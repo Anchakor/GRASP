@@ -17,5 +17,8 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
+LIBS += -lrdf
+
 QMAKE_CC = clang
 QMAKE_CXX = clang++
+QMAKE_INCDIR += /usr/include/rasqal

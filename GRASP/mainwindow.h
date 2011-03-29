@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <librdf.h>
 
 namespace Ui {
     class MainWindow;
@@ -20,6 +21,8 @@ protected:
 
 private:
     Ui::MainWindow *ui;
+    librdf_world *redland_world;
+
 };
 
 #endif // MAINWINDOW_H
