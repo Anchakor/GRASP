@@ -7,13 +7,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    redland_world = librdf_new_world();
-    librdf_world_open(redland_world);
 }
 
 MainWindow::~MainWindow()
 {
-    librdf_free_world(redland_world);
     delete ui;
 }
 

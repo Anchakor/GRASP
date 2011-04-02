@@ -21,7 +21,6 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-    librdf_world *redland_world;
 
 };
 
