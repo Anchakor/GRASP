@@ -13,10 +13,14 @@ CONFIG += debug
 
 SOURCES += main.cpp\
         mainwindow.cpp\
-        persistentcounter.cpp
+        persistentcounter.cpp\
+        rdf.cpp\
+        exception.cpp
 
 HEADERS  += mainwindow.h\
-        persistentcounter.h
+        persistentcounter.h\
+        rdf.h\
+        exception.h
 
 FORMS    += mainwindow.ui
 

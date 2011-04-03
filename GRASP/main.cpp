@@ -1,22 +1,16 @@
 #include <QtGui/QApplication>
 #include <QtCore>
+#include <exception>
+#include <typeinfo>
+#include "rdf.h"
 #include "mainwindow.h"
-#include "persistentcounter.h"
-
-#define PERSCOUNTERPATH "maindb-counter"
-
-namespace rdf
-{
-    librdf_world *world;
-    librdf_storage *storage;
-    librdf_model *model;
-    librdf_stream *stream;
-    raptor_world *raptor;
-    raptor_iostream *iostr;
-}
+#include "exception.h"
 
 int main(int argc, char *argv[])
 {
+    THROW(Exception);
+    int ret;
+    try {
     rdf::world = librdf_new_world();
     if(!rdf::world) {
         fprintf(stderr, "Failed to create rdf::world\n");
@@ -25,7 +19,7 @@ int main(int argc, char *argv[])
     librdf_world_open(rdf::world);
 
     QString storageConfString("hash-type='bdb',dir='.',contexts='yes'");
-    if(!QFile::exists("maindb-contexts.db")) storageConfString.prepend("new='yes',");
+    if(!QFile::exists(QString("maindb-contexts.db"))) storageConfString.prepend("new='yes',");
     rdf::storage = librdf_new_storage(rdf::world, "hashes", "maindb", storageConfString.toLatin1().constData());
     if(!rdf::storage) {
         fprintf(stderr, "Failed to create rdf::storage\n");
@@ -57,9 +51,10 @@ int main(int argc, char *argv[])
     //pc.init(QString(PERSCOUNTERPATH));
     //return pc.increment();
     //printf("%li\n", PersistentCounter::increment(PERSCOUNTERPATH));
-    printf("%li\n", PersistentCounter::increment(PERSCOUNTERPATH));
-    printf("%li\n", PersistentCounter::increment(PERSCOUNTERPATH));
 
+    librdf_node *cx = rdf::loadGraphFromURI(QString("http://mud.cz/foaf.rdf")); //, "application/rdf+xml");
+    rdf::printContext(cx);
+    librdf_free_node(cx);
 
 
     QApplication a(argc, argv);
@@ -69,8 +64,10 @@ int main(int argc, char *argv[])
 #else
     w.show();
 #endif
-    int ret = a.exec();
+    ret = a.exec();
 
+    } catch (std::exception& e)
+    { fprintf(stderr, "Error: Exception: %s\n", typeid(e).name()); }
     librdf_free_model(rdf::model);
     librdf_free_storage(rdf::storage);
     librdf_free_world(rdf::world);
