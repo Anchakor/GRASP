@@ -4,11 +4,9 @@
 #include <typeinfo>
 #include "rdf.h"
 #include "mainwindow.h"
-#include "exception.h"
 
 int main(int argc, char *argv[])
 {
-    THROW(Exception);
     int ret;
     try {
     rdf::world = librdf_new_world();
