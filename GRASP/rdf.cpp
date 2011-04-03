@@ -9,7 +9,7 @@ namespace rdf
     raptor_world *raptor;
     raptor_iostream *iostr;
 
-    QList<librdf_node> contexts;
+    QSet<librdf_node *> contexts;
 
     librdf_node *loadGraphFromFile(const QString & path, const char *mimeType, librdf_uri *baseUri) 
     {
@@ -37,6 +37,10 @@ namespace rdf
         librdf_free_uri(contextURI);
         librdf_free_stream(stream);
         librdf_free_parser(parser);
+
+        // add context
+        contexts.insert(contextNode);
+
         return contextNode;
     }
 
@@ -67,6 +71,10 @@ namespace rdf
         librdf_free_stream(stream);
         librdf_free_uri(lURI);
         librdf_free_parser(parser);
+
+        // add context
+        contexts.insert(contextNode);
+
         return contextNode;
     }
 
@@ -83,5 +91,13 @@ namespace rdf
         librdf_free_serializer(serializer);
         librdf_free_stream(stream);
     }
+
+    void freeContext(librdf_node *context)
+    {
+        if(0 != librdf_model_context_remove_statements(model, context)) throw ModelAccessException();
+
+        contexts.remove(context);
+    }
+
 }
 

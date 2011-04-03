@@ -16,7 +16,7 @@ namespace rdf
     extern raptor_world *raptor;
     extern raptor_iostream *iostr;
 
-    extern QList<librdf_node> contexts;
+    extern QSet<librdf_node *> contexts;
 
     struct NodeConstructException : public std::exception {};
     struct StreamConstructException : public std::exception {};
@@ -25,9 +25,11 @@ namespace rdf
     struct URIConstructException : public std::exception {};
     struct FileOpenException : public std::exception {};
     struct ModelAccessException : public std::exception {};
+
     librdf_node *loadGraphFromFile(const QString & path, const char *mimeType = NULL, librdf_uri *baseUri = NULL);
     librdf_node *loadGraphFromURI(const QString & uri, const char *mimeType = NULL, librdf_uri *baseUri = NULL);
     void printContext(librdf_node *context);
+    void freeContext(librdf_node *context);
 }
 
 
