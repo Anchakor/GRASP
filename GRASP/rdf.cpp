@@ -22,24 +22,39 @@ namespace rdf
 
         librdf_stream *stream;
         stream = librdf_parser_parse_string_as_stream(parser, (const unsigned char *)(file.readAll().constData()), baseUri);
-        if(NULL == stream) throw StreamConstructException();
+        if(NULL == stream) { 
+            librdf_free_parser(parser);
+            throw ParsingException();
+        }
 
         QString s(GRASPURIPREFIX);
         s.append(QString::number(PersistentCounter::increment(PERSCOUNTERPATH)));
         librdf_uri *contextURI = librdf_new_uri(world, (const unsigned char *)s.toLatin1().constData());
-        if(NULL == contextURI) throw URIConstructException();
+        if(NULL == contextURI) { 
+            librdf_free_stream(stream);
+            librdf_free_parser(parser);
+            throw URIConstructException();
+        }
 
         librdf_node *contextNode = librdf_new_node_from_uri(world, contextURI);
-        if(NULL == contextNode) throw NodeConstructException();
+        if(NULL == contextNode) { 
+            librdf_free_uri(contextURI);
+            librdf_free_stream(stream);
+            librdf_free_parser(parser);
+            throw NodeConstructException();
+        }
 
-        if(0 != librdf_storage_context_add_statements(storage, contextNode, stream)) throw ModelAccessException(); 
+        if(0 != librdf_storage_context_add_statements(storage, contextNode, stream)) { 
+            librdf_free_node(contextNode);
+            librdf_free_uri(contextURI);
+            librdf_free_stream(stream);
+            librdf_free_parser(parser);
+            throw ModelAccessException();
+        }
 
         librdf_free_uri(contextURI);
         librdf_free_stream(stream);
         librdf_free_parser(parser);
-
-        // add context
-        contexts.insert(contextNode);
 
         return contextNode;
     }
@@ -51,29 +66,51 @@ namespace rdf
         if(NULL == parser) throw ParserConstructException();
 
         librdf_uri *lURI = librdf_new_uri(world, (const unsigned char *)uri.toLatin1().constData());
-        if(NULL == lURI) throw URIConstructException();
+        if(NULL == lURI) {
+            librdf_free_parser(parser);
+            throw URIConstructException();
+        }
 
         librdf_stream *stream;
         stream = librdf_parser_parse_as_stream(parser, lURI, baseUri);
-        if(NULL == stream) throw StreamConstructException();
+        if(NULL == stream) { 
+            librdf_free_uri(lURI);
+            librdf_free_parser(parser);
+            throw ParsingException();
+        }
 
         QString s(GRASPURIPREFIX);
         s.append(QString::number(PersistentCounter::increment(PERSCOUNTERPATH)));
         librdf_uri *contextURI = librdf_new_uri(world, (const unsigned char *)s.toLatin1().constData());
-        if(NULL == contextURI) throw URIConstructException();
+        if(NULL == contextURI) {
+            librdf_free_stream(stream);
+            librdf_free_uri(lURI);
+            librdf_free_parser(parser);
+            throw URIConstructException();
+        }
 
         librdf_node *contextNode = librdf_new_node_from_uri(world, contextURI);
-        if(NULL == contextNode) throw NodeConstructException();
+        if(NULL == contextNode) { 
+            librdf_free_uri(contextURI);
+            librdf_free_stream(stream);
+            librdf_free_uri(lURI);
+            librdf_free_parser(parser);
+            throw NodeConstructException();
+        }
 
-        if(0 != librdf_storage_context_add_statements(storage, contextNode, stream)) throw ModelAccessException(); 
+        if(0 != librdf_storage_context_add_statements(storage, contextNode, stream)) { 
+            librdf_free_node(contextNode);
+            librdf_free_uri(contextURI);
+            librdf_free_stream(stream);
+            librdf_free_uri(lURI);
+            librdf_free_parser(parser); 
+            throw ModelAccessException(); 
+        }
 
         librdf_free_uri(contextURI);
         librdf_free_stream(stream);
         librdf_free_uri(lURI);
         librdf_free_parser(parser);
-
-        // add context
-        contexts.insert(contextNode);
 
         return contextNode;
     }
@@ -84,9 +121,14 @@ namespace rdf
         if(NULL == stream) throw StreamConstructException();
 
         librdf_serializer *serializer = librdf_new_serializer(world, NULL, "application/turtle", NULL);
-        if(NULL == serializer) throw SerializerConstructException();
+        if(NULL == serializer) {
+            librdf_free_stream(stream);
+            throw SerializerConstructException();
+        }
 
-        if(0 != librdf_serializer_serialize_stream_to_file_handle(serializer, stdout, NULL, stream)) fprintf(stderr, "%s/n", "Error: printContext(): serialization error");
+        if(0 != librdf_serializer_serialize_stream_to_file_handle(serializer, stdout, NULL, stream)) {
+            fprintf(stderr, "%s/n", "Error: printContext(): serialization error");
+        }
 
         librdf_free_serializer(serializer);
         librdf_free_stream(stream);
@@ -95,8 +137,6 @@ namespace rdf
     void freeContext(librdf_node *context)
     {
         if(0 != librdf_model_context_remove_statements(model, context)) throw ModelAccessException();
-
-        contexts.remove(context);
     }
 
 }

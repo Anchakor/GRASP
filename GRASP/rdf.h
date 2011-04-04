@@ -16,13 +16,12 @@ namespace rdf
     extern raptor_world *raptor;
     extern raptor_iostream *iostr;
 
-    extern QSet<librdf_node *> contexts;
-
     struct NodeConstructException : public std::exception {};
     struct StreamConstructException : public std::exception {};
     struct ParserConstructException : public std::exception {};
     struct SerializerConstructException : public std::exception {};
     struct URIConstructException : public std::exception {};
+    struct ParsingException : public std::exception {};
     struct FileOpenException : public std::exception {};
     struct ModelAccessException : public std::exception {};
 

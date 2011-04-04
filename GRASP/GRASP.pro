@@ -16,13 +16,15 @@ SOURCES += main.cpp\
         persistentcounter.cpp\
         rdf.cpp\
         graphview.cpp\
-        graph.cpp
+        graph.cpp\
+        graphicslabel.cpp
 
 HEADERS  += mainwindow.h\
         persistentcounter.h\
         rdf.h\
         graphview.h\
-        graph.h
+        graph.h\
+        graphicslabel.h
 
 FORMS    += mainwindow.ui
 
