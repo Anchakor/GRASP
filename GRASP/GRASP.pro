@@ -14,11 +14,15 @@ CONFIG += debug
 SOURCES += main.cpp\
         mainwindow.cpp\
         persistentcounter.cpp\
-        rdf.cpp
+        rdf.cpp\
+        graphview.cpp\
+        graph.cpp
 
 HEADERS  += mainwindow.h\
         persistentcounter.h\
-        rdf.h
+        rdf.h\
+        graphview.h\
+        graph.h
 
 FORMS    += mainwindow.ui
 
