@@ -7,8 +7,8 @@ Graph::Graph(QObject *parent) : QGraphicsScene(parent)
     QGraphicsWidget *w = new QGraphicsWidget(0);
     w->setLayout(new QGraphicsLinearLayout(Qt::Vertical, w));
     addItem(w);
-    new GraphicsLabel("test", w);
-    new GraphicsLabel("test2", w);
+    new GraphicsLabel("tost", w);
+    new GraphicsLabel("txxt2", w);
     w->setGeometry(10, 10, 100, 100);
     w->layout()->activate();
 }
