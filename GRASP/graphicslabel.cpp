@@ -1,6 +1,8 @@
 #include "graphicslabel.h"
 
-GraphicsLabel::GraphicsLabel(const QString &text, QGraphicsItem *parent) : QGraphicsSimpleTextItem(text, parent), QGraphicsLayoutItem(0, false), QObject(0) {}
+GraphicsLabel::GraphicsLabel(const QString &text, QGraphicsWidget *parent) : QObject(0), QGraphicsLayoutItem(0, false), QGraphicsSimpleTextItem(text, parent)
+{
+}
 
 GraphicsLabel::~GraphicsLabel()
 {
@@ -8,6 +10,7 @@ GraphicsLabel::~GraphicsLabel()
 
 QSizeF GraphicsLabel::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
+    qDebug("SIZEHINT\n");
     switch (which) {
         case Qt::MinimumSize:
             return QSizeF(0, 0);

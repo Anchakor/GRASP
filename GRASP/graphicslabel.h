@@ -3,13 +3,14 @@
 
 #include <QtGui>
 
-class GraphicsLabel : public QObject, public QGraphicsSimpleTextItem, public QGraphicsLayoutItem {
+class GraphicsLabel : public QObject, public QGraphicsLayoutItem, public QGraphicsSimpleTextItem {
     Q_OBJECT
+    Q_INTERFACES(QGraphicsLayoutItem)
 
     public:
         enum { Type = UserType + 1 };
         
-        GraphicsLabel(const QString &text = QString(), QGraphicsItem *parent = 0);
+        GraphicsLabel(const QString &text = QString(), QGraphicsWidget *parent = 0);
         ~GraphicsLabel();
 
         int type() const { return Type; }
