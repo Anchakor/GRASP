@@ -3,8 +3,21 @@
 
 GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
 { 
-    //setDragMode(QGraphicsView::ScrollHandDrag);
-    setScene(new Graph(this));
+    Graph *graph = new Graph(this);
+    
+    GraphicsLabel *l1 = new GraphicsLabel("TEST");
+    GraphicsLabel *l2 = new GraphicsLabel("XXXX\nOOOO");
+
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->addItem(l1);
+    layout->addItem(l2);
+
+    QGraphicsWidget *form = new QGraphicsWidget;
+    form->setLayout(layout);
+
+    graph->addItem(form);
+    
+    setScene(graph);
 }
 
 void GraphView::openFile()

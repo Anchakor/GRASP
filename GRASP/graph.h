@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include "rdf.h"
+#include "graphicslabel.h"
 
 class Graph : public QGraphicsScene
 {
