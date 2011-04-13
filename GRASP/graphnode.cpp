@@ -34,35 +34,16 @@ const librdf_node *GraphNode::node() const
         
 void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-  /*  QStyleOptionButton option;
-    option.initFrom(this);
-    option.state = isDown() ? QStyle::State_Sunken : QStyle::State_Raised;
-    if (isDefault())
-        option.features |= QStyleOptionButton::DefaultButton;
-    option.text = text();
-    option.icon = icon(); */
-    
-        QStyleOptionFrameV3 frameOptionV3;
-        frameOptionV3.direction     = option->direction;
-        frameOptionV3.fontMetrics   = option->fontMetrics;
-        frameOptionV3.palette       = option->palette;
-        frameOptionV3.rect          = option->rect;
-        //frameOptionV3.state         = option->state;
-        frameOptionV3.state         = QStyle::State_Raised;
-        frameOptionV3.frameShape = QFrame::StyledPanel;
-        frameOptionV3.lineWidth = 1;
-        frameOptionV3.midLineWidth = 0;
-        style()->drawPrimitive(QStyle::PE_Frame, &frameOptionV3, painter, widget);
-    
-        QStyleOptionFocusRect FRoption;
-        FRoption.direction     = option->direction;
-        FRoption.fontMetrics   = option->fontMetrics;
-        //FRoption.palette       = option->palette;
-        FRoption.palette       = palette();
-        FRoption.rect          = option->rect;
-        //FRoption.state         = option->state;
-        FRoption.state         = QStyle::State_Raised;
-        FRoption.backgroundColor = QColor("red");
-        //FRoption.backgroundColor = palette().color(QPalette::Background);
-        style()->drawPrimitive(QStyle::PE_FrameFocusRect, &FRoption, painter, widget);
+    painter->fillRect(option->rect, palette().color(QPalette::Button));
+
+    QStyleOptionFrameV3 frameOptionV3;
+    frameOptionV3.direction     = option->direction;
+    frameOptionV3.fontMetrics   = option->fontMetrics;
+    frameOptionV3.palette       = option->palette;
+    frameOptionV3.rect          = option->rect;
+    frameOptionV3.state         = option->state;
+    frameOptionV3.frameShape = QFrame::StyledPanel;
+    frameOptionV3.lineWidth = 1;
+    frameOptionV3.midLineWidth = 0;
+    style()->drawPrimitive(QStyle::PE_Frame, &frameOptionV3, painter, widget);
 }
