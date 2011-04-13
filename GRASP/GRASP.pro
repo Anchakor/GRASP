@@ -17,14 +17,18 @@ SOURCES += main.cpp\
         rdf.cpp\
         graphview.cpp\
         graph.cpp\
-        graphicslabel.cpp
+        graphicslabel.cpp\
+        graphnode.cpp
+        #graphedge.cpp
 
 HEADERS  += mainwindow.h\
         persistentcounter.h\
         rdf.h\
         graphview.h\
         graph.h\
-        graphicslabel.h
+        graphicslabel.h\
+        graphnode.h
+        #graphedge.h
 
 FORMS    += mainwindow.ui
 

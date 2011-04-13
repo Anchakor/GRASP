@@ -14,10 +14,10 @@ namespace rdf
     extern librdf_storage *storage;
     extern librdf_model *model;
     extern raptor_world *raptor;
-    extern raptor_iostream *iostr;
 
     struct NodeConstructException : public std::exception {};
     struct StreamConstructException : public std::exception {};
+    struct StatementConstructException : public std::exception {};
     struct ParserConstructException : public std::exception {};
     struct SerializerConstructException : public std::exception {};
     struct URIConstructException : public std::exception {};

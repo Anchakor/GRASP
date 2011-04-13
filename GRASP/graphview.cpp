@@ -8,14 +8,17 @@ GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
     GraphicsLabel *l1 = new GraphicsLabel("TEST");
     GraphicsLabel *l2 = new GraphicsLabel("XXXX\nOOOO");
 
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->addItem(l1);
-    layout->addItem(l2);
+    //QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    //layout->addItem(l1);
+    //layout->addItem(l2);
+    GraphNode *node = new GraphNode();
+    static_cast<QGraphicsLinearLayout *>(node->layout())->addItem(l1);
+    static_cast<QGraphicsLinearLayout *>(node->layout())->addItem(l2);
 
-    QGraphicsWidget *form = new QGraphicsWidget;
-    form->setLayout(layout);
+    //QGraphicsWidget *form = new QGraphicsWidget;
+    //form->setLayout(layout);
 
-    graph->addItem(form);
+    graph->addItem(node);
     
     setScene(graph);
 }

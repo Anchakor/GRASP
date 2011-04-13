@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     ret = a.exec();
 
     } catch (std::exception& e)
-    { fprintf(stderr, "Error: Exception: %s\n", typeid(e).name()); }
+    { fprintf(stderr, "Error: Exception: %s\n", typeid(e).name()); throw e; }
     librdf_free_model(rdf::model);
     librdf_free_storage(rdf::storage);
     librdf_free_world(rdf::world);
