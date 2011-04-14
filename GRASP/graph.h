@@ -5,6 +5,7 @@
 #include "rdf.h"
 #include "graphicslabel.h"
 #include "graphnode.h"
+#include "graphedge.h"
 
 class Graph : public QGraphicsScene
 {

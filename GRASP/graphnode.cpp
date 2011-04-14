@@ -13,6 +13,14 @@ GraphNode::GraphNode(librdf_node *node, QGraphicsItem *parent, Qt::WindowFlags w
 
 void GraphNode::init()
 {
+    node_ = NULL;
+
+    setFlag(ItemIsMovable);
+    setFlag(ItemIsSelectable);
+    setFlag(ItemIsFocusable);
+    //setFlag(ItemSendsGeometryChanges);
+    setCacheMode(DeviceCoordinateCache);
+
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical); 
     layout->setSpacing(0);
     layout->setContentsMargins(0,0,0,0);
@@ -24,6 +32,7 @@ void GraphNode::init()
 
 void GraphNode::setNode(const librdf_node *node) 
 { 
+    if(node_ != NULL) librdf_free_node(node_);
     node_ = librdf_new_node_from_node(const_cast<librdf_node *>(node));
 }
         
@@ -47,3 +56,9 @@ void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     frameOptionV3.midLineWidth = 0;
     style()->drawPrimitive(QStyle::PE_Frame, &frameOptionV3, painter, widget);
 }
+
+GraphNode::~GraphNode()
+{
+    if(node_ != NULL) librdf_free_node(node_);
+}
+

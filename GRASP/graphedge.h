@@ -1,0 +1,45 @@
+#ifndef GRAPHEDGE_H
+#define GRAPHEDGE_H
+
+#include <QtGui>
+#include "rdf.h"
+#include "graphnode.h"
+
+class GraphEdge : public QGraphicsWidget
+{
+    Q_OBJECT
+
+    public:
+        explicit GraphEdge(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
+        explicit GraphEdge(librdf_statement *statement, QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
+        ~GraphEdge();
+       
+        /// copy statement and set it as rdf statement of the graph edge 
+        void setStatement(const librdf_statement *statement);
+        const librdf_statement *statement() const;
+
+        void setSourceNode(const QGraphicsWidget *node);
+        QGraphicsWidget *sourceNode() const;
+        void setDestNode(const QGraphicsWidget *node);
+        QGraphicsWidget *destNode() const;
+
+        void adjust();
+        QRectF boundingRect() const;
+
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+        enum { Type = UserType + 2 };
+        int type() const { return Type; }
+
+        // TODO shape()
+
+    private:
+        void init();
+        librdf_statement *statement_;
+        QGraphicsWidget *sourceNode_;
+        QGraphicsWidget *destNode_;
+        QPointF sourcePoint;
+        QPointF destPoint;
+        qreal arrowSize;
+};
+
+#endif

@@ -11,12 +11,15 @@ class GraphNode : public QGraphicsWidget
     public:
         explicit GraphNode(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
         explicit GraphNode(librdf_node *node, QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
+        ~GraphNode();
        
         /// copy node and set it as rdf node of the graph node 
         void setNode(const librdf_node *node);
         const librdf_node *node() const;
 
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+        enum { Type = UserType + 1 };
+        int type() const { return Type; }
 
     private:
         void init();

@@ -18,8 +18,8 @@ SOURCES += main.cpp\
         graphview.cpp\
         graph.cpp\
         graphicslabel.cpp\
-        graphnode.cpp
-        #graphedge.cpp
+        graphnode.cpp\
+        graphedge.cpp
 
 HEADERS  += mainwindow.h\
         persistentcounter.h\
@@ -27,8 +27,8 @@ HEADERS  += mainwindow.h\
         graphview.h\
         graph.h\
         graphicslabel.h\
-        graphnode.h
-        #graphedge.h
+        graphnode.h\
+        graphedge.h
 
 FORMS    += mainwindow.ui
 

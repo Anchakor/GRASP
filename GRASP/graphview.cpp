@@ -14,11 +14,18 @@ GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
     GraphNode *node = new GraphNode();
     static_cast<QGraphicsLinearLayout *>(node->layout())->addItem(l1);
     static_cast<QGraphicsLinearLayout *>(node->layout())->addItem(l2);
-
-    //QGraphicsWidget *form = new QGraphicsWidget;
-    //form->setLayout(layout);
-
     graph->addItem(node);
+
+    GraphNode *n2 = new GraphNode();
+    static_cast<QGraphicsLinearLayout *>(n2->layout())->addItem(new GraphicsLabel("TTT"));
+    graph->addItem(n2);
+    n2->setPos(50,100);
+
+    GraphEdge *e = new GraphEdge();
+    e->setSourceNode(node);
+    e->setDestNode(n2);
+    e->adjust();
+    graph->addItem(e);
     
     setScene(graph);
 }
