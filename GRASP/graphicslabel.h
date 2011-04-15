@@ -19,7 +19,6 @@ class GraphicsLabel : public QGraphicsWidget
         QFont font() const;
 
         QRectF boundingRect() const;
-        bool contains(const QPointF &point) const;
         QRectF setupTextLayout(QTextLayout *layout);
 
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

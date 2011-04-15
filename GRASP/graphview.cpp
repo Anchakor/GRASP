@@ -3,7 +3,7 @@
 
 GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
 { 
-    setDragMode(QGraphicsView::ScrollHandDrag);
+    //setDragMode(QGraphicsView::ScrollHandDrag);
 
     Graph *graph = new Graph(this);
     

@@ -14,7 +14,8 @@ GraphNode::GraphNode(librdf_node *node, QGraphicsItem *parent, Qt::WindowFlags w
 void GraphNode::init()
 {
     node_ = NULL;
-
+    
+    setAcceptHoverEvents(true);
     setFlag(ItemIsMovable);
     setFlag(ItemIsSelectable);
     setFlag(ItemIsFocusable);

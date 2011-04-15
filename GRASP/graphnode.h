@@ -20,7 +20,15 @@ class GraphNode : public QGraphicsWidget
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
         enum { Type = UserType + 1 };
         int type() const { return Type; }
+     
+    protected:   
+        void focusInEvent(QFocusEvent *event)
+        {
+            Q_UNUSED(event)
 
+            qDebug("NODEfocusIn");
+            update();
+        }
     private:
         void init();
         librdf_node *node_;

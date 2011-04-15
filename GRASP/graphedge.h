@@ -28,12 +28,17 @@ class GraphEdge : public QGraphicsWidget
 
         void adjust();
         QRectF boundingRect() const;
+        QPainterPath shape() const;
 
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
         enum { Type = UserType + 2 };
         int type() const { return Type; }
 
-        // TODO shape()
+    protected: 
+        virtual void focusInEvent(QFocusEvent *event);
+        virtual void focusOutEvent(QFocusEvent *event);
+        virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+        virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
     private:
         void init();
@@ -41,7 +46,7 @@ class GraphEdge : public QGraphicsWidget
         QTextLayout textLayout;
         QRectF labelRect_;
 
-        bool focused_;
+        QPainterPath arrow_;
 
         QGraphicsWidget *sourceNode_;
         QGraphicsWidget *destNode_;

@@ -42,11 +42,6 @@ QRectF GraphicsLabel::boundingRect() const
     return textLayout.boundingRect();
 }
 
-bool GraphicsLabel::contains(const QPointF &point) const
-{
-    return boundingRect().contains(point);
-}
-
 QRectF GraphicsLabel::setupTextLayout(QTextLayout *layout)
 {
     layout->setCacheEnabled(true);

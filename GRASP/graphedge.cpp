@@ -20,10 +20,11 @@ void GraphEdge::init()
     sourceNode_ = NULL;
     destNode_ = NULL;
     arrowSize = 10;
-    focused_ = false;
 
+    setAcceptHoverEvents(true);
     setFlag(ItemIsSelectable);
-    setFlag(ItemIsFocusable);
+    setFocusPolicy(Qt::StrongFocus);
+//    setFlag(ItemIsFocusable);
     setCacheMode(DeviceCoordinateCache);
     setZValue(-1);
 }
@@ -138,6 +139,13 @@ QRectF GraphEdge::boundingRect() const
         .adjusted(-extra, -extra, extra, extra));
 }
 
+QPainterPath GraphEdge::shape() const
+{
+    QPainterPath pp;
+    pp.addRect(labelRect_);
+    return arrow_.united(pp);
+}
+
 void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option)
@@ -151,7 +159,13 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->setRenderHint(QPainter::Antialiasing);
 
     // Draw the line itself
-    painter->setPen(QPen(palette().color(QPalette::ButtonText), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    QColor c;
+    if(hasFocus() || isSelected()) {
+        c = palette().color(QPalette::Highlight);
+        if(isSelected() && !hasFocus()) c = c.lighter();
+    } else
+        c = palette().color(QPalette::ButtonText);
+    painter->setPen(QPen(c, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->drawLine(line);
 
     // Draw the arrows
@@ -163,15 +177,51 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                                               cos(angle - Pi / 3) * arrowSize);
     QPointF destArrowP2 = destPoint + QPointF(sin(angle - Pi + Pi / 3) * arrowSize,
                                               cos(angle - Pi + Pi / 3) * arrowSize);
+    QPolygonF polygon;
+    polygon << line.p2() << destArrowP1 << destArrowP2;
+    arrow_ = QPainterPath();
+    arrow_.addPolygon(polygon);
+    arrow_.closeSubpath();
 
-    painter->setBrush(palette().color(QPalette::ButtonText));
-    painter->drawPolygon(QPolygonF() << line.p2() << destArrowP1 << destArrowP2);
+    painter->setBrush(c);
+    painter->drawPolygon(polygon);
 
     // Draw the label
     QColor col (palette().color(QPalette::Button));
-    if(!focused_) col.setAlphaF(0.6);
+    if(!hasFocus() && !isUnderMouse()) col.setAlphaF(0.7);
     painter->fillRect(labelRect_, col);
+    painter->setPen(palette().color(QPalette::ButtonText));
     textLayout.draw(painter, labelRect_.topLeft()); 
+}
+        
+void GraphEdge::focusInEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event)
+
+    setZValue(1);
+    update();
+}
+        
+void GraphEdge::focusOutEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event)
+
+    setZValue(-1);
+    update();
+}
+        
+void GraphEdge::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    Q_UNUSED(event)
+
+    setFocus();
+}
+        
+void GraphEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    Q_UNUSED(event)
+
+    clearFocus();
 }
 
 GraphEdge::~GraphEdge()
