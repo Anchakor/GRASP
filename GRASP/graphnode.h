@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include "rdf.h"
+#include "graphedge.h"
 
 class GraphNode : public QGraphicsWidget
 {
@@ -20,18 +21,24 @@ class GraphNode : public QGraphicsWidget
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
         enum { Type = UserType + 1 };
         int type() const { return Type; }
-     
-    protected:   
-        void focusInEvent(QFocusEvent *event)
-        {
-            Q_UNUSED(event)
 
-            qDebug("NODEfocusIn");
-            update();
-        }
+        void registerEdge(GraphEdge *edge, bool in = true);
+        bool unregisterEdge(GraphEdge *edge);
+        const QSet<GraphEdge *> *outEdges() const;
+        const QSet<GraphEdge *> *inEdges() const;
+     
+    protected:
+        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+        virtual void focusInEvent(QFocusEvent *event);
+        virtual void focusOutEvent(QFocusEvent *event);
+        virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+        virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+
     private:
         void init();
         librdf_node *node_;
+        QSet<GraphEdge *> outEdges_;
+        QSet<GraphEdge *> inEdges_;
 };
 
 class GraphNodeObjectLayout : public QGraphicsLinearLayout

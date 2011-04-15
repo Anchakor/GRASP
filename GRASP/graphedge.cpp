@@ -1,4 +1,5 @@
 #include "graphedge.h"
+#include "graphnode.h"
        
 static const double Pi = 3.14159265358979323846264338327950288419717;
 static double TwoPi = 2.0 * Pi;
@@ -23,8 +24,7 @@ void GraphEdge::init()
 
     setAcceptHoverEvents(true);
     setFlag(ItemIsSelectable);
-    setFocusPolicy(Qt::StrongFocus);
-//    setFlag(ItemIsFocusable);
+    setFocusPolicy(Qt::StrongFocus); // setFlag(ItemIsFocusable);
     setCacheMode(DeviceCoordinateCache);
     setZValue(-1);
 }
@@ -72,22 +72,26 @@ QRectF GraphEdge::setupTextLayout(QTextLayout *layout)
     return QRectF(0, 0, maxWidth, y);
 }
         
-void GraphEdge::setSourceNode(const QGraphicsWidget *node)
+void GraphEdge::setSourceNode(const GraphNode *node)
 {
-    sourceNode_ = const_cast<QGraphicsWidget *>(node);
+    if(sourceNode_ != NULL) sourceNode_->unregisterEdge(this);
+    sourceNode_ = const_cast<GraphNode *>(node);
+    sourceNode_->registerEdge(this, false);
 }
         
-QGraphicsWidget *GraphEdge::sourceNode() const
+GraphNode *GraphEdge::sourceNode() const
 {
     return sourceNode_;
 }
         
-void GraphEdge::setDestNode(const QGraphicsWidget *node)
+void GraphEdge::setDestNode(const GraphNode *node)
 {
-    destNode_ = const_cast<QGraphicsWidget *>(node);
+    if(destNode_ != NULL) destNode_->unregisterEdge(this);
+    destNode_ = const_cast<GraphNode *>(node);
+    destNode_->registerEdge(this);
 }
         
-QGraphicsWidget *GraphEdge::destNode() const
+GraphNode *GraphEdge::destNode() const
 {
     return destNode_;
 }

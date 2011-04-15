@@ -1,4 +1,5 @@
 #include "graphnode.h"
+#include "graphedge.h"
         
 GraphNode::GraphNode(QGraphicsItem *parent, Qt::WindowFlags wFlags) : QGraphicsWidget(parent, wFlags) 
 {
@@ -18,8 +19,7 @@ void GraphNode::init()
     setAcceptHoverEvents(true);
     setFlag(ItemIsMovable);
     setFlag(ItemIsSelectable);
-    setFlag(ItemIsFocusable);
-    //setFlag(ItemSendsGeometryChanges);
+    setFocusPolicy(Qt::StrongFocus); // setFlag(ItemIsFocusable);
     setCacheMode(DeviceCoordinateCache);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical); 
@@ -52,10 +52,78 @@ void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     frameOptionV3.palette       = option->palette;
     frameOptionV3.rect          = option->rect;
     frameOptionV3.state         = option->state;
+    if(hasFocus())
+        frameOptionV3.state |= QStyle::State_HasFocus;
+    else if(isSelected())
+        frameOptionV3.state |= QStyle::State_Selected;
     frameOptionV3.frameShape = QFrame::StyledPanel;
     frameOptionV3.lineWidth = 1;
     frameOptionV3.midLineWidth = 0;
     style()->drawPrimitive(QStyle::PE_Frame, &frameOptionV3, painter, widget);
+} 
+
+void GraphNode::registerEdge(GraphEdge *edge, bool in)
+{
+    if(in)
+        inEdges_.insert(edge);
+    else
+        outEdges_.insert(edge);
+}
+
+bool GraphNode::unregisterEdge(GraphEdge *edge)
+{
+    return (inEdges_.remove(edge) || outEdges_.remove(edge));
+}
+
+const QSet<GraphEdge *> *GraphNode::outEdges() const
+{
+    return &outEdges_;
+}
+
+const QSet<GraphEdge *> *GraphNode::inEdges() const
+{
+    return &inEdges_;
+}
+        
+void GraphNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsWidget::mouseMoveEvent(event);
+
+    // adjust connected edges
+    QSetIterator<GraphEdge *> i(inEdges_);
+    while (i.hasNext())
+        i.next()->adjust();
+    QSetIterator<GraphEdge *> i2(outEdges_);
+    while (i2.hasNext())
+        i2.next()->adjust();
+}
+
+void GraphNode::focusInEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event)
+
+    update();
+}
+        
+void GraphNode::focusOutEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event)
+
+    update();
+}
+        
+void GraphNode::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    Q_UNUSED(event)
+
+    setFocus();
+}
+        
+void GraphNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    Q_UNUSED(event)
+
+    clearFocus();
 }
 
 GraphNode::~GraphNode()

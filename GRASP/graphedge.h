@@ -3,7 +3,8 @@
 
 #include <QtGui>
 #include "rdf.h"
-#include "graphnode.h"
+
+class GraphNode;
 
 class GraphEdge : public QGraphicsWidget
 {
@@ -21,10 +22,10 @@ class GraphEdge : public QGraphicsWidget
         QString text() const;
         QRectF setupTextLayout(QTextLayout *layout);
 
-        void setSourceNode(const QGraphicsWidget *node);
-        QGraphicsWidget *sourceNode() const;
-        void setDestNode(const QGraphicsWidget *node);
-        QGraphicsWidget *destNode() const;
+        void setSourceNode(const GraphNode *node);
+        GraphNode *sourceNode() const;
+        void setDestNode(const GraphNode *node);
+        GraphNode *destNode() const;
 
         void adjust();
         QRectF boundingRect() const;
@@ -48,8 +49,8 @@ class GraphEdge : public QGraphicsWidget
 
         QPainterPath arrow_;
 
-        QGraphicsWidget *sourceNode_;
-        QGraphicsWidget *destNode_;
+        GraphNode *sourceNode_;
+        GraphNode *destNode_;
         QPointF sourcePoint;
         QPointF destPoint;
         qreal arrowSize;
