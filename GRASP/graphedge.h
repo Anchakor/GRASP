@@ -17,6 +17,9 @@ class GraphEdge : public QGraphicsWidget
         /// copy statement and set it as rdf statement of the graph edge 
         void setStatement(const librdf_statement *statement);
         const librdf_statement *statement() const;
+        void setText(const QString &text);
+        QString text() const;
+        QRectF setupTextLayout(QTextLayout *layout);
 
         void setSourceNode(const QGraphicsWidget *node);
         QGraphicsWidget *sourceNode() const;
@@ -35,6 +38,11 @@ class GraphEdge : public QGraphicsWidget
     private:
         void init();
         librdf_statement *statement_;
+        QTextLayout textLayout;
+        QRectF labelRect_;
+
+        bool focused_;
+
         QGraphicsWidget *sourceNode_;
         QGraphicsWidget *destNode_;
         QPointF sourcePoint;

@@ -16,7 +16,7 @@ GraphicsLabel::~GraphicsLabel()
 void GraphicsLabel::setText(const QString &text)
 {
     QString tmp(text);
-    tmp.replace(QLatin1Char('\n'), QChar::LineSeparator);
+    //tmp.replace(QLatin1Char('\n'), QChar::LineSeparator);
     textLayout.setText(tmp);
     setupTextLayout(&textLayout);
     update();

@@ -20,6 +20,7 @@ void GraphEdge::init()
     sourceNode_ = NULL;
     destNode_ = NULL;
     arrowSize = 10;
+    focused_ = false;
 
     setFlag(ItemIsSelectable);
     setFlag(ItemIsFocusable);
@@ -36,6 +37,38 @@ void GraphEdge::setStatement(const librdf_statement *statement)
 const librdf_statement *GraphEdge::statement() const
 {
     return statement_;
+}
+
+void GraphEdge::setText(const QString &text)
+{
+    QString tmp(text);
+    //tmp.replace(QLatin1Char('\n'), QChar::LineSeparator);
+    textLayout.setText(tmp);
+    setupTextLayout(&textLayout);
+    update();
+}
+
+QString GraphEdge::text() const
+{
+    return textLayout.text();
+}
+
+QRectF GraphEdge::setupTextLayout(QTextLayout *layout)
+{
+    layout->setCacheEnabled(true);
+    layout->beginLayout();
+    while (layout->createLine().isValid());
+    layout->endLayout();
+    
+    qreal maxWidth = 0;
+    qreal y = 0;
+    for (int i = 0; i < layout->lineCount(); ++i) {
+        QTextLine line = layout->lineAt(i);
+        maxWidth = qMax(maxWidth, line.naturalTextWidth());
+        line.setPosition(QPointF(0, y));
+        y += line.height();
+    }
+    return QRectF(0, 0, maxWidth, y);
 }
         
 void GraphEdge::setSourceNode(const QGraphicsWidget *node)
@@ -74,6 +107,9 @@ void GraphEdge::adjust()
     dP += QPointF(dS.width()/2, dS.height()/2);
     
     QLineF line(sP, dP);
+    QRectF label (textLayout.boundingRect());
+    label.translate(QPointF((line.x1()+line.x2())/2, (line.y1()+line.y2())/2));
+    labelRect_ = label;
     qreal length = line.length();
 
     prepareGeometryChange();
@@ -95,11 +131,11 @@ QRectF GraphEdge::boundingRect() const
 
     qreal penWidth = 1;
     qreal extra = (penWidth + arrowSize) / 2.0;
-
-    return QRectF(sourcePoint, QSizeF(destPoint.x() - sourcePoint.x(),
+    
+    return labelRect_.united(QRectF(sourcePoint, QSizeF(destPoint.x() - sourcePoint.x(),
                                       destPoint.y() - sourcePoint.y()))
         .normalized()
-        .adjusted(-extra, -extra, extra, extra);
+        .adjusted(-extra, -extra, extra, extra));
 }
 
 void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -112,8 +148,10 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     QLineF line(sourcePoint, destPoint);
     if (qFuzzyCompare(line.length(), qreal(0.))) return;
 
+    painter->setRenderHint(QPainter::Antialiasing);
+
     // Draw the line itself
-    painter->setPen(QPen(palette().color(QPalette::WindowText), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter->setPen(QPen(palette().color(QPalette::ButtonText), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->drawLine(line);
 
     // Draw the arrows
@@ -126,8 +164,14 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     QPointF destArrowP2 = destPoint + QPointF(sin(angle - Pi + Pi / 3) * arrowSize,
                                               cos(angle - Pi + Pi / 3) * arrowSize);
 
-    painter->setBrush(palette().color(QPalette::WindowText));
+    painter->setBrush(palette().color(QPalette::ButtonText));
     painter->drawPolygon(QPolygonF() << line.p2() << destArrowP1 << destArrowP2);
+
+    // Draw the label
+    QColor col (palette().color(QPalette::Button));
+    if(!focused_) col.setAlphaF(0.6);
+    painter->fillRect(labelRect_, col);
+    textLayout.draw(painter, labelRect_.topLeft()); 
 }
 
 GraphEdge::~GraphEdge()

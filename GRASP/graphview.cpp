@@ -3,6 +3,8 @@
 
 GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
 { 
+    setDragMode(QGraphicsView::ScrollHandDrag);
+
     Graph *graph = new Graph(this);
     
     GraphicsLabel *l1 = new GraphicsLabel("TEST");
@@ -24,6 +26,7 @@ GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
     GraphEdge *e = new GraphEdge();
     e->setSourceNode(node);
     e->setDestNode(n2);
+    e->setText("property");
     e->adjust();
     graph->addItem(e);
     

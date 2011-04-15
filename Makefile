@@ -14,3 +14,4 @@ memcheck:
 
 clean:
 	cd ${PROJECT}-build-desktop && rm ${PROJECT} && rm *.o
+	
