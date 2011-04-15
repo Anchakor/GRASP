@@ -115,16 +115,20 @@ void GraphEdge::adjust()
     QRectF label (textLayout.boundingRect());
     label.translate(line.pointAt(0.5));
     labelRect_ = label;
-    qreal length = line.length();
 
     prepareGeometryChange();
     
-    // offsets (ellipse based)
+    // set the source and destination points
     if(!sSBR.intersects(dSBR)) {
-        QPointF sourceEdgeOffset((line.dx() * (sSBR.width()/2)) / length, (line.dy() * (sSBR.height()/2)) / length);
-        QPointF destEdgeOffset((line.dx() * (dSBR.width()/2)) / length, (line.dy() * (dSBR.height()/2)) / length);
-        sourcePoint = line.p1() + sourceEdgeOffset;
-        destPoint = line.p2() - destEdgeOffset;
+        QPointF po;
+        if(QLineF::BoundedIntersection == line.intersect(QLineF(sSBR.topLeft(), sSBR.topRight()), &po)) sourcePoint = po;
+        else if(QLineF::BoundedIntersection == line.intersect(QLineF(sSBR.bottomRight(), sSBR.topRight()), &po)) sourcePoint = po;
+        else if(QLineF::BoundedIntersection == line.intersect(QLineF(sSBR.bottomLeft(), sSBR.bottomRight()), &po)) sourcePoint = po;
+        else if(QLineF::BoundedIntersection == line.intersect(QLineF(sSBR.topLeft(), sSBR.bottomLeft()), &po)) sourcePoint = po;
+        if(QLineF::BoundedIntersection == line.intersect(QLineF(dSBR.topLeft(), dSBR.topRight()), &po)) destPoint = po;
+        else if(QLineF::BoundedIntersection == line.intersect(QLineF(dSBR.bottomRight(), dSBR.topRight()), &po)) destPoint = po;
+        else if(QLineF::BoundedIntersection == line.intersect(QLineF(dSBR.bottomLeft(), dSBR.bottomRight()), &po)) destPoint = po;
+        else if(QLineF::BoundedIntersection == line.intersect(QLineF(dSBR.topLeft(), dSBR.bottomLeft()), &po)) destPoint = po;
     } else {
         sourcePoint = destPoint = line.p1();
     }
