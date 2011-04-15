@@ -15,6 +15,7 @@ GraphNode::GraphNode(librdf_node *node, QGraphicsItem *parent, Qt::WindowFlags w
 void GraphNode::init()
 {
     node_ = NULL;
+    hover_ = false;
     
     setAcceptHoverEvents(true);
     setFlag(ItemIsMovable);
@@ -52,10 +53,10 @@ void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     frameOptionV3.palette       = option->palette;
     frameOptionV3.rect          = option->rect;
     frameOptionV3.state         = option->state;
-    if(hasFocus())
-        frameOptionV3.state |= QStyle::State_HasFocus;
-    else if(isSelected())
-        frameOptionV3.state |= QStyle::State_Selected;
+    if(hasFocus() || isSelected())
+        frameOptionV3.state |= QStyle::State_Sunken;
+    else
+        frameOptionV3.state |= QStyle::State_None;
     frameOptionV3.frameShape = QFrame::StyledPanel;
     frameOptionV3.lineWidth = 1;
     frameOptionV3.midLineWidth = 0;
@@ -102,6 +103,7 @@ void GraphNode::focusInEvent(QFocusEvent *event)
 {
     Q_UNUSED(event)
 
+    //QGraphicsWidget::focusInEvent(event);
     update();
 }
         
@@ -109,6 +111,7 @@ void GraphNode::focusOutEvent(QFocusEvent *event)
 {
     Q_UNUSED(event)
 
+    //QGraphicsWidget::focusOutEvent(event);
     update();
 }
         
@@ -116,14 +119,18 @@ void GraphNode::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     Q_UNUSED(event)
 
-    setFocus();
+    hover_ = true;
+    //QGraphicsWidget::hoverEnterEvent(event);
+    update();
 }
         
 void GraphNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     Q_UNUSED(event)
 
-    clearFocus();
+    hover_ = false;
+    //QGraphicsWidget::hoverLeaveEvent(event);
+    update();
 }
 
 GraphNode::~GraphNode()

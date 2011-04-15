@@ -21,6 +21,7 @@ void GraphEdge::init()
     sourceNode_ = NULL;
     destNode_ = NULL;
     arrowSize = 10;
+    hover_ = false;
 
     setAcceptHoverEvents(true);
     setFlag(ItemIsSelectable);
@@ -100,29 +101,28 @@ void GraphEdge::adjust()
 {
     if (!sourceNode_ || !destNode_) return;
 
-    // line from center of sourceNode_ to center of destNode_
     sourceNode_->adjustSize();
-    QSizeF sS = sourceNode_->size();
-    QPointF sP = mapFromItem(sourceNode_, 0, 0);
-    sP += QPointF(sS.width()/2, sS.height()/2);
-
     destNode_->adjustSize();
-    QSizeF dS = destNode_->size();
-    QPointF dP = mapFromItem(destNode_, 0, 0);
-    dP += QPointF(dS.width()/2, dS.height()/2);
+
+    QRectF sSBR (sourceNode_->sceneBoundingRect());
+    QRectF dSBR (destNode_->sceneBoundingRect());
+
+    // line from center of sourceNode_ to center of destNode_
+    QPointF sP (sSBR.center());
+    QPointF dP (dSBR.center());
     
     QLineF line(sP, dP);
     QRectF label (textLayout.boundingRect());
-    label.translate(QPointF((line.x1()+line.x2())/2, (line.y1()+line.y2())/2));
+    label.translate(line.pointAt(0.5));
     labelRect_ = label;
     qreal length = line.length();
 
     prepareGeometryChange();
     
-    // offsets
-    if (length > qreal(20.)) {
-        QPointF sourceEdgeOffset((line.dx() * (sS.width()/2)) / length, (line.dy() * (sS.height()/2)) / length);
-        QPointF destEdgeOffset((line.dx() * (dS.width()/2)) / length, (line.dy() * (dS.height()/2)) / length);
+    // offsets (ellipse based)
+    if(!sSBR.intersects(dSBR)) {
+        QPointF sourceEdgeOffset((line.dx() * (sSBR.width()/2)) / length, (line.dy() * (sSBR.height()/2)) / length);
+        QPointF destEdgeOffset((line.dx() * (dSBR.width()/2)) / length, (line.dy() * (dSBR.height()/2)) / length);
         sourcePoint = line.p1() + sourceEdgeOffset;
         destPoint = line.p2() - destEdgeOffset;
     } else {
@@ -164,9 +164,9 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
     // Draw the line itself
     QColor c;
-    if(hasFocus() || isSelected()) {
+    if(hasFocus() || hover_ || isSelected()) {
         c = palette().color(QPalette::Highlight);
-        if(isSelected() && !hasFocus()) c = c.lighter();
+        if(isSelected() && !hasFocus() && !hover_) c = c.lighter();
     } else
         c = palette().color(QPalette::ButtonText);
     painter->setPen(QPen(c, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -192,16 +192,17 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
     // Draw the label
     QColor col (palette().color(QPalette::Button));
-    if(!hasFocus() && !isUnderMouse()) col.setAlphaF(0.7);
+    if(!hasFocus() && !hover_) col.setAlphaF(0.7);
     painter->fillRect(labelRect_, col);
     painter->setPen(palette().color(QPalette::ButtonText));
     textLayout.draw(painter, labelRect_.topLeft()); 
 }
-        
+     
 void GraphEdge::focusInEvent(QFocusEvent *event)
 {
     Q_UNUSED(event)
 
+    //QGraphicsWidget::focusInEvent(event);
     setZValue(1);
     update();
 }
@@ -210,6 +211,7 @@ void GraphEdge::focusOutEvent(QFocusEvent *event)
 {
     Q_UNUSED(event)
 
+    //QGraphicsWidget::focusOutEvent(event);
     setZValue(-1);
     update();
 }
@@ -218,14 +220,20 @@ void GraphEdge::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     Q_UNUSED(event)
 
-    setFocus();
+    hover_ = true;
+    //QGraphicsWidget::hoverEnterEvent(event);
+    setZValue(1);
+    update();
 }
         
 void GraphEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     Q_UNUSED(event)
 
-    clearFocus();
+    hover_ = false;
+    //QGraphicsWidget::hoverLeaveEvent(event);
+    setZValue(-1);
+    update();
 }
 
 GraphEdge::~GraphEdge()

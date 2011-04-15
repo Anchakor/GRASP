@@ -39,6 +39,7 @@ class GraphNode : public QGraphicsWidget
         librdf_node *node_;
         QSet<GraphEdge *> outEdges_;
         QSet<GraphEdge *> inEdges_;
+        bool hover_;
 };
 
 class GraphNodeObjectLayout : public QGraphicsLinearLayout

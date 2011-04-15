@@ -31,6 +31,8 @@ class GraphEdge : public QGraphicsWidget
         QRectF boundingRect() const;
         QPainterPath shape() const;
 
+//        bool isUnderMouse() const { qDebug("isUnderMouse()"); return QGraphicsWidget::isUnderMouse(); }
+
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
         enum { Type = UserType + 2 };
         int type() const { return Type; }
@@ -46,6 +48,7 @@ class GraphEdge : public QGraphicsWidget
         librdf_statement *statement_;
         QTextLayout textLayout;
         QRectF labelRect_;
+        bool hover_;
 
         QPainterPath arrow_;
 
