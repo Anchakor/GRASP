@@ -112,7 +112,12 @@ namespace rdf
             return (librdf_node_equals(p, other) == 0)? true : false;      
         }
         ~Node() { librdf_free_node(p); }
+        const char *serialize() const;
     };
+    inline uint qHash(const Node &key)
+    {
+        return qHash(QString(key.serialize()));
+    }
 
     class Statement
     {
@@ -139,7 +144,12 @@ namespace rdf
             return (librdf_statement_equals(p, other) == 0)? true : false;      
         }
         ~Statement() { librdf_free_statement(p); }
+        const char *serialize() const;
     };
+    inline uint qHash(const Statement &key)
+    {
+        return qHash(QString(key.serialize()));
+    }
 
     class Stream
     {
@@ -226,7 +236,6 @@ namespace rdf
     Node *loadGraphFromURI(const QString & uri, const char *mimeType = NULL, librdf_uri *baseUri = NULL);
     void printContext(librdf_node *context);
     void freeContext(librdf_node *context);
-    const char *serializeNode(librdf_node *node);
 
 }
 

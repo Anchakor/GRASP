@@ -81,7 +81,7 @@ namespace rdf
         if(0 != librdf_model_context_remove_statements(model, context)) throw ModelAccessException();
     }
 
-    const char *serializeNode(librdf_node *node)
+    const char *Node::serialize() const
     {
         URI base_uri (world, (unsigned char*)"http://exampe.org/base.rdf");
        
@@ -89,7 +89,24 @@ namespace rdf
 
         Node tnode (world, (unsigned char*)"x:");
 
-        if(0 != librdf_model_add(tmodel, tnode, tnode, node)) {
+        if(0 != librdf_model_add(tmodel, tnode, tnode, p)) {
+            throw ModelAccessException();
+        }
+
+        unsigned char *str = librdf_model_to_string(tmodel, base_uri, "ntriples", NULL, NULL);
+        if(NULL == str) {
+            throw SerializationException();
+        }
+        return reinterpret_cast<const char *>(str);
+    }
+
+    const char *Statement::serialize() const
+    {
+        URI base_uri (world, (unsigned char*)"http://exampe.org/base.rdf");
+       
+        Model tmodel (model);
+
+        if(0 != librdf_model_add_statement(tmodel, p)) {
             throw ModelAccessException();
         }
 

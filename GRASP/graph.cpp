@@ -4,7 +4,7 @@ Graph::Graph(QObject *parent) : QGraphicsScene(parent)
 {
 }
 
-Graph::Graph(librdf_node *context, QObject *parent) : QGraphicsScene(parent), context_(context)
+Graph::Graph(rdf::Node *context, QObject *parent) : QGraphicsScene(parent), context_(context)
 {
     contextChanged();
 }
@@ -12,7 +12,7 @@ Graph::Graph(librdf_node *context, QObject *parent) : QGraphicsScene(parent), co
 class AddEdgeNodeNotFoundException {};
 void Graph::contextChanged()
 {
-    librdf_stream *stream = librdf_model_context_as_stream(rdf::model, context_);
+    librdf_stream *stream = librdf_model_context_as_stream(rdf::model, *context_);
     if(NULL == stream) throw rdf::StreamConstructException();
 
     while(!librdf_stream_end(stream)) {
