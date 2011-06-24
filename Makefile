@@ -7,7 +7,7 @@ all:
 	cd ../${PROJECT}-build-desktop && make && ./${PROJECT} -style windows
 
 debug:
-	cd ${PROJECT}-build-desktop && gdb ./${PROJECT}
+	cd ${PROJECT}-build-desktop && gdb -x ../GDBcode ./${PROJECT}
 
 memcheck:
 	cd ${PROJECT}-build-desktop && valgrind --leak-check=yes --gen-suppressions=yes ./${PROJECT} -style windows

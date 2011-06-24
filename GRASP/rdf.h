@@ -4,6 +4,7 @@
 #include <QtCore>
 #include <librdf.h>
 #include <exception>
+#include <execinfo.h>
 
 #define PERSCOUNTERPATH "maindb-counter"
 #define GRASPURIPREFIX "grasp:"

@@ -8,7 +8,6 @@
 int main(int argc, char *argv[])
 {
     int ret;
-    try {
     rdf::world = librdf_new_world();
     if(NULL == rdf::world) {
         fprintf(stderr, "Failed to create rdf::world\n");
@@ -31,8 +30,6 @@ int main(int argc, char *argv[])
     }
 
 
-
-
     QApplication a(argc, argv);
     MainWindow w;
 #if defined(Q_WS_S60)
@@ -42,8 +39,6 @@ int main(int argc, char *argv[])
 #endif
     ret = a.exec();
 
-    } catch (std::exception& e)
-    { fprintf(stderr, "Error: Exception: %s\n", typeid(e).name()); throw e; }
     librdf_free_model(rdf::model);
     librdf_free_storage(rdf::storage);
     librdf_free_world(rdf::world);
