@@ -139,5 +139,33 @@ namespace rdf
         if(0 != librdf_model_context_remove_statements(model, context)) throw ModelAccessException();
     }
 
+    const char *serializeNode(const librdf_node *node)
+    {
+        librdf_serializer *serializer = librdf_new_serializer(world, "ntriples", NULL, NULL);
+        if(NULL == serializer) throw SerializerConstructException();
+
+        librdf_uri *base_uri=librdf_new_uri(world, (const unsigned char*)"http://exampe.org/base.rdf");
+        if(NULL == base_uri) {
+            librdf_new_serializer(serializer);
+            throw URIConstructException();
+        }
+       
+        librdf_model* tmodel = librdf_new_model_from_model(model);
+        if(NLL == tmodel) {
+            librdf_free_serializer(serializer);
+            librdf_free_uri(base_uri);
+            throw ModelConstructException();
+        }
+
+        librdf_node* tnode = librdf_new_node_from_uri_string(world, (const unsigned char*)"x:");
+
+
+        size_t len;
+        //unsigned char *str = librdf_serializer_serialize_stream_to_counted_string(serializer, base_uri, stream, &len);
+        librdf_free_serializer(serializer);
+        librdf_free_uri(base_uri);
+        //return reinterpret_cast<const char *>(str);
+    }
+
 }
 

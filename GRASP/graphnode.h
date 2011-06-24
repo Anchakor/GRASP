@@ -4,6 +4,7 @@
 #include <QtGui>
 #include "rdf.h"
 #include "graphedge.h"
+#include "graphicslabel.h"
 
 class GraphNode : public QGraphicsWidget
 {
@@ -40,6 +41,7 @@ class GraphNode : public QGraphicsWidget
         QSet<GraphEdge *> outEdges_;
         QSet<GraphEdge *> inEdges_;
         bool hover_;
+        GraphicsLabel label_;
 };
 
 class GraphNodeObjectLayout : public QGraphicsLinearLayout

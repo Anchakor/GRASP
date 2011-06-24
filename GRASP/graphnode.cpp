@@ -27,6 +27,8 @@ void GraphNode::init()
     layout->setSpacing(0);
     layout->setContentsMargins(0,0,0,0);
     setLayout(layout);
+    
+    layout->addItem(&label_);
 
     int framewidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
     setContentsMargins(framewidth,framewidth,framewidth,framewidth);
@@ -36,6 +38,8 @@ void GraphNode::setNode(const librdf_node *node)
 { 
     if(node_ != NULL) librdf_free_node(node_);
     node_ = librdf_new_node_from_node(const_cast<librdf_node *>(node));
+    
+    label_.setText(reinterpret_cast<const char *>(librdf_node_to_string(node_)));
 }
         
 const librdf_node *GraphNode::node() const

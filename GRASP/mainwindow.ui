@@ -40,17 +40,10 @@
      <addaction name="action_File"/>
      <addaction name="action_URL"/>
     </widget>
-    <widget class="QMenu" name="menuS_ave_as">
-     <property name="title">
-      <string>S&amp;ave as...</string>
-     </property>
-     <addaction name="action_File_2"/>
-     <addaction name="action_URL_2"/>
-    </widget>
     <addaction name="actionNew"/>
     <addaction name="menuOpen"/>
     <addaction name="action_Save"/>
-    <addaction name="menuS_ave_as"/>
+    <addaction name="actionS_ave_as"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -110,6 +103,11 @@
   <action name="action_URL_2">
    <property name="text">
     <string>&amp;URL</string>
+   </property>
+  </action>
+  <action name="actionS_ave_as">
+   <property name="text">
+    <string>S&amp;ave as...</string>
    </property>
   </action>
  </widget>

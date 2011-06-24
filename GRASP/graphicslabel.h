@@ -8,8 +8,8 @@ class GraphicsLabel : public QGraphicsWidget
     Q_OBJECT
 
     public:
-        GraphicsLabel(QGraphicsWidget *parent = 0);
-        GraphicsLabel(const QString &text, QGraphicsWidget *parent = 0);
+        explicit GraphicsLabel(QGraphicsWidget *parent = 0);
+        explicit GraphicsLabel(const QString &text, QGraphicsWidget *parent = 0);
         ~GraphicsLabel();
 
         void setText(const QString &text);

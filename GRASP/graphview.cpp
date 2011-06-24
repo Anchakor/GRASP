@@ -3,7 +3,7 @@
 
 GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
 { 
-    //setDragMode(QGraphicsView::ScrollHandDrag);
+    setDragMode(QGraphicsView::ScrollHandDrag);
 
     Graph *graph = new Graph(this);
     
@@ -40,7 +40,7 @@ void GraphView::openFile()
 
     librdf_node *context;
     try {
-        context = rdf::loadGraphFromFile(path);
+        context = rdf::loadGraphFromFile(path, "application/x-turtle", librdf_new_uri(rdf::world, (unsigned char *)"test:"));
     } catch (std::exception& e) {
         QString msg("Couldn't open graph '");
         msg.append(path).append("'\n Error: ").append(QString(typeid(e).name()));

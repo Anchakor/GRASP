@@ -22,16 +22,14 @@ class GraphEdge : public QGraphicsWidget
         QString text() const;
         QRectF setupTextLayout(QTextLayout *layout);
 
-        void setSourceNode(const GraphNode *node);
+        void setSourceNode(GraphNode *node);
         GraphNode *sourceNode() const;
-        void setDestNode(const GraphNode *node);
+        void setDestNode(GraphNode *node);
         GraphNode *destNode() const;
 
         void adjust();
         QRectF boundingRect() const;
         QPainterPath shape() const;
-
-//        bool isUnderMouse() const { qDebug("isUnderMouse()"); return QGraphicsWidget::isUnderMouse(); }
 
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
         enum { Type = UserType + 2 };

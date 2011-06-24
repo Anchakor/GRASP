@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     int ret;
     try {
     rdf::world = librdf_new_world();
-    if(!rdf::world) {
+    if(NULL == rdf::world) {
         fprintf(stderr, "Failed to create rdf::world\n");
         return(1);
     }
@@ -19,13 +19,13 @@ int main(int argc, char *argv[])
     QString storageConfString("hash-type='bdb',dir='.',contexts='yes'");
     if(!QFile::exists(QString("maindb-contexts.db"))) storageConfString.prepend("new='yes',");
     rdf::storage = librdf_new_storage(rdf::world, "hashes", "maindb", storageConfString.toLatin1().constData());
-    if(!rdf::storage) {
+    if(NULL == rdf::storage) {
         fprintf(stderr, "Failed to create rdf::storage\n");
         return(1);
     }
 
     rdf::model = librdf_new_model(rdf::world, rdf::storage, LIBRDF_MODEL_FEATURE_CONTEXTS);
-    if(!rdf::model) {
+    if(NULL == rdf::model) {
         fprintf(stderr, "Failed to create rdf::model\n");
         return(1);
     }
