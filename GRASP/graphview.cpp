@@ -38,7 +38,7 @@ void GraphView::openFile()
     QString path = QFileDialog::getOpenFileName(this,tr("Open graph"), QString(), tr("RDF Files (*.rdf *.ttl *.nt *.n3);;All Files (*.*)"));
     if(NULL == path) return;
 
-    librdf_node *context;
+    rdf::Node *context;
     try {
         context = rdf::loadGraphFromFile(path, "application/x-turtle", librdf_new_uri(rdf::world, (unsigned char *)"test:"));
     } catch (std::exception& e) {

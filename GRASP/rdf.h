@@ -25,19 +25,16 @@ namespace rdf
     struct FileOpenException : public std::exception {};
     struct ModelAccessException : public std::exception {};
     struct ModelConstructException : public std::exception {};
-
-    librdf_node *loadGraphFromFile(const QString & path, const char *mimeType = NULL, librdf_uri *baseUri = NULL);
-    librdf_node *loadGraphFromURI(const QString & uri, const char *mimeType = NULL, librdf_uri *baseUri = NULL);
-    void printContext(librdf_node *context);
-    void freeContext(librdf_node *context);
+    struct SerializationException : public std::exception {};
 
     class Model
     {
+      private:
         librdf_model *p;
-      public:
         void init() {
             if(NULL == p) { throw ModelConstructException(); }
         }
+      public:
         Model(librdf_world *world, librdf_storage *storage, const char *options_string) { 
             p = librdf_new_model(world, storage, options_string);
             init();
@@ -50,17 +47,18 @@ namespace rdf
             p = librdf_new_model_from_model(model);
             init();
         }
-        ~Model() { librdf_free_model(); }
-        operator World*() { return p; }
+        ~Model() { librdf_free_model(p); }
+        operator librdf_model*() { return p; }
     };
 
     class Node
     {
+      private:
         librdf_node *p;
-      public:
         void init() {
             if(NULL == p) { throw NodeConstructException(); }
         }
+      public:
         Node(librdf_world *world) { 
             p = librdf_new_node(world); 
             init(); 
@@ -69,10 +67,10 @@ namespace rdf
             p = librdf_new_node_from_blank_identifier(world, identifier); 
             init(); 
         }
-        Node(librdf_world *world, unsigned char *identifier, size_t identifier_len) { 
+     /*   Node(librdf_world *world, unsigned char *identifier, size_t identifier_len) { 
             p = librdf_new_node_from_counted_blank_identifier(world, identifier, identifier_len); 
             init(); 
-        }
+        } */
         Node(librdf_world *world, unsigned char *uri_string, size_t len) { 
             p = librdf_new_node_from_counted_uri_string(world, uri_string, len); 
             init(); 
@@ -105,24 +103,25 @@ namespace rdf
             p = librdf_new_node_from_uri_local_name(world, uri, local_name); 
             init(); 
         }
-        Node(librdf_world *world, unsigned char *uri_string) { 
+     /*   Node(librdf_world *world, unsigned char *uri_string) { 
             p = librdf_new_node_from_uri_string(world, uri_string); 
             init(); 
-        }
+        }*/
+        operator librdf_node*() const { return p; }
         bool operator==(const Node &other) const {
-            return (librdf_node_equals(p, *other) == 0)? true : false;      
+            return (librdf_node_equals(p, other) == 0)? true : false;      
         }
         ~Node() { librdf_free_node(p); }
-        operator Node*() { return p; }
     };
 
     class Statement
     {
+      private:
         librdf_statement *p;
-      public:
         void init() {
             if(NULL == p) { throw StatementConstructException(); }
         }
+      public:
         Statement(librdf_world *world) { 
             p = librdf_new_statement(world);
             init();
@@ -135,19 +134,21 @@ namespace rdf
             p = librdf_new_statement_from_nodes(world, subject, predicate, object);
             init();
         }
+        operator librdf_statement*() const { return p; }
         bool operator==(const Statement &other) const {
-            return (librdf_statement_equals(p, *other) == 0)? true : false;      
+            return (librdf_statement_equals(p, other) == 0)? true : false;      
         }
         ~Statement() { librdf_free_statement(p); }
     };
 
     class Stream
     {
+      private:
         librdf_stream *p;
-      public:
         void init() {
             if(NULL == p) { throw StreamConstructException(); }
         }
+      public:
         Stream(librdf_iterator *iterator, librdf_statement *statement, librdf_statement_part field) { 
             p = librdf_new_stream_from_node_iterator (iterator, statement, field); 
             init();
@@ -156,68 +157,78 @@ namespace rdf
             p = librdf_new_empty_stream(world); 
             init();
         }
+        operator librdf_stream*() const { return p; }
         ~Stream() { librdf_free_stream(p); }
     };
 
     class URI
     {
+      private:
         librdf_uri *p;
-      public:
         void init() {
             if(NULL == p) { throw URIConstructException(); }
         }
+      public:
         URI(librdf_world *world, unsigned char *uri_string) { 
             p = librdf_new_uri(world, uri_string);
             init();
         }
-        (librdf_world *world, unsigned char *uri_string, size_t length) { 
+        URI(librdf_world *world, unsigned char *uri_string, size_t length) { 
             p = librdf_new_uri2(world, uri_string, length);
             init();
         }
-        (librdf_uri *old_uri) { 
+        URI(librdf_uri *old_uri) { 
             librdf_new_uri_from_uri(old_uri);
             init();
         }
-        (librdf_uri *old_uri, unsigned char *local_name) { 
+        URI(librdf_uri *old_uri, unsigned char *local_name) { 
             p = librdf_new_uri_from_uri_local_name(old_uri, local_name);
             init();
         }
+        operator librdf_uri*() const { return p; }
         ~URI() { librdf_free_uri(p); }
     };
 
     class Parser
     {
+      private:
         librdf_parser *p;
-      public:
         void init() {
             if(NULL == p) { throw ParserConstructException(); }
         }
+      public:
         Parser(librdf_world *world, const char *name, const char *mime_type, librdf_uri *type_uri) { 
             p = librdf_new_parser(world, name, mime_type, type_uri);
             init();
         }
+        operator librdf_parser*() const { return p; }
         ~Parser() { librdf_free_parser(p); }
     };
 
     class Serializer
     {
+      private:
         librdf_serializer *p;
-      public:
         void init() {
             if(NULL == p) { throw SerializerConstructException(); }
         }
+      public:
         Serializer(librdf_world *world, const char *name, const char *mime_type, librdf_uri *type_uri) { 
             p = librdf_new_serializer(world, name, mime_type, type_uri);
             init();
         }
+        operator librdf_serializer*() const { return p; }
         ~Serializer() { librdf_free_serializer(p); }
     };
 
 
-}
+    Node *loadGraphFromFile(const QString & path, const char *mimeType = NULL, librdf_uri *baseUri = NULL);
+    Node *loadGraphFromURI(const QString & uri, const char *mimeType = NULL, librdf_uri *baseUri = NULL);
+    void printContext(librdf_node *context);
+    void freeContext(librdf_node *context);
+    const char *serializeNode(librdf_node *node);
 
-inline uint qHash(const rdf::Node &key) { return qHash(key.node_); }
-inline uint qHash(const rdf::Statement &key) { return qHash(key.statement_); }
+}
 
 
 #endif //IG
