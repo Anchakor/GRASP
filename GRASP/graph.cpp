@@ -19,49 +19,52 @@ void Graph::contextChanged()
         librdf_statement *statement = librdf_stream_get_object(stream);
         if(NULL == statement) throw rdf::StatementConstructException();
 
-// TODO
-// canonical serialization of node & statement to remove the frickin' pointers in the QHash
-
-
         if(true) { // triple/property not blacklisted TODO
             librdf_node *node = librdf_statement_get_subject(statement);
             rdf::Node x(node);
+//          printf("DEBUG subj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(x)));
+            printf("DEBUG subj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(x)));
             if(!nodes_.contains(x)) {
                 GraphNode *n = new GraphNode();
-                n->setNode(node);
-                nodes_.insert(const_cast<librdf_node *>(n->node()), n);
+                n->setNode(
+                    nodes_.insert(rdf::Node(node), n)
+                        .key());
                 addItem(n);
                 n->setPos(qrand(),qrand());
             }
-            node = librdf_statement_get_subject(statement);
+            node = librdf_statement_get_object(statement);
             rdf::Node y(node);
+            printf("DEBUG obj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(y)));
             if(!nodes_.contains(y)) {
                 GraphNode *n = new GraphNode();
-                n->setNode(node);
-                nodes_.insert(const_cast<librdf_node *>(n->node()), n);
+                n->setNode(
+                    nodes_.insert(rdf::Node(node), n)
+                        .key());
                 addItem(n);
                 n->setPos(qrand(),qrand());
             }
+                rdf::Node nodex = librdf_statement_get_predicate(statement);
+                printf("DEBUG pred node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(nodex)));
             rdf::Statement z(statement);
             if(!edges_.contains(z)) {
                 GraphEdge *e = new GraphEdge();
-                e->setStatement(statement);
-                edges_.insert(const_cast<librdf_statement *>(e->statement()), e);
+                e->setStatement(
+                        edges_.insert(rdf::Statement(statement), e)
+                            .key());
 
-                node = librdf_statement_get_subject(statement);
-                if(nodes_.value(node) == 0) throw AddEdgeNodeNotFoundException();
-                e->setSourceNode(nodes_.value(node));
-                node = librdf_statement_get_object(statement);
-                if(nodes_.value(node) == 0) throw AddEdgeNodeNotFoundException();
-                e->setDestNode(nodes_.value(node));
+                //if(nodes_.value(reinterpret_cast<const char *>(librdf_node_to_string(node)) == 0) throw AddEdgeNodeNotFoundException();
+                if(!nodes_.contains(x)) throw AddEdgeNodeNotFoundException();
+                e->setSourceNode(nodes_.value(x));
+                if(!nodes_.contains(y)) throw AddEdgeNodeNotFoundException();
+                e->setDestNode(nodes_.value(y));
 
-                node = librdf_statement_get_predicate(statement);
-                e->setText(reinterpret_cast<const char *>(librdf_node_to_string(node)));
+                librdf_node *node = librdf_statement_get_predicate(statement);
+                e->setText(qstrdup(reinterpret_cast<const char *>(librdf_node_to_string(node))));
 
                 e->adjust();
             }
         }
-        librdf_stream_next(stream);
+        if(librdf_stream_next(stream)) break;
     }
 
     librdf_free_stream(stream);

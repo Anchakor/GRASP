@@ -4,7 +4,6 @@
 #include <QtCore>
 #include <librdf.h>
 #include <exception>
-#include <execinfo.h>
 
 #define PERSCOUNTERPATH "maindb-counter"
 #define GRASPURIPREFIX "grasp:"
@@ -27,6 +26,23 @@ namespace rdf
     struct ModelAccessException : public std::exception {};
     struct ModelConstructException : public std::exception {};
     struct SerializationException : public std::exception {};
+    struct StorageConstructException : public std::exception {};
+
+    class Storage
+    {
+      private:
+        librdf_storage *p;
+        void init() {
+            if(NULL == p) { throw StorageConstructException(); }
+        }
+      public:
+        Storage(librdf_world *world, const char *storage_name = "memory", const char *name = NULL, const char *options_string = NULL) {
+            p = librdf_new_storage(world, storage_name, name, options_string);
+            init();
+        }
+        ~Storage() { librdf_free_storage(p); }
+        operator librdf_storage*() { return p; }
+    };
 
     class Model
     {
@@ -36,7 +52,7 @@ namespace rdf
             if(NULL == p) { throw ModelConstructException(); }
         }
       public:
-        Model(librdf_world *world, librdf_storage *storage, const char *options_string) { 
+        Model(librdf_world *world, librdf_storage *storage, const char *options_string = NULL) { 
             p = librdf_new_model(world, storage, options_string);
             init();
         }
@@ -110,10 +126,15 @@ namespace rdf
         }*/
         operator librdf_node*() const { return p; }
         bool operator==(const Node &other) const {
-            return (librdf_node_equals(p, other) == 0)? true : false;      
+            /* this function didn't work as expected: */
+            return librdf_node_equals(p, other.p);
+            /*QString s1 (serialize());
+            QString s2 (other.serialize());
+            printf("CMP TEST: 1: %s 2: %s 3: %d\n", s1.toLatin1().constData(), s2.toLatin1().constData(), librdf_node_equals(p, other.p));
+            return s1 == s2;*/
         }
         ~Node() { librdf_free_node(p); }
-        const char *serialize() const;
+        const char *serialize() const; // needs to be delete[]d
     };
     inline uint qHash(const Node &key)
     {
@@ -142,10 +163,10 @@ namespace rdf
         }
         operator librdf_statement*() const { return p; }
         bool operator==(const Statement &other) const {
-            return (librdf_statement_equals(p, other) == 0)? true : false;      
+            return librdf_statement_equals(p, other.p);      
         }
         ~Statement() { librdf_free_statement(p); }
-        const char *serialize() const;
+        const char *serialize() const; // needs to be delete[]d
     };
     inline uint qHash(const Statement &key)
     {

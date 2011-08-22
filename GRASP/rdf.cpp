@@ -83,7 +83,7 @@ namespace rdf
 
     const char *Node::serialize() const
     {
-        return reinterpret_cast<const char *>(librdf_node_to_string(p));
+        return qstrdup(reinterpret_cast<const char *>(librdf_node_to_string(p)));
 /*        URI base_uri (world, (unsigned char*)"http://example.org/base.rdf");
      
         Storage tstorage (world);
@@ -107,7 +107,19 @@ namespace rdf
 
     const char *Statement::serialize() const
     {
-        URI base_uri (world, (unsigned char*)"http://example.org/base.rdf");
+        QString s;
+        librdf_node *n;
+        n = librdf_statement_get_subject(p);
+        s.append(reinterpret_cast<const char *>(librdf_node_to_string(n)));
+        s.append(" ");
+        n = librdf_statement_get_predicate(p);
+        s.append(reinterpret_cast<const char *>(librdf_node_to_string(n)));
+        s.append(" ");
+        n = librdf_statement_get_object(p);
+        s.append(reinterpret_cast<const char *>(librdf_node_to_string(n)));
+        s.append(" . \n");
+        return qstrdup(s.toLatin1().constData());
+/*        URI base_uri (world, (unsigned char*)"http://example.org/base.rdf");
      
         Storage tstorage (world);
 
@@ -121,7 +133,7 @@ namespace rdf
         if(NULL == str) {
             throw SerializationException();
         }
-        return reinterpret_cast<const char *>(str);
+        return reinterpret_cast<const char *>(str);*/
     }
 }
 

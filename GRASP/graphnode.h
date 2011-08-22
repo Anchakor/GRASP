@@ -27,6 +27,9 @@ class GraphNode : public QGraphicsWidget
         bool unregisterEdge(GraphEdge *edge);
         const QSet<GraphEdge *> *outEdges() const;
         const QSet<GraphEdge *> *inEdges() const;
+        bool operator==(const GraphNode &other) const {
+            return librdf_node_equals(node_, other.node_);      
+        }
      
     protected:
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
