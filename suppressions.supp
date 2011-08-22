@@ -1,0 +1,177 @@
+{
+   redland_supp_1
+   Memcheck:Cond
+   fun:__bam_stkrel
+   obj:/usr/lib/libdb-5.2.so
+   fun:__dbc_iput
+   fun:__dbc_put
+   fun:__db_put
+   fun:__db_put_pp
+   obj:/usr/lib/librdf.so.0.0.0
+   fun:librdf_hash_put
+   obj:/usr/lib/librdf.so.0.0.0
+   obj:/usr/lib/librdf.so.0.0.0
+   fun:librdf_storage_context_add_statement
+   fun:librdf_storage_context_add_statements
+}
+{
+   libdb_supp_1
+   Memcheck:Param
+   pwrite64(buf)
+   fun:pwrite64
+   fun:__os_io
+   obj:/usr/lib/libdb-5.2.so
+   fun:__memp_bhwrite
+   fun:__memp_sync_int
+   fun:__memp_fsync
+   fun:__db_sync
+   fun:__db_refresh
+   fun:__db_close
+   fun:__db_close_pp
+   obj:/usr/lib/librdf.so.0.0.0
+}
+{
+   gtk_leak_supp_1
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libglib-2.0.so.0.2800.8
+   fun:g_malloc
+   fun:g_strdup
+   fun:g_param_spec_string
+   obj:/usr/lib/libgtk-x11-2.0.so.0.2400.5
+   fun:g_type_class_ref
+   fun:g_object_newv
+   fun:g_object_new
+   fun:gtk_*_new
+   obj:/usr/lib/libgtk-x11-2.0.so.0.2400.5
+}
+{
+   gtk_leak_supp_2
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libglib-2.0.so.0.2800.8
+   fun:g_malloc
+   fun:g_pattern_spec_new
+   obj:/usr/lib/libgtk-x11-2.0.so.0.2400.5
+   obj:/usr/lib/libgtk-x11-2.0.so.0.2400.5
+   obj:/usr/lib/libgtk-x11-2.0.so.0.2400.5
+   fun:gtk_rc_reparse_all_for_settings
+   fun:gtk_settings_get_for_screen
+   fun:gtk_settings_get_default
+   obj:/usr/lib/libgtk-x11-2.0.so.0.2400.5
+   fun:g_type_create_instance
+}
+{
+   gtk_leak_supp_3
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libglib-2.0.so.0.2800.8
+   fun:g_malloc
+   fun:g_strdup
+   fun:g_param_spec_string
+   obj:/usr/lib/libgtk-x11-2.0.so.0.2400.5
+   fun:g_type_class_ref
+   fun:g_object_new_valist
+   fun:g_object_new
+   fun:gtk_menu_item_new_with_label
+   obj:/usr/lib/libQtGui.so.4.7.3
+   obj:/usr/lib/libQtGui.so.4.7.3
+}
+{
+   gtk_leak_supp_4
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libglib-2.0.so.0.2800.8
+   fun:g_malloc
+   fun:g_strdup
+   fun:g_param_spec_string
+   obj:/usr/lib/libgtk-x11-2.0.so.0.2400.5
+   fun:g_type_class_ref
+   fun:g_object_newv
+   fun:g_object_new
+   fun:gtk_tree_view_new
+   obj:/usr/lib/libQtGui.so.4.7.3
+   obj:/usr/lib/libQtGui.so.4.7.3
+}
+{
+   gtk_leak_supp_5
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libglib-2.0.so.0.2800.8
+   fun:g_malloc
+   fun:g_strdup
+   fun:g_param_spec_string
+   obj:/usr/lib/libgtk-x11-2.0.so.0.2400.5
+   fun:g_type_class_ref
+   fun:g_type_class_ref
+   obj:/usr/lib/libQtGui.so.4.7.3
+}
+{
+   gtk_leak_supp_6
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libglib-2.0.so.0.2800.8
+   fun:g_malloc
+   fun:g_strdup
+   obj:/usr/lib/gio/modules/libgioremote-volume-monitor.so
+   obj:/usr/lib/gio/modules/libgioremote-volume-monitor.so
+   obj:/usr/lib/gio/modules/libgioremote-volume-monitor.so
+   fun:g_object_newv
+   fun:g_object_new
+   fun:g_volume_monitor_get
+   obj:/usr/lib/libgtk-x11-2.0.so.0.2400.5
+   fun:g_type_create_instance
+}
+{
+   gtk_leak_supp_7
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libglib-2.0.so.0.2800.8
+   fun:g_malloc
+   fun:g_strdup
+   fun:g_mount_info_from_dbus
+   obj:/usr/lib/libgvfscommon.so.0.0.0
+   fun:g_object_newv
+   fun:g_object_new_valist
+   obj:*
+}
+{
+   gtk_leak_supp_8
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libglib-2.0.so.0.2800.8
+   fun:g_malloc
+   fun:g_strdup
+   fun:gtk_label_set_markup
+   obj:*
+}
+{
+   gtk_leak_supp_9
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libglib-2.0.so.0.2800.8
+   fun:g_malloc
+   fun:g_strdup
+   obj:/usr/lib/libgio-2.0.so.0.2800.8
+   obj:/usr/lib/libgio-2.0.so.0.2800.8
+   obj:/usr/lib/libgio-2.0.so.0.2800.8
+   obj:/usr/lib/libgio-2.0.so.0.2800.8
+   fun:g_file_attribute_matcher_new
+   obj:/usr/lib/libgio-2.0.so.0.2800.8
+   fun:g_file_query_info
+   obj:/usr/lib/libgtk-x11-2.0.so.0.2400.5
+}
+{
+   glib_leak_1
+   Memcheck:Leak
+   fun:malloc
+   fun:realloc
+   obj:/usr/lib/libglib-2.0.so.0.2800.8
+   fun:g_realloc
+   fun:g_realloc_n
+   obj:/usr/lib/libgobject-2.0.so.0.2800.8
+   obj:/usr/lib/libgobject-2.0.so.0.2800.8
+   fun:g_type_register_static
+   fun:g_pointer_type_register_static
+   obj:/usr/lib/libgobject-2.0.so.0.2800.8
+}
