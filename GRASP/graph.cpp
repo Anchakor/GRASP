@@ -29,8 +29,8 @@ void Graph::contextChanged()
                 n->setNode(
                     nodes_.insert(rdf::Node(node), n)
                         .key());
+                n->setPos((qrand()*1000.0)/RAND_MAX,(qrand()*1000.0)/RAND_MAX);
                 addItem(n);
-                n->setPos(qrand(),qrand());
             }
             node = librdf_statement_get_object(statement);
             rdf::Node y(node);
@@ -40,8 +40,8 @@ void Graph::contextChanged()
                 n->setNode(
                     nodes_.insert(rdf::Node(node), n)
                         .key());
+                n->setPos((qrand()*1000.0)/RAND_MAX,(qrand()*1000.0)/RAND_MAX);
                 addItem(n);
-                n->setPos(qrand(),qrand());
             }
                 rdf::Node nodex = librdf_statement_get_predicate(statement);
                 printf("DEBUG pred node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(nodex)));
@@ -61,6 +61,7 @@ void Graph::contextChanged()
                 librdf_node *node = librdf_statement_get_predicate(statement);
                 e->setText(qstrdup(reinterpret_cast<const char *>(librdf_node_to_string(node))));
 
+                addItem(e);
                 e->adjust();
             }
         }
