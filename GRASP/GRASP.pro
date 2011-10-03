@@ -36,5 +36,7 @@ LIBS += -lrdf
 
 QMAKE_CC = gcc
 QMAKE_CXX = g++
+QMAKE_CXXFLAGS+=-O3
+
 QMAKE_INCDIR += /usr/include/rasqal
 QMAKE_INCDIR += /usr/include/raptor2
