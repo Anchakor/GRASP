@@ -9,7 +9,7 @@ namespace rdf
     raptor_world *raptor;
     raptor_iostream *iostr;
 
-    QSet<librdf_node *> contexts;
+    QSet<Node *> contexts;
 
     Node *loadGraphFromFile(const QString & path, const char *mimeType, librdf_uri *baseUri) 
     {
@@ -28,6 +28,7 @@ namespace rdf
         URI contextURI (world, (unsigned char *)s.toLatin1().constData());
 
         Node *contextNode = new Node(world, contextURI);
+		contexts.insert(contextNode);
 
         if(0 != librdf_storage_context_add_statements(storage, *contextNode, stream)) { 
             throw ModelAccessException();
@@ -53,6 +54,7 @@ namespace rdf
         URI contextURI (world, (unsigned char *)s.toLatin1().constData());
 
         Node *contextNode = new Node(world, contextURI);
+		contexts.insert(contextNode);
 
         if(0 != librdf_storage_context_add_statements(storage, *contextNode, stream)) { 
             throw ModelAccessException(); 

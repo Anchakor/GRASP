@@ -36,7 +36,7 @@ GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
 void GraphView::openFile()
 {
     QString path = QFileDialog::getOpenFileName(this,tr("Open graph"), QString(), tr("RDF Files (*.rdf *.ttl *.nt *.n3);;All Files (*.*)"));
-    if(NULL == path) return;
+    if(NULL == path || path.isEmpty()) return;
 
     rdf::Node *context;
     try {
@@ -57,4 +57,23 @@ void GraphView::openFile()
 
 void GraphView::openURL()
 {
+	bool ok;
+	QString path = QInputDialog::getText(this, tr("Open URL"), tr("URL:"), QLineEdit::Normal, QString("http://mud.cz/foaf.ttl"), &ok);
+    if(!ok || path.isEmpty()) return;
+
+    rdf::Node *context;
+    try {
+        context = rdf::loadGraphFromURI(path, "application/x-turtle", librdf_new_uri(rdf::world, (unsigned char *)"test:"));
+    } catch (std::exception& e) {
+        QString msg("Couldn't open graph '");
+        msg.append(path).append("'\n Error: ").append(QString(typeid(e).name()));
+        QMessageBox msgBox;
+        msgBox.setText(msg);
+        msgBox.exec();
+        return;
+    }
+
+    Graph *g = new Graph(context, this);
+    graphs.append(g);
+    setScene(g);
 }
