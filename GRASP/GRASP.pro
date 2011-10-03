@@ -34,7 +34,7 @@ FORMS    += mainwindow.ui
 
 LIBS += -lrdf
 
-QMAKE_CC = clang
-QMAKE_CXX = clang++
+QMAKE_CC = gcc
+QMAKE_CXX = g++
 QMAKE_INCDIR += /usr/include/rasqal
 QMAKE_INCDIR += /usr/include/raptor2

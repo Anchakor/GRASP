@@ -42,5 +42,6 @@ int main(int argc, char *argv[])
     librdf_free_model(rdf::model);
     librdf_free_storage(rdf::storage);
     librdf_free_world(rdf::world);
+
     return ret;
 }

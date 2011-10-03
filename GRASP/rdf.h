@@ -134,11 +134,14 @@ namespace rdf
             return s1 == s2;*/
         }
         ~Node() { librdf_free_node(p); }
-        const char *serialize() const; // needs to be delete[]d
+        char *serialize() const; // needs to be delete[]d
     };
     inline uint qHash(const Node &key)
     {
-        return qHash(QString(key.serialize()));
+		char *str = key.serialize();
+        uint out = qHash(QString(const_cast<const char *>(str)));
+		free(str);
+		return out;
     }
 
     class Statement
@@ -166,11 +169,15 @@ namespace rdf
             return librdf_statement_equals(p, other.p);      
         }
         ~Statement() { librdf_free_statement(p); }
-        const char *serialize() const; // needs to be delete[]d
+        char *serialize() const; // needs to be delete[]d
     };
     inline uint qHash(const Statement &key)
     {
-        return qHash(QString(key.serialize()));
+		char *str = key.serialize();
+		//printf("DEBUG stat ser: %s\n", const_cast<const char *>(str));
+        uint out = qHash(QString(const_cast<const char *>(str)));
+		delete[] str;
+		return out;
     }
 
     class Stream

@@ -81,9 +81,9 @@ namespace rdf
         if(0 != librdf_model_context_remove_statements(model, context)) throw ModelAccessException();
     }
 
-    const char *Node::serialize() const
+    char *Node::serialize() const
     {
-        return qstrdup(reinterpret_cast<const char *>(librdf_node_to_string(p)));
+        return reinterpret_cast<char *>(librdf_node_to_string(p));
 /*        URI base_uri (world, (unsigned char*)"http://example.org/base.rdf");
      
         Storage tstorage (world);
@@ -105,18 +105,24 @@ namespace rdf
         return reinterpret_cast<const char *>(str); */
     }
 
-    const char *Statement::serialize() const
+    char *Statement::serialize() const
     {
         QString s;
         librdf_node *n;
         n = librdf_statement_get_subject(p);
-        s.append(reinterpret_cast<const char *>(librdf_node_to_string(n)));
+		char *str = reinterpret_cast<char *>(librdf_node_to_string(n));
+        s.append(const_cast<const char *>(str));
+		free(str);
         s.append(" ");
         n = librdf_statement_get_predicate(p);
-        s.append(reinterpret_cast<const char *>(librdf_node_to_string(n)));
+		str = reinterpret_cast<char *>(librdf_node_to_string(n));
+        s.append(const_cast<const char *>(str));
+		free(str);
         s.append(" ");
         n = librdf_statement_get_object(p);
-        s.append(reinterpret_cast<const char *>(librdf_node_to_string(n)));
+		str = reinterpret_cast<char *>(librdf_node_to_string(n));
+        s.append(const_cast<const char *>(str));
+		free(str);
         s.append(" . \n");
         return qstrdup(s.toLatin1().constData());
 /*        URI base_uri (world, (unsigned char*)"http://example.org/base.rdf");

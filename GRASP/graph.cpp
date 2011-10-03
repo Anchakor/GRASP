@@ -2,6 +2,7 @@
 
 Graph::Graph(QObject *parent) : QGraphicsScene(parent) 
 {
+	context_ = 0;
 }
 
 Graph::Graph(rdf::Node *context, QObject *parent) : QGraphicsScene(parent), context_(context)
@@ -22,8 +23,7 @@ void Graph::contextChanged()
         if(true) { // triple/property not blacklisted TODO
             librdf_node *node = librdf_statement_get_subject(statement);
             rdf::Node x(node);
-//          printf("DEBUG subj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(x)));
-            printf("DEBUG subj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(x)));
+            //printf("DEBUG subj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(x)));
             if(!nodes_.contains(x)) {
                 GraphNode *n = new GraphNode();
                 n->setNode(
@@ -34,7 +34,7 @@ void Graph::contextChanged()
             }
             node = librdf_statement_get_object(statement);
             rdf::Node y(node);
-            printf("DEBUG obj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(y)));
+            //printf("DEBUG obj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(y)));
             if(!nodes_.contains(y)) {
                 GraphNode *n = new GraphNode();
                 n->setNode(
@@ -44,7 +44,7 @@ void Graph::contextChanged()
                 addItem(n);
             }
                 rdf::Node nodex = librdf_statement_get_predicate(statement);
-                printf("DEBUG pred node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(nodex)));
+                //printf("DEBUG pred node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(nodex)));
             rdf::Statement z(statement);
             if(!edges_.contains(z)) {
                 GraphEdge *e = new GraphEdge();
@@ -59,7 +59,9 @@ void Graph::contextChanged()
                 e->setDestNode(nodes_.value(y));
 
                 librdf_node *node = librdf_statement_get_predicate(statement);
-                e->setText(qstrdup(reinterpret_cast<const char *>(librdf_node_to_string(node))));
+				char *str = reinterpret_cast<char *>(librdf_node_to_string(node));
+                e->setText(const_cast<const char *>(str));
+				free(str);
 
                 addItem(e);
                 e->adjust();
@@ -83,12 +85,13 @@ const QHash<librdf_statement *, GraphEdge *> *Graph::edges() const
 
 Graph::~Graph()
 {
-    QList<GraphNode *> nl = nodes_.values();
+	if(context_) delete context_;
+    /*QList<GraphNode *> nl = nodes_.values();
     for (int i = 0; i < nl.size(); ++i) {
         delete nl.at(i);
     }
     QList<GraphEdge *> el = edges_.values();
     for (int i = 0; i < el.size(); ++i) {
         delete el.at(i);
-    }
+    }*/
 }

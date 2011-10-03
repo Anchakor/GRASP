@@ -38,8 +38,10 @@ void GraphNode::setNode(const librdf_node *node)
 { 
     if(node_ != NULL) librdf_free_node(node_);
     node_ = librdf_new_node_from_node(const_cast<librdf_node *>(node));
-    
-    label_.setText(reinterpret_cast<const char *>(librdf_node_to_string(node_)));
+   
+   	char *str = reinterpret_cast<char *>(librdf_node_to_string(node_));
+    label_.setText(str);
+	free(str);
 }
         
 const librdf_node *GraphNode::node() const
@@ -139,6 +141,6 @@ void GraphNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 GraphNode::~GraphNode()
 {
-    if(node_ != NULL) librdf_free_node(node_);
+    //if(node_ != NULL) librdf_free_node(node_);
 }
 

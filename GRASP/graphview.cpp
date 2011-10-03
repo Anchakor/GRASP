@@ -7,7 +7,7 @@ GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
 
     Graph *graph = new Graph(this);
     
-    GraphicsLabel *l1 = new GraphicsLabel("TEST");
+  /*  GraphicsLabel *l1 = new GraphicsLabel("TEST");
     GraphicsLabel *l2 = new GraphicsLabel("XXXX\nOOOO");
 
     //QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -28,7 +28,7 @@ GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
     e->setDestNode(n2);
     e->setText("property");
     e->adjust();
-    graph->addItem(e);
+    graph->addItem(e); */
     
     setScene(graph);
 }

@@ -44,9 +44,9 @@ const librdf_statement *GraphEdge::statement() const
 
 void GraphEdge::setText(const QString &text)
 {
-    QString tmp(text);
+    //QString tmp(text);
     //tmp.replace(QLatin1Char('\n'), QChar::LineSeparator);
-    textLayout.setText(tmp);
+    textLayout.setText(text);
     setupTextLayout(&textLayout);
     update();
 }
@@ -244,5 +244,5 @@ void GraphEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 GraphEdge::~GraphEdge()
 {
-    if(statement_ != NULL) librdf_free_statement(statement_);
+    //if(statement_ != NULL) librdf_free_statement(statement_);
 }
