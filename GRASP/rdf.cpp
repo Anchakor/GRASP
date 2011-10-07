@@ -64,6 +64,20 @@ namespace rdf
         return contextNode;
     }
 
+    void saveGraphToFile(librdf_node *context, FILE *file)
+    {
+        librdf_stream *stream = librdf_model_context_as_stream(model, context);
+        if(NULL == stream) throw StreamConstructException();
+
+        Serializer serializer (world, NULL, "application/turtle", NULL);
+
+        if(0 != librdf_serializer_serialize_stream_to_file_handle(serializer, file, NULL, stream)) {
+            throw SerializationException();
+        }
+
+        librdf_free_stream(stream);
+    }
+
     void printContext(librdf_node *context)
     {
         librdf_stream *stream = librdf_model_context_as_stream(model, context);

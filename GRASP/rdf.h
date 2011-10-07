@@ -263,6 +263,7 @@ namespace rdf
 
     Node *loadGraphFromFile(const QString & path, const char *mimeType = NULL, librdf_uri *baseUri = NULL);
     Node *loadGraphFromURI(const QString & uri, const char *mimeType = NULL, librdf_uri *baseUri = NULL);
+    void saveGraphToFile(librdf_node *context, FILE *file);
     void printContext(librdf_node *context);
     void freeContext(librdf_node *context);
 

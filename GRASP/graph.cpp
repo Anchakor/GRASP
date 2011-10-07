@@ -72,6 +72,12 @@ void Graph::contextChanged()
 
     librdf_free_stream(stream);
 }
+
+rdf::Node Graph::getContext() 
+{
+	return rdf::Node(*context_);
+}
+
 /*
 const QHash<librdf_node *, GraphNode *> *Graph::nodes() const
 {

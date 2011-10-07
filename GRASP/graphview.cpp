@@ -77,3 +77,12 @@ void GraphView::openURL()
     graphs.append(g);
     setScene(g);
 }
+
+void GraphView::saveFile()
+{
+	QString fileName = QFileDialog::getSaveFileName(this, tr("Save"), QString(), tr("Turtle files (*.ttl)"));
+	rdf::Node context = graphs[0]->getContext();
+	FILE *file = fopen(fileName.toLatin1().constData(), "w");
+	rdf::saveGraphToFile(context, file);
+	fclose(file);
+}

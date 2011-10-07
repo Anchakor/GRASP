@@ -13,6 +13,7 @@ class GraphView : public QGraphicsView
     public slots:
         void openFile();
         void openURL();
+		void saveFile();
 
     private:
         QList<Graph *> graphs;
