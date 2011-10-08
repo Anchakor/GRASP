@@ -14,9 +14,11 @@ class GraphView : public QGraphicsView
         void openFile();
         void openURL();
 		void saveFile();
+		void saveFileAs();
 
     private:
         QList<Graph *> graphs;
+		int currentGraph;
 };
 
 #endif

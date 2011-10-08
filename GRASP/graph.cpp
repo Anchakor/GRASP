@@ -1,11 +1,15 @@
 #include "graph.h"
 
-Graph::Graph(QObject *parent) : QGraphicsScene(parent) 
+Graph::Graph(QObject *parent) : QGraphicsScene(parent), context_(rdf::world)
 {
-	context_ = 0;
 }
 
-Graph::Graph(rdf::Node *context, QObject *parent) : QGraphicsScene(parent), context_(context)
+Graph::Graph(rdf::Node &context, QObject *parent) : QGraphicsScene(parent), context_(context)
+{
+    contextChanged();
+}
+        
+Graph::Graph(rdf::Node &context, QString &file, QObject *parent) : QGraphicsScene(parent), file_(file), context_(context)
 {
     contextChanged();
 }
@@ -13,7 +17,7 @@ Graph::Graph(rdf::Node *context, QObject *parent) : QGraphicsScene(parent), cont
 class AddEdgeNodeNotFoundException {};
 void Graph::contextChanged()
 {
-    librdf_stream *stream = librdf_model_context_as_stream(rdf::model, *context_);
+    librdf_stream *stream = librdf_model_context_as_stream(rdf::model, context_);
     if(NULL == stream) throw rdf::StreamConstructException();
 
     while(!librdf_stream_end(stream)) {
@@ -43,7 +47,7 @@ void Graph::contextChanged()
                 n->setPos((qrand()*1000.0)/RAND_MAX,(qrand()*1000.0)/RAND_MAX);
                 addItem(n);
             }
-                rdf::Node nodex = librdf_statement_get_predicate(statement);
+                rdf::Node nodex (librdf_statement_get_predicate(statement));
                 //printf("DEBUG pred node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(nodex)));
             rdf::Statement z(statement);
             if(!edges_.contains(z)) {
@@ -75,8 +79,9 @@ void Graph::contextChanged()
 
 rdf::Node Graph::getContext() 
 {
-	return rdf::Node(*context_);
+	return rdf::Node(context_);
 }
+
 
 /*
 const QHash<librdf_node *, GraphNode *> *Graph::nodes() const
@@ -91,7 +96,6 @@ const QHash<librdf_statement *, GraphEdge *> *Graph::edges() const
 
 Graph::~Graph()
 {
-	if(context_) delete context_;
     /*QList<GraphNode *> nl = nodes_.values();
     for (int i = 0; i < nl.size(); ++i) {
         delete nl.at(i);

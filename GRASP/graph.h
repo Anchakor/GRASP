@@ -13,14 +13,17 @@ class Graph : public QGraphicsScene
 
     public:
         explicit Graph(QObject *parent = 0);
-        explicit Graph(rdf::Node *context, QObject *parent = 0);
+        explicit Graph(rdf::Node &context, QObject *parent = 0);
+        explicit Graph(rdf::Node &context, QString &file, QObject *parent = 0);
         ~Graph();
 
         void contextChanged();
 		rdf::Node getContext();
 
+		QString file_;
+
     private:
-        rdf::Node *context_;
+        rdf::Node context_;
         //QSet<librdf_node *> node_ids_;
         QHash<rdf::Node, GraphNode *> nodes_;
         QHash<rdf::Statement, GraphEdge *> edges_;

@@ -60,6 +60,10 @@ namespace rdf
             p = librdf_new_model_with_options(world, storage, options);
             init();
         }
+        Model(Model &model) { 
+            p = librdf_new_model_from_model(model.p);
+            init();
+        }
         Model(librdf_model *model) { 
             p = librdf_new_model_from_model(model);
             init();
@@ -94,6 +98,10 @@ namespace rdf
         }
         Node(librdf_world *world, unsigned char *string, const char *xml_language, int is_wf_xml) { 
             p = librdf_new_node_from_literal(world, string, xml_language, is_wf_xml); 
+            init(); 
+        }
+        Node(Node &node) { 
+            p = librdf_new_node_from_node(node.p); 
             init(); 
         }
         Node(librdf_node *node) { 
@@ -156,6 +164,10 @@ namespace rdf
             p = librdf_new_statement(world);
             init();
         }
+        Statement(Statement &statement) { 
+            p = librdf_new_statement_from_statement(statement.p);
+            init();
+        }
         Statement(librdf_statement *statement) { 
             p = librdf_new_statement_from_statement(statement);
             init();
@@ -214,6 +226,10 @@ namespace rdf
         }
         URI(librdf_world *world, unsigned char *uri_string, size_t length) { 
             p = librdf_new_uri2(world, uri_string, length);
+            init();
+        }
+        URI(URI &old_uri) { 
+            librdf_new_uri_from_uri(old_uri.p);
             init();
         }
         URI(librdf_uri *old_uri) { 
