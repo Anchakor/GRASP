@@ -40,7 +40,7 @@ void GraphView::openFile()
 
     rdf::Node *context;
     try {
-        context = rdf::loadGraphFromFile(path, "application/x-turtle", librdf_new_uri(rdf::world, (unsigned char *)"test:"));
+        context = rdf::loadGraphFromFile(path, "text/turtle", librdf_new_uri(rdf::world, (unsigned char *)"test:"));
     } catch (std::exception& e) {
         QString msg("Couldn't open graph '");
         msg.append(path).append("'\n Error: ").append(QString(typeid(e).name()));
@@ -65,7 +65,7 @@ void GraphView::openURL()
 
     rdf::Node *context;
     try {
-        context = rdf::loadGraphFromURI(path, "application/x-turtle", librdf_new_uri(rdf::world, (unsigned char *)"test:"));
+        context = rdf::loadGraphFromURI(path, "text/turtle", librdf_new_uri(rdf::world, (unsigned char *)"test:"));
     } catch (std::exception& e) {
         QString msg("Couldn't open graph '");
         msg.append(path).append("'\n Error: ").append(QString(typeid(e).name()));

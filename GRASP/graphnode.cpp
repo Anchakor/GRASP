@@ -39,7 +39,7 @@ void GraphNode::setNode(const librdf_node *node)
     if(node_ != NULL) librdf_free_node(node_);
     node_ = librdf_new_node_from_node(const_cast<librdf_node *>(node));
    
-   	char *str = reinterpret_cast<char *>(librdf_node_to_string(node_));
+   	char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node_, NULL, NULL));
     label_.setText(str);
 	free(str);
 }

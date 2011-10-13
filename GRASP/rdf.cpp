@@ -69,7 +69,7 @@ namespace rdf
         librdf_stream *stream = librdf_model_context_as_stream(model, context);
         if(NULL == stream) throw StreamConstructException();
 
-        Serializer serializer (world, NULL, "application/turtle", NULL);
+        Serializer serializer (world, NULL, "text/turtle", NULL);
 
         if(0 != librdf_serializer_serialize_stream_to_file_handle(serializer, file, NULL, stream)) {
             throw SerializationException();
@@ -83,7 +83,7 @@ namespace rdf
         librdf_stream *stream = librdf_model_context_as_stream(model, context);
         if(NULL == stream) throw StreamConstructException();
 
-        Serializer serializer (world, NULL, "application/turtle", NULL);
+        Serializer serializer (world, NULL, "text/turtle", NULL);
 
         if(0 != librdf_serializer_serialize_stream_to_file_handle(serializer, stdout, NULL, stream)) {
             throw SerializationException();
@@ -99,26 +99,8 @@ namespace rdf
 
     char *Node::serialize() const
     {
-        return reinterpret_cast<char *>(librdf_node_to_string(p));
-/*        URI base_uri (world, (unsigned char*)"http://example.org/base.rdf");
-     
-        Storage tstorage (world);
-
-        Model tmodel (world, tstorage);
-
-        QString tnodestr ("http://example.org/x");
-        Node tnode (world, (unsigned char*)tnodestr.toLatin1().constData(), tnodestr.length());
-
-        printf("node::serialize: %s\n", librdf_node_to_string(p));
-        if(0 != librdf_model_add(tmodel, tnode, tnode, p)) {
-            throw ModelAccessException();
-        }
-
-        unsigned char *str = librdf_model_to_string(tmodel, base_uri, "ntriples", NULL, NULL);
-        if(NULL == str) {
-            throw SerializationException();
-        }
-        return reinterpret_cast<const char *>(str); */
+		return reinterpret_cast<char *>(raptor_term_to_turtle_string(p, NULL, NULL));
+        //return reinterpret_cast<char *>(librdf_node_to_string(p));
     }
 
     char *Statement::serialize() const
@@ -126,36 +108,21 @@ namespace rdf
         QString s;
         librdf_node *n;
         n = librdf_statement_get_subject(p);
-		char *str = reinterpret_cast<char *>(librdf_node_to_string(n));
+		char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(n, NULL, NULL));
         s.append(const_cast<const char *>(str));
 		free(str);
         s.append(" ");
         n = librdf_statement_get_predicate(p);
-		str = reinterpret_cast<char *>(librdf_node_to_string(n));
+		str = reinterpret_cast<char *>(raptor_term_to_turtle_string(n, NULL, NULL));
         s.append(const_cast<const char *>(str));
 		free(str);
         s.append(" ");
         n = librdf_statement_get_object(p);
-		str = reinterpret_cast<char *>(librdf_node_to_string(n));
+		str = reinterpret_cast<char *>(raptor_term_to_turtle_string(n, NULL, NULL));
         s.append(const_cast<const char *>(str));
 		free(str);
         s.append(" . \n");
         return qstrdup(s.toLatin1().constData());
-/*        URI base_uri (world, (unsigned char*)"http://example.org/base.rdf");
-     
-        Storage tstorage (world);
-
-        Model tmodel (world, tstorage);
-
-        if(0 != librdf_model_add_statement(tmodel, p)) {
-            throw ModelAccessException();
-        }
-
-        unsigned char *str = librdf_model_to_string(tmodel, base_uri, "ntriples", NULL, NULL);
-        if(NULL == str) {
-            throw SerializationException();
-        }
-        return reinterpret_cast<const char *>(str);*/
     }
 }
 

@@ -63,7 +63,7 @@ void Graph::contextChanged()
                 e->setDestNode(nodes_.value(y));
 
                 librdf_node *node = librdf_statement_get_predicate(statement);
-				char *str = reinterpret_cast<char *>(librdf_node_to_string(node));
+				char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, NULL, NULL));
                 e->setText(const_cast<const char *>(str));
 				free(str);
 
