@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
         return(1);
     }
     librdf_world_open(rdf::world);
-	rdf::raptor = raptor_new_world();
+    rdf::raptor = raptor_new_world();
 
     QString storageConfString("hash-type='bdb',dir='.',contexts='yes'");
     if(!QFile::exists(QString("maindb-contexts.db"))) storageConfString.prepend("new='yes',");
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 
     librdf_free_model(rdf::model);
     librdf_free_storage(rdf::storage);
-	raptor_free_world(rdf::raptor);
+    raptor_free_world(rdf::raptor);
     librdf_free_world(rdf::world);
 
     return ret;

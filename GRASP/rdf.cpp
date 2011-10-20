@@ -28,7 +28,7 @@ namespace rdf
         URI contextURI (world, (unsigned char *)s.toLatin1().constData());
 
         Node *contextNode = new Node(world, contextURI);
-		contexts.insert(contextNode);
+        contexts.insert(contextNode);
 
         if(0 != librdf_storage_context_add_statements(storage, *contextNode, stream)) { 
             throw ModelAccessException();
@@ -54,7 +54,7 @@ namespace rdf
         URI contextURI (world, (unsigned char *)s.toLatin1().constData());
 
         Node *contextNode = new Node(world, contextURI);
-		contexts.insert(contextNode);
+        contexts.insert(contextNode);
 
         if(0 != librdf_storage_context_add_statements(storage, *contextNode, stream)) { 
             throw ModelAccessException(); 
@@ -99,7 +99,7 @@ namespace rdf
 
     char *Node::serialize() const
     {
-		return reinterpret_cast<char *>(raptor_term_to_turtle_string(p, NULL, NULL));
+        return reinterpret_cast<char *>(raptor_term_to_turtle_string(p, NULL, NULL));
         //return reinterpret_cast<char *>(librdf_node_to_string(p));
     }
 
@@ -108,19 +108,19 @@ namespace rdf
         QString s;
         librdf_node *n;
         n = librdf_statement_get_subject(p);
-		char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(n, NULL, NULL));
+        char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(n, NULL, NULL));
         s.append(const_cast<const char *>(str));
-		free(str);
+        free(str);
         s.append(" ");
         n = librdf_statement_get_predicate(p);
-		str = reinterpret_cast<char *>(raptor_term_to_turtle_string(n, NULL, NULL));
+        str = reinterpret_cast<char *>(raptor_term_to_turtle_string(n, NULL, NULL));
         s.append(const_cast<const char *>(str));
-		free(str);
+        free(str);
         s.append(" ");
         n = librdf_statement_get_object(p);
-		str = reinterpret_cast<char *>(raptor_term_to_turtle_string(n, NULL, NULL));
+        str = reinterpret_cast<char *>(raptor_term_to_turtle_string(n, NULL, NULL));
         s.append(const_cast<const char *>(str));
-		free(str);
+        free(str);
         s.append(" . \n");
         return qstrdup(s.toLatin1().constData());
     }

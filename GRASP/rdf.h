@@ -146,10 +146,10 @@ namespace rdf
     };
     inline uint qHash(const Node &key)
     {
-		char *str = key.serialize();
+        char *str = key.serialize();
         uint out = qHash(QString(const_cast<const char *>(str)));
-		free(str);
-		return out;
+        free(str);
+        return out;
     }
 
     class Statement
@@ -185,11 +185,11 @@ namespace rdf
     };
     inline uint qHash(const Statement &key)
     {
-		char *str = key.serialize();
-		//printf("DEBUG stat ser: %s\n", const_cast<const char *>(str));
+        char *str = key.serialize();
+        //printf("DEBUG stat ser: %s\n", const_cast<const char *>(str));
         uint out = qHash(QString(const_cast<const char *>(str)));
-		delete[] str;
-		return out;
+        delete[] str;
+        return out;
     }
 
     class Stream

@@ -51,16 +51,16 @@ void GraphView::openFile()
     }
 
     Graph *g = new Graph(*context, path, this);
-	delete context;
+    delete context;
     graphs.append(g);
-	currentGraph = graphs.size() - 1;
+    currentGraph = graphs.size() - 1;
     setScene(g);
 }
 
 void GraphView::openURL()
 {
-	bool ok;
-	QString path = QInputDialog::getText(this, tr("Open URL"), tr("URL:"), QLineEdit::Normal, QString("http://mud.cz/foaf.ttl"), &ok);
+    bool ok;
+    QString path = QInputDialog::getText(this, tr("Open URL"), tr("URL:"), QLineEdit::Normal, QString("http://mud.cz/foaf.ttl"), &ok);
     if(!ok || path.isEmpty()) return;
 
     rdf::Node *context;
@@ -76,31 +76,31 @@ void GraphView::openURL()
     }
 
     Graph *g = new Graph(*context, this);
-	delete context;
+    delete context;
     graphs.append(g);
-	currentGraph = graphs.size() - 1;
+    currentGraph = graphs.size() - 1;
     setScene(g);
 }
 
 void GraphView::saveFile()
 {
-	QString path = graphs[currentGraph]->file_;
-	//qDebug(path.toLatin1().constData());
-	if(!path.isEmpty()) {
-		rdf::Node context = graphs[currentGraph]->getContext();
-		FILE *file = fopen(path.toLatin1().constData(), "w");
-		rdf::saveGraphToFile(context, file);
-		fclose(file);
-	} else
-		saveFileAs();
+    QString path = graphs[currentGraph]->file_;
+    //qDebug(path.toLatin1().constData());
+    if(!path.isEmpty()) {
+        rdf::Node context = graphs[currentGraph]->getContext();
+        FILE *file = fopen(path.toLatin1().constData(), "w");
+        rdf::saveGraphToFile(context, file);
+        fclose(file);
+    } else
+        saveFileAs();
 }
 
 void GraphView::saveFileAs()
 {
-	QString fileName = QFileDialog::getSaveFileName(this, tr("Save"), QString(), tr("Turtle files (*.ttl)"));
-	rdf::Node context = graphs[currentGraph]->getContext();
-	FILE *file = fopen(fileName.toLatin1().constData(), "w");
-	rdf::saveGraphToFile(context, file);
-	fclose(file);
-	graphs[currentGraph]->file_ = fileName;
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save"), QString(), tr("Turtle files (*.ttl)"));
+    rdf::Node context = graphs[currentGraph]->getContext();
+    FILE *file = fopen(fileName.toLatin1().constData(), "w");
+    rdf::saveGraphToFile(context, file);
+    fclose(file);
+    graphs[currentGraph]->file_ = fileName;
 }

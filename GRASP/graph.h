@@ -18,9 +18,9 @@ class Graph : public QGraphicsScene
         ~Graph();
 
         void contextChanged();
-		rdf::Node getContext();
+        rdf::Node getContext();
 
-		QString file_;
+        QString file_;
 
     private:
         rdf::Node context_;
