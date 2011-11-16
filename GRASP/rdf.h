@@ -27,6 +27,8 @@ namespace rdf
     struct ModelConstructException : public std::exception {};
     struct SerializationException : public std::exception {};
     struct StorageConstructException : public std::exception {};
+    struct NamespaceConstructException : public std::exception {};
+    struct NamespaceStackConstructException : public std::exception {};
 
     class Storage
     {
@@ -275,6 +277,43 @@ namespace rdf
         operator librdf_serializer*() const { return p; }
         ~Serializer() { librdf_free_serializer(p); }
     };
+
+    class Namespace
+    {
+      private:
+        raptor_namespace *p;
+        void init() {
+            if(NULL == p) { throw NamespaceConstructException(); }
+        }
+      public:
+        Namespace(raptor_namespace_stack *nstack,const unsigned char *prefix,raptor_uri *ns_uri,int depth) {
+            p = raptor_new_namespace_from_uri(nstack, prefix, ns_uri, depth);
+            init();
+        }
+        Namespace(raptor_namespace_stack *nstack, const unsigned char *prefix, const unsigned char *ns_uri_string, int depth) {
+            p = raptor_new_namespace(nstack, prefix, ns_uri_string, depth);
+            init();
+        }
+        operator raptor_namespace*() const { return p; }
+        ~Namespace() { raptor_free_namespace(p); }
+    };
+
+    class NamespaceStack
+    {
+      private:
+        raptor_namespace_stack *p;
+        void init() {
+            if(NULL == p) { throw NamespaceStackConstructException(); }
+        }
+      public:
+        NamespaceStack(raptor_world *world, int defaults) {
+            p = raptor_new_namespaces(world, defaults);
+            init();
+        }
+        operator raptor_namespace_stack*() const { return p; }
+        ~NamespaceStack() { raptor_free_namespaces(p); }
+    };
+
 
 
     Node *loadGraphFromFile(const QString & path, const char *mimeType = NULL, librdf_uri *baseUri = NULL);
