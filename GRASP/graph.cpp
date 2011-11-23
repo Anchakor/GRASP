@@ -77,7 +77,7 @@ void Graph::contextChanged()
 
                 librdf_node *node = librdf_statement_get_predicate(statement);
                 char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, nstack_, NULL));
-                e->setText(const_cast<const char *>(str));
+                e->setText(QString::fromLocal8Bit(const_cast<const char *>(str)));
                 free(str);
 
                 addItem(e);

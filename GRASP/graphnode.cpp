@@ -41,7 +41,7 @@ void GraphNode::setNode(const librdf_node *node)
     node_ = librdf_new_node_from_node(const_cast<librdf_node *>(node));
    
     char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node_, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
-    label_.setText(str);
+    label_.setText(QString::fromLocal8Bit(str));
     free(str);
 }
         
