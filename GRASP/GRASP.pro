@@ -30,7 +30,8 @@ HEADERS  += mainwindow.h\
         graphnode.h\
         graphedge.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui\
+        nodeedit.ui
 
 LIBS += -lrdf
 

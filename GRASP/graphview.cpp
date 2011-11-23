@@ -51,7 +51,6 @@ void GraphView::openFile()
         return;
     }
 
-    printf("nnnstack: %p \n", nstack);
     Graph *g = new Graph(*context, path, nstack, this);
     delete context;
     graphs.append(g);

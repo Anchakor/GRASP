@@ -21,9 +21,7 @@ Graph::Graph(rdf::Node &context, QString &file, QObject *parent) : QGraphicsScen
 
 Graph::Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QObject *parent) : QGraphicsScene(parent), nstack_(nstack), file_(file), context_(context)
 {
-    printf("nstack: %p\n", nstack_);
     nstack_ = nstack;
-    printf("nstack2: %p\n", nstack_);
     contextChanged();
 }
 

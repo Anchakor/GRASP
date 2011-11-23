@@ -145,10 +145,8 @@ namespace rdf
             raptor_namespace *ns = raptor_new_namespace(nstack, prefix, uric, 0);
             if(NULL == ns) return NULL;
             raptor_namespaces_start_namespace(nstack, ns);
-            printf("NS ok: %s:%s\n", prefix, uric);
             free(uric);
         }
-        printf("All ok %p\n", nstack);
 
         return nstack;
     }
