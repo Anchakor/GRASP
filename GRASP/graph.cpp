@@ -8,9 +8,22 @@ Graph::Graph(rdf::Node &context, QObject *parent) : QGraphicsScene(parent), cont
 {
     contextChanged();
 }
-        
+
+Graph::Graph(rdf::Node &context, raptor_namespace_stack *nstack, QObject *parent) : QGraphicsScene(parent), nstack_(nstack), context_(context)
+{
+    contextChanged();
+}
+
 Graph::Graph(rdf::Node &context, QString &file, QObject *parent) : QGraphicsScene(parent), file_(file), context_(context)
 {
+    contextChanged();
+}
+
+Graph::Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QObject *parent) : QGraphicsScene(parent), nstack_(nstack), file_(file), context_(context)
+{
+    printf("nstack: %p\n", nstack_);
+    nstack_ = nstack;
+    printf("nstack2: %p\n", nstack_);
     contextChanged();
 }
 
@@ -30,22 +43,22 @@ void Graph::contextChanged()
             //printf("DEBUG subj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(x)));
             if(!nodes_.contains(x)) {
                 GraphNode *n = new GraphNode();
+                addItem(n);
                 n->setNode(
                     nodes_.insert(rdf::Node(node), n)
                         .key());
                 n->setPos((qrand()*1000.0)/RAND_MAX,(qrand()*1000.0)/RAND_MAX);
-                addItem(n);
             }
             node = librdf_statement_get_object(statement);
             rdf::Node y(node);
             //printf("DEBUG obj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(y)));
             if(!nodes_.contains(y)) {
                 GraphNode *n = new GraphNode();
+                addItem(n);
                 n->setNode(
                     nodes_.insert(rdf::Node(node), n)
                         .key());
                 n->setPos((qrand()*1000.0)/RAND_MAX,(qrand()*1000.0)/RAND_MAX);
-                addItem(n);
             }
                 rdf::Node nodex (librdf_statement_get_predicate(statement));
                 //printf("DEBUG pred node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(nodex)));
@@ -63,7 +76,7 @@ void Graph::contextChanged()
                 e->setDestNode(nodes_.value(y));
 
                 librdf_node *node = librdf_statement_get_predicate(statement);
-                char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, NULL, NULL));
+                char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, nstack_, NULL));
                 e->setText(const_cast<const char *>(str));
                 free(str);
 

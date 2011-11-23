@@ -14,12 +14,15 @@ class Graph : public QGraphicsScene
     public:
         explicit Graph(QObject *parent = 0);
         explicit Graph(rdf::Node &context, QObject *parent = 0);
+        explicit Graph(rdf::Node &context, raptor_namespace_stack *nstack, QObject *parent = 0);
         explicit Graph(rdf::Node &context, QString &file, QObject *parent = 0);
+        explicit Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QObject *parent = 0);
         ~Graph();
 
         void contextChanged();
         rdf::Node getContext();
 
+        raptor_namespace_stack *nstack_;
         QString file_;
 
     private:

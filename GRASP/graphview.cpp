@@ -39,8 +39,9 @@ void GraphView::openFile()
     if(NULL == path || path.isEmpty()) return;
 
     rdf::Node *context;
+    raptor_namespace_stack *nstack = NULL;
     try {
-        context = rdf::loadGraphFromFile(path, "text/turtle", librdf_new_uri(rdf::world, (unsigned char *)"test:"));
+        context = rdf::loadGraphFromFile(path, &nstack, "text/turtle", librdf_new_uri(rdf::world, (unsigned char *)"test:"));
     } catch (std::exception& e) {
         QString msg("Couldn't open graph '");
         msg.append(path).append("'\n Error: ").append(QString(typeid(e).name()));
@@ -50,7 +51,8 @@ void GraphView::openFile()
         return;
     }
 
-    Graph *g = new Graph(*context, path, this);
+    printf("nnnstack: %p \n", nstack);
+    Graph *g = new Graph(*context, path, nstack, this);
     delete context;
     graphs.append(g);
     currentGraph = graphs.size() - 1;
@@ -64,8 +66,9 @@ void GraphView::openURL()
     if(!ok || path.isEmpty()) return;
 
     rdf::Node *context;
+    raptor_namespace_stack *nstack = NULL;
     try {
-        context = rdf::loadGraphFromURI(path, "text/turtle", librdf_new_uri(rdf::world, (unsigned char *)"test:"));
+        context = rdf::loadGraphFromURI(path, &nstack, "text/turtle", librdf_new_uri(rdf::world, (unsigned char *)"test:"));
     } catch (std::exception& e) {
         QString msg("Couldn't open graph '");
         msg.append(path).append("'\n Error: ").append(QString(typeid(e).name()));
@@ -75,7 +78,7 @@ void GraphView::openURL()
         return;
     }
 
-    Graph *g = new Graph(*context, this);
+    Graph *g = new Graph(*context, nstack, this);
     delete context;
     graphs.append(g);
     currentGraph = graphs.size() - 1;

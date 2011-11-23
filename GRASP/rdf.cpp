@@ -11,7 +11,7 @@ namespace rdf
 
     QSet<Node *> contexts;
 
-    Node *loadGraphFromFile(const QString & path, const char *mimeType, librdf_uri *baseUri) 
+    Node *loadGraphFromFile(const QString & path, raptor_namespace_stack **nstack, const char *mimeType, librdf_uri *baseUri) 
     {
         Parser parser (world, NULL, mimeType, NULL);
 
@@ -34,11 +34,13 @@ namespace rdf
             throw ModelAccessException();
         }
 
+        *nstack = getParsedNamespaces(parser);
+
         librdf_free_stream(stream);
         return contextNode;
     }
 
-    Node *loadGraphFromURI(const QString & uri, const char *mimeType, librdf_uri *baseUri) 
+    Node *loadGraphFromURI(const QString & uri, raptor_namespace_stack **nstack, const char *mimeType, librdf_uri *baseUri) 
     {
         Parser parser (world, NULL, mimeType, NULL);
 
@@ -59,6 +61,8 @@ namespace rdf
         if(0 != librdf_storage_context_add_statements(storage, *contextNode, stream)) { 
             throw ModelAccessException(); 
         }
+
+        *nstack = getParsedNamespaces(parser);
 
         librdf_free_stream(stream);
         return contextNode;
@@ -124,5 +128,28 @@ namespace rdf
         s.append(" . \n");
         return qstrdup(s.toLatin1().constData());
     }
-}
 
+    raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser) {
+        int namespaces = librdf_parser_get_namespaces_seen_count(parser);
+        if(namespaces < 1) return NULL;
+
+        raptor_namespace_stack *nstack = raptor_new_namespaces(raptor, 2);
+        if(NULL == nstack) return NULL;
+
+        for(int i = 0; i < namespaces; i++) {
+            const unsigned char *prefix = reinterpret_cast<const unsigned char *>(librdf_parser_get_namespaces_seen_prefix(parser, i));
+            librdf_uri* uri = librdf_parser_get_namespaces_seen_uri(parser, i);
+            if(NULL == prefix || NULL == uri) return NULL;
+            unsigned char *uric = librdf_uri_to_string(uri);
+
+            raptor_namespace *ns = raptor_new_namespace(nstack, prefix, uric, 0);
+            if(NULL == ns) return NULL;
+            raptor_namespaces_start_namespace(nstack, ns);
+            printf("NS ok: %s:%s\n", prefix, uric);
+            free(uric);
+        }
+        printf("All ok %p\n", nstack);
+
+        return nstack;
+    }
+}
