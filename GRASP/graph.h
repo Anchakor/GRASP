@@ -6,6 +6,7 @@
 #include "graphicslabel.h"
 #include "graphnode.h"
 #include "graphedge.h"
+#include "ui_nodeedit.h"
 
 class Graph : public QGraphicsScene
 {
@@ -24,6 +25,8 @@ class Graph : public QGraphicsScene
 
         raptor_namespace_stack *nstack_;
         QString file_;
+
+        static void setupNodeEditDialog(Ui::NodeEditDialog *ui, Graph *graph, librdf_node *node);
 
     private:
         rdf::Node context_;

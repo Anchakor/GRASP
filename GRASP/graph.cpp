@@ -63,6 +63,7 @@ void Graph::contextChanged()
             rdf::Statement z(statement);
             if(!edges_.contains(z)) {
                 GraphEdge *e = new GraphEdge();
+                addItem(e);
                 e->setStatement(
                         edges_.insert(rdf::Statement(statement), e)
                             .key());
@@ -73,12 +74,6 @@ void Graph::contextChanged()
                 if(!nodes_.contains(y)) throw AddEdgeNodeNotFoundException();
                 e->setDestNode(nodes_.value(y));
 
-                librdf_node *node = librdf_statement_get_predicate(statement);
-                char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, nstack_, NULL));
-                e->setText(QString::fromLocal8Bit(const_cast<const char *>(str)));
-                free(str);
-
-                addItem(e);
                 e->adjust();
             }
         }
@@ -115,4 +110,26 @@ Graph::~Graph()
     for (int i = 0; i < el.size(); ++i) {
         delete el.at(i);
     }*/
+}
+
+void Graph::setupNodeEditDialog(Ui::NodeEditDialog *ui, Graph *graph, librdf_node *node) {
+    ui->tabWidget->setCurrentIndex(librdf_node_get_type(node) - 1);
+    if(librdf_node_is_resource(node)) {
+        char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, graph->nstack_, NULL));
+        ui->uriedit->setText(QString::fromLocal8Bit(str));
+        free(str);
+    } else if(librdf_node_is_literal(node)) {
+        ui->valueedit->setPlainText(QString::fromLocal8Bit(reinterpret_cast<char *>(librdf_node_get_literal_value(node))));
+        librdf_uri* uri = librdf_node_get_literal_value_datatype_uri(node);
+        if(NULL != uri) {
+            char *str = reinterpret_cast<char *>(raptor_uri_to_turtle_string(rdf::raptor, uri, graph->nstack_, NULL));
+            ui->datatypeedit->setText(QString::fromLocal8Bit(str));
+            free(str);
+        }
+        ui->languageedit->setText(const_cast<const char *>(librdf_node_get_literal_value_language(node)));
+    } else if(librdf_node_is_blank(node)) {
+        char *str = reinterpret_cast<char *>(librdf_node_get_blank_identifier(node));
+        ui->bnodelabeledit->setText(QString::fromLocal8Bit(str));
+        free(str);
+    }
 }

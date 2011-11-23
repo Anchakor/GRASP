@@ -1,6 +1,7 @@
 #include "graphnode.h"
 #include "graphedge.h"
 #include "graph.h"
+#include "ui_nodeedit.h"
         
 GraphNode::GraphNode(QGraphicsItem *parent, Qt::WindowFlags wFlags) : QGraphicsWidget(parent, wFlags) 
 {
@@ -138,6 +139,21 @@ void GraphNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     hover_ = false;
     //QGraphicsWidget::hoverLeaveEvent(event);
     update();
+}
+        
+void GraphNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_UNUSED(event)
+
+    QDialog *dialog = new QDialog;
+    Ui::NodeEditDialog ui;
+    ui.setupUi(dialog);
+    Graph::setupNodeEditDialog(&ui, (reinterpret_cast<Graph *>(scene())), node_);
+
+    if(dialog->exec()) {
+        printf("foo %s\n", ui.uriedit->text().toLatin1().constData());
+    }
+    delete dialog;
 }
 
 GraphNode::~GraphNode()

@@ -40,6 +40,7 @@ class GraphEdge : public QGraphicsWidget
         virtual void focusOutEvent(QFocusEvent *event);
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
         virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+        virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
     private:
         void init();

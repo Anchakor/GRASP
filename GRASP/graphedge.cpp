@@ -35,6 +35,11 @@ void GraphEdge::setStatement(const librdf_statement *statement)
 { 
     if(statement_ != NULL) librdf_free_statement(statement_);
     statement_ = librdf_new_statement_from_statement(const_cast<librdf_statement *>(statement));
+    
+    librdf_node *node = librdf_statement_get_predicate(statement_);
+    char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
+    setText(QString::fromLocal8Bit(const_cast<const char *>(str)));
+    free(str);
 }
         
 const librdf_statement *GraphEdge::statement() const
@@ -240,6 +245,22 @@ void GraphEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     //QGraphicsWidget::hoverLeaveEvent(event);
     setZValue(-1);
     update();
+}
+        
+void GraphEdge::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_UNUSED(event)
+
+    QDialog *dialog = new QDialog;
+    Ui::NodeEditDialog ui;
+    ui.setupUi(dialog);
+    librdf_node *node = librdf_statement_get_predicate(statement_);
+    Graph::setupNodeEditDialog(&ui, (reinterpret_cast<Graph *>(scene())), node);
+
+    if(dialog->exec()) {
+        printf("foo %s\n", ui.uriedit->text().toLatin1().constData());
+    }
+    delete dialog;
 }
 
 GraphEdge::~GraphEdge()
