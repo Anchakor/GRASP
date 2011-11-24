@@ -1,6 +1,7 @@
 #include "graphedge.h"
 #include "graphnode.h"
 #include "graph.h"
+#include "graphutils.h"
        
 static const double Pi = 3.14159265358979323846264338327950288419717;
 static double TwoPi = 2.0 * Pi;
@@ -53,7 +54,7 @@ void GraphEdge::setText(const QString &text)
     //tmp.replace(QLatin1Char('\n'), QChar::LineSeparator);
     textLayout.setText(text);
     setupTextLayout(&textLayout);
-    update();
+    adjust();
 }
 
 QString GraphEdge::text() const
@@ -251,16 +252,15 @@ void GraphEdge::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event)
 
-    QDialog *dialog = new QDialog;
-    Ui::NodeEditDialog ui;
-    ui.setupUi(dialog);
     librdf_node *node = librdf_statement_get_predicate(statement_);
-    Graph::setupNodeEditDialog(&ui, (reinterpret_cast<Graph *>(scene())), node);
+    librdf_node *newnode;
+    RDFNodeEditDialog dialog (&newnode, node, reinterpret_cast<Graph *>(scene()), true);
 
-    if(dialog->exec()) {
-        printf("foo %s\n", ui.uriedit->text().toLatin1().constData());
+    if(dialog.exec() && newnode) {
+        char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(newnode, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
+        setText(QString::fromLocal8Bit(const_cast<const char *>(str)));
+        free(str);
     }
-    delete dialog;
 }
 
 GraphEdge::~GraphEdge()

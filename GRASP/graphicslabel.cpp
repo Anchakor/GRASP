@@ -84,11 +84,11 @@ QSizeF GraphicsLabel::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
 {
     switch (which) {
         case Qt::MinimumSize:
-            return QSizeF(0, 0);
+            return boundingRect().size();
         case Qt::PreferredSize:
             return boundingRect().size();
         case Qt::MaximumSize:
-            return QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+            return boundingRect().size();
         default:
             qWarning("GraphicsLabel::sizeHint(): Don't know how to handle the value of 'which'");
             break;      

@@ -1,7 +1,7 @@
 #include "graphnode.h"
 #include "graphedge.h"
 #include "graph.h"
-#include "ui_nodeedit.h"
+#include "graphutils.h"
         
 GraphNode::GraphNode(QGraphicsItem *parent, Qt::WindowFlags wFlags) : QGraphicsWidget(parent, wFlags) 
 {
@@ -18,19 +18,21 @@ void GraphNode::init()
 {
     node_ = NULL;
     hover_ = false;
+    label_ = new GraphicsLabel(this);
     
     setAcceptHoverEvents(true);
     setFlag(ItemIsMovable);
     setFlag(ItemIsSelectable);
     setFocusPolicy(Qt::StrongFocus); // setFlag(ItemIsFocusable);
     setCacheMode(DeviceCoordinateCache);
+    //setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical); 
     layout->setSpacing(0);
     layout->setContentsMargins(0,0,0,0);
     setLayout(layout);
     
-    layout->addItem(&label_);
+    layout->addItem(label_);
 
     int framewidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
     setContentsMargins(framewidth,framewidth,framewidth,framewidth);
@@ -42,8 +44,17 @@ void GraphNode::setNode(const librdf_node *node)
     node_ = librdf_new_node_from_node(const_cast<librdf_node *>(node));
    
     char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node_, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
-    label_.setText(QString::fromLocal8Bit(str));
+    label_->setText(QString::fromLocal8Bit(str));
+    layout()->activate();
+    printf("layout size: %f %f\n", layout()->geometry().width(), layout()->geometry().height());
+    printf("layout contents: %f %f\n", layout()->contentsRect().width(), layout()->contentsRect().height());
+    printf("label size hint: %f %f\n", label_->sizeHint(Qt::PreferredSize).width(), label_->sizeHint(Qt::PreferredSize).height());
     free(str);
+    //updateGeometry();
+    //adjustSize();//TODO
+    //resize(layout()->minimumSize());
+    //resize(label_->size());
+    //update();
 }
         
 const librdf_node *GraphNode::node() const
@@ -69,7 +80,7 @@ void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     frameOptionV3.lineWidth = 1;
     frameOptionV3.midLineWidth = 0;
     style()->drawPrimitive(QStyle::PE_Frame, &frameOptionV3, painter, widget);
-} 
+}
 
 void GraphNode::registerEdge(GraphEdge *edge, bool in)
 {
@@ -145,7 +156,14 @@ void GraphNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event)
 
-    QDialog *dialog = new QDialog;
+    librdf_node *newnode;
+    RDFNodeEditDialog dialog (&newnode, node_, reinterpret_cast<Graph *>(scene()));
+
+    if(dialog.exec() && newnode) {
+        setNode(const_cast<const librdf_node *>(newnode));
+        librdf_free_node(newnode);
+    }
+   /* TODO QDialog *dialog = new QDialog;
     Ui::NodeEditDialog ui;
     ui.setupUi(dialog);
     Graph::setupNodeEditDialog(&ui, (reinterpret_cast<Graph *>(scene())), node_);
@@ -153,7 +171,7 @@ void GraphNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     if(dialog->exec()) {
         printf("foo %s\n", ui.uriedit->text().toLatin1().constData());
     }
-    delete dialog;
+    delete dialog;*/
 }
 
 GraphNode::~GraphNode()

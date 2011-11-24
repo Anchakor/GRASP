@@ -111,25 +111,3 @@ Graph::~Graph()
         delete el.at(i);
     }*/
 }
-
-void Graph::setupNodeEditDialog(Ui::NodeEditDialog *ui, Graph *graph, librdf_node *node) {
-    ui->tabWidget->setCurrentIndex(librdf_node_get_type(node) - 1);
-    if(librdf_node_is_resource(node)) {
-        char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, graph->nstack_, NULL));
-        ui->uriedit->setText(QString::fromLocal8Bit(str));
-        free(str);
-    } else if(librdf_node_is_literal(node)) {
-        ui->valueedit->setPlainText(QString::fromLocal8Bit(reinterpret_cast<char *>(librdf_node_get_literal_value(node))));
-        librdf_uri* uri = librdf_node_get_literal_value_datatype_uri(node);
-        if(NULL != uri) {
-            char *str = reinterpret_cast<char *>(raptor_uri_to_turtle_string(rdf::raptor, uri, graph->nstack_, NULL));
-            ui->datatypeedit->setText(QString::fromLocal8Bit(str));
-            free(str);
-        }
-        ui->languageedit->setText(const_cast<const char *>(librdf_node_get_literal_value_language(node)));
-    } else if(librdf_node_is_blank(node)) {
-        char *str = reinterpret_cast<char *>(librdf_node_get_blank_identifier(node));
-        ui->bnodelabeledit->setText(QString::fromLocal8Bit(str));
-        free(str);
-    }
-}

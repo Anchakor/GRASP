@@ -45,7 +45,7 @@ class GraphNode : public QGraphicsWidget
         QSet<GraphEdge *> outEdges_;
         QSet<GraphEdge *> inEdges_;
         bool hover_;
-        GraphicsLabel label_;
+        GraphicsLabel *label_;
 };
 
 class GraphNodeObjectLayout : public QGraphicsLinearLayout
