@@ -30,6 +30,7 @@ class GraphNode : public QGraphicsWidget
         bool operator==(const GraphNode &other) const {
             return librdf_node_equals(node_, other.node_);      
         }
+        void adjustEdges();
      
     protected:
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -41,6 +42,7 @@ class GraphNode : public QGraphicsWidget
 
     private:
         void init();
+        QGraphicsLinearLayout *layout_;
         librdf_node *node_;
         QSet<GraphEdge *> outEdges_;
         QSet<GraphEdge *> inEdges_;

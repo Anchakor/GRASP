@@ -25,14 +25,15 @@ void GraphNode::init()
     setFlag(ItemIsSelectable);
     setFocusPolicy(Qt::StrongFocus); // setFlag(ItemIsFocusable);
     setCacheMode(DeviceCoordinateCache);
-    //setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical); 
-    layout->setSpacing(0);
-    layout->setContentsMargins(0,0,0,0);
-    setLayout(layout);
+    layout_ = new QGraphicsLinearLayout(Qt::Vertical, this); 
+    layout_->setSpacing(0);
+    layout_->setContentsMargins(0,0,0,0);
+    layout_->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    setLayout(layout_);
     
-    layout->addItem(label_);
+    layout_->addItem(label_);
 
     int framewidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
     setContentsMargins(framewidth,framewidth,framewidth,framewidth);
@@ -45,16 +46,13 @@ void GraphNode::setNode(const librdf_node *node)
    
     char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node_, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
     label_->setText(QString::fromLocal8Bit(str));
-    layout()->activate();
-    printf("layout size: %f %f\n", layout()->geometry().width(), layout()->geometry().height());
-    printf("layout contents: %f %f\n", layout()->contentsRect().width(), layout()->contentsRect().height());
-    printf("label size hint: %f %f\n", label_->sizeHint(Qt::PreferredSize).width(), label_->sizeHint(Qt::PreferredSize).height());
     free(str);
-    //updateGeometry();
-    //adjustSize();//TODO
-    //resize(layout()->minimumSize());
-    //resize(label_->size());
-    //update();
+
+    QSizeF oldsize = size();
+    adjustSize();
+    setPos(x() + (oldsize.width() - size().width()) / 2, y() + (oldsize.height() - size().height()) / 2);
+
+    adjustEdges();
 }
         
 const librdf_node *GraphNode::node() const
@@ -105,10 +103,7 @@ const QSet<GraphEdge *> *GraphNode::inEdges() const
     return &inEdges_;
 }
         
-void GraphNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    QGraphicsWidget::mouseMoveEvent(event);
-
+void GraphNode::adjustEdges() {
     // adjust connected edges
     QSetIterator<GraphEdge *> i(inEdges_);
     while (i.hasNext())
@@ -116,6 +111,12 @@ void GraphNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     QSetIterator<GraphEdge *> i2(outEdges_);
     while (i2.hasNext())
         i2.next()->adjust();
+}
+        
+void GraphNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsWidget::mouseMoveEvent(event);
+    adjustEdges();
 }
 
 void GraphNode::focusInEvent(QFocusEvent *event)

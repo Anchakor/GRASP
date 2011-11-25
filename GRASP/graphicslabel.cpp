@@ -19,7 +19,7 @@ void GraphicsLabel::setText(const QString &text)
     //tmp.replace(QLatin1Char('\n'), QChar::LineSeparator);
     textLayout.setText(tmp);
     setupTextLayout(&textLayout);
-    update();
+    updateGeometry();
 }
 
 QString GraphicsLabel::text() const
@@ -88,7 +88,7 @@ QSizeF GraphicsLabel::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
         case Qt::PreferredSize:
             return boundingRect().size();
         case Qt::MaximumSize:
-            return boundingRect().size();
+            return QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
         default:
             qWarning("GraphicsLabel::sizeHint(): Don't know how to handle the value of 'which'");
             break;      
@@ -98,6 +98,8 @@ QSizeF GraphicsLabel::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
 
 void GraphicsLabel::setGeometry(const QRectF &rect)
 {
+    prepareGeometryChange();
+    QGraphicsWidget::setGeometry(rect);
     setPos(rect.topLeft());
 }
 
