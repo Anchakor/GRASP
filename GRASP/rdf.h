@@ -322,6 +322,8 @@ namespace rdf
     void printContext(librdf_node *context);
     void freeContext(librdf_node *context);
     raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser);
+    void addOrReplaceStatement(librdf_node *context, librdf_statement *replacement, librdf_statement *statement = NULL);
+    void replaceNode(librdf_node *context, librdf_node *replacement, librdf_node *node);
 
 }
 

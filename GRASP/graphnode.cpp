@@ -161,6 +161,7 @@ void GraphNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     RDFNodeEditDialog dialog (&newnode, node_, reinterpret_cast<Graph *>(scene()));
 
     if(dialog.exec() && newnode) {
+        replaceNode(reinterpret_cast<Graph *>(scene())->getContext(), newnode, node_);
         setNode(const_cast<const librdf_node *>(newnode));
         librdf_free_node(newnode);
     }
