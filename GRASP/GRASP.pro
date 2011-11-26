@@ -29,7 +29,8 @@ HEADERS  += mainwindow.h\
         graphicslabel.h\
         graphnode.h\
         graphedge.h\
-        graphutils.h
+        graphutils.h\
+        guiutils.h
 
 FORMS    += mainwindow.ui\
         nodeedit.ui

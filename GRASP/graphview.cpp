@@ -1,5 +1,5 @@
-#include <typeinfo>
 #include "graphview.h"
+#include "guiutils.h"
 
 GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
 { 
@@ -45,9 +45,7 @@ void GraphView::openFile()
     } catch (std::exception& e) {
         QString msg("Couldn't open graph '");
         msg.append(path).append("'\n Error: ").append(QString(typeid(e).name()));
-        QMessageBox msgBox;
-        msgBox.setText(msg);
-        msgBox.exec();
+        alertPopup(msg);
         return;
     }
 
@@ -71,9 +69,7 @@ void GraphView::openURL()
     } catch (std::exception& e) {
         QString msg("Couldn't open graph '");
         msg.append(path).append("'\n Error: ").append(QString(typeid(e).name()));
-        QMessageBox msgBox;
-        msgBox.setText(msg);
-        msgBox.exec();
+        alertPopup(msg);
         return;
     }
 

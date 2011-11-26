@@ -1,6 +1,10 @@
+#ifndef GRAPHUTILS_H
+#define GRAPHUTILS_H
+
 #include "rdf.h"
 #include "graph.h"
 #include "ui_nodeedit.h"
+#include "guiutils.h"
 
 class RDFNodeEditDialog : public QDialog
 {
@@ -44,18 +48,20 @@ public slots:
         // URI resource
         if(0 == ui.tabWidget->currentIndex()) {
             unsigned char *str = reinterpret_cast<unsigned char *>(qstrdup(ui.uriedit->text().toLatin1().constData()));
-            printf("res %s %d\n", str, strlen(reinterpret_cast<const char *>(str)));
-            librdf_uri *uri = raptor_qname_string_to_uri(graph_->nstack_, str, strlen(reinterpret_cast<const char *>(str)));
-            if(uri) {
-                //printf("readtest: %s\n", librdf_uri_to_string(uri));
-                *result_ = librdf_new_node_from_uri(rdf::world, uri);
-                librdf_free_uri(uri);
-            } else if(str[0] == '<') {
+            //printf("res %s %d\n", str, strlen(reinterpret_cast<const char *>(str)));
+            if(str[0] == '<') {
                 unsigned char *s = reinterpret_cast<unsigned char *>(calloc(ui.uriedit->text().size()-1, sizeof(unsigned char)));
                 memcpy(s, str+1, ui.uriedit->text().size()-2);
                 s[ui.uriedit->text().size()-2] = '\0';
                 *result_ = librdf_new_node_from_uri_string(rdf::world, s);
                 free(s);
+            } else {
+                librdf_uri *uri = raptor_qname_string_to_uri(graph_->nstack_, str, strlen(reinterpret_cast<const char *>(str)));
+                if(uri) {
+                    //printf("readtest: %s\n", librdf_uri_to_string(uri));
+                    *result_ = librdf_new_node_from_uri(rdf::world, uri);
+                    librdf_free_uri(uri);
+                }
             }
             free(str);
         // Literal
@@ -63,18 +69,29 @@ public slots:
             unsigned char *str = reinterpret_cast<unsigned char *>(qstrdup(ui.valueedit->toPlainText().toLatin1().constData()));
             unsigned char *datatypestr = reinterpret_cast<unsigned char *>(qstrdup(ui.datatypeedit->text().toLatin1().constData()));
             char *langstr = qstrdup(ui.languageedit->text().toLatin1().constData());
-            printf("lit %s %d\n", str, strlen(reinterpret_cast<const char *>(str)));
-            librdf_uri *duri = raptor_qname_string_to_uri(graph_->nstack_, datatypestr, strlen(reinterpret_cast<const char *>(datatypestr)));
+            //printf("lit %s %d\n", str, strlen(reinterpret_cast<const char *>(str)));
             if(str) {
-                if(datatypestr[0] == '<' && !duri) {
+                librdf_uri *duri = NULL;
+                if(datatypestr[0] == '\0') { ;
+                } else if(datatypestr[0] == '<') {
                     unsigned char *s = reinterpret_cast<unsigned char *>(calloc(ui.datatypeedit->text().size()-1, sizeof(unsigned char)));
                     memcpy(s, datatypestr+1, ui.datatypeedit->text().size()-2);
                     s[ui.datatypeedit->text().size()-2] = '\0';
                     duri = librdf_new_uri(rdf::world, s);
+                    if(!duri) {
+                        QString msg ("Error editing the node, malformed datatype URI syntax");
+                        alertPopup(msg);
+                    }
                     free(s);
+                } else {
+                    duri = raptor_qname_string_to_uri(graph_->nstack_, datatypestr, strlen(reinterpret_cast<const char *>(datatypestr)));
+                    if(!duri) {
+                        QString msg ("Error editing the node, malformed datatype URI syntax while using namespace abbrevation");
+                        alertPopup(msg);
+                    }
                 }
                 if(duri) {
-                    printf("readtest: %s\n", librdf_uri_to_string(duri));
+                    //printf("readtest: %s\n", librdf_uri_to_string(duri));
                     *result_ = librdf_new_node_from_typed_literal(rdf::world, str, const_cast<const char *>(langstr), duri);
                     librdf_free_uri(duri);
                 }/* else */ else {
@@ -87,9 +104,13 @@ public slots:
         // Blank node
         } else if(2 == ui.tabWidget->currentIndex()) {
             unsigned char *str = reinterpret_cast<unsigned char *>(qstrdup(ui.bnodelabeledit->text().toLatin1().constData()));
-            printf("bnd %s %d\n", str, strlen(reinterpret_cast<const char *>(str)));
+            //printf("bnd %s %d\n", str, strlen(reinterpret_cast<const char *>(str)));
             *result_ = librdf_new_node_from_blank_identifier(rdf::world, str);
             free(str);
+        }
+        if(!(*result_)) {
+            QString msg ("Error editing the node, malformed syntax,\nmaybe URI syntax while using namespace abbrevation");
+            alertPopup(msg);
         }
 
         QDialog::accept();
@@ -102,3 +123,5 @@ private:
     librdf_node **result_;
 
 };
+
+#endif

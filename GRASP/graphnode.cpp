@@ -2,6 +2,7 @@
 #include "graphedge.h"
 #include "graph.h"
 #include "graphutils.h"
+#include "guiutils.h"
         
 GraphNode::GraphNode(QGraphicsItem *parent, Qt::WindowFlags wFlags) : QGraphicsWidget(parent, wFlags) 
 {
@@ -157,23 +158,21 @@ void GraphNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event)
 
-    librdf_node *newnode;
+    librdf_node *newnode = NULL;
     RDFNodeEditDialog dialog (&newnode, node_, reinterpret_cast<Graph *>(scene()));
 
     if(dialog.exec() && newnode) {
-        replaceNode(reinterpret_cast<Graph *>(scene())->getContext(), newnode, node_);
+        try {
+            replaceNode(reinterpret_cast<Graph *>(scene())->getContext(), newnode, node_);
+        } catch (std::exception& e) {
+            QString msg ("Error editing the node, probably illegal node form in this position");
+            msg.append("'\n Error: ").append(QString(typeid(e).name()));
+            alertPopup(msg);
+            return;
+        }
         setNode(const_cast<const librdf_node *>(newnode));
         librdf_free_node(newnode);
     }
-   /* TODO QDialog *dialog = new QDialog;
-    Ui::NodeEditDialog ui;
-    ui.setupUi(dialog);
-    Graph::setupNodeEditDialog(&ui, (reinterpret_cast<Graph *>(scene())), node_);
-
-    if(dialog->exec()) {
-        printf("foo %s\n", ui.uriedit->text().toLatin1().constData());
-    }
-    delete dialog;*/
 }
 
 GraphNode::~GraphNode()

@@ -2,6 +2,7 @@
 #include "graphnode.h"
 #include "graph.h"
 #include "graphutils.h"
+#include "guiutils.h"
        
 static const double Pi = 3.14159265358979323846264338327950288419717;
 static double TwoPi = 2.0 * Pi;
@@ -253,15 +254,22 @@ void GraphEdge::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     Q_UNUSED(event)
 
     librdf_node *node = librdf_statement_get_predicate(statement_);
-    librdf_node *newnode;
+    librdf_node *newnode = NULL;
     RDFNodeEditDialog dialog (&newnode, node, reinterpret_cast<Graph *>(scene()), true);
 
     if(dialog.exec() && newnode) {
         rdf::Statement stat (statement_);
         librdf_statement_set_predicate(stat, newnode);
-        addOrReplaceStatement(reinterpret_cast<Graph *>(scene())->getContext(), stat, statement_);
+        try {
+            addOrReplaceStatement(reinterpret_cast<Graph *>(scene())->getContext(), stat, statement_);
+        } catch (std::exception& e) {
+            QString msg ("Error editing the node, probably illegal node form in this position");
+            msg.append("'\n Error: ").append(QString(typeid(e).name()));
+            alertPopup(msg);
+            return;
+        }
         setStatement(const_cast<const librdf_statement *>(static_cast<librdf_statement *>(stat)));
-        //librdf_free_statement(stat);
+        //librdf_free_statement(stat); TODO uncomment this when redland 1.0.15 comes out
     }
 }
 
