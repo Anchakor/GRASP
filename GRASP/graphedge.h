@@ -27,6 +27,8 @@ class GraphEdge : public QGraphicsWidget
         void setDestNode(GraphNode *node);
         GraphNode *destNode() const;
 
+        void editDialog();
+
         void adjust();
         QRectF boundingRect() const;
         QPainterPath shape() const;

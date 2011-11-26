@@ -253,6 +253,11 @@ void GraphEdge::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event)
 
+    editDialog();
+}
+
+void GraphEdge::editDialog() 
+{
     librdf_node *node = librdf_statement_get_predicate(statement_);
     librdf_node *newnode = NULL;
     RDFNodeEditDialog dialog (&newnode, node, reinterpret_cast<Graph *>(scene()), true);

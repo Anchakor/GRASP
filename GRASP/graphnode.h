@@ -19,6 +19,8 @@ class GraphNode : public QGraphicsWidget
         void setNode(const librdf_node *node);
         const librdf_node *node() const;
 
+        void editDialog();
+
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
         enum { Type = UserType + 1 };
         int type() const { return Type; }
