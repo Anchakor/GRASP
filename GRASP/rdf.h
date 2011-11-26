@@ -166,12 +166,57 @@ namespace rdf
             p = librdf_new_statement(world);
             init();
         }
-        Statement(Statement &statement) { 
-            p = librdf_new_statement_from_statement(statement.p);
+        //TODO delete this when redland 1.0.15 comes out
+        static librdf_statement*
+        new_statement_from_statement(librdf_statement* statement)
+        {
+          raptor_term *subject = NULL;
+          raptor_term *predicate = NULL;
+          raptor_term *object = NULL;
+          raptor_term *graph = NULL;
+
+          if(!statement)
+            return NULL;
+
+          subject = raptor_term_copy(statement->subject);
+          if(statement->subject && !subject)
+            goto err;
+
+          predicate = raptor_term_copy(statement->predicate);
+          if(statement->predicate && !predicate)
+            goto err;
+
+          object = raptor_term_copy(statement->object);
+          if(statement->object && !object)
+            goto err;
+
+          graph = raptor_term_copy(statement->graph);
+          if(statement->graph && !graph)
+            goto err;
+
+          return raptor_new_statement_from_nodes(statement->world, subject, predicate, object, graph);
+
+         err:
+          if(graph)
+            raptor_free_term(graph);
+          if(object)
+            raptor_free_term(object);
+          if(predicate)
+            raptor_free_term(predicate);
+          if(subject)
+            raptor_free_term(subject);
+          return NULL;
+        }
+        Statement(Statement &statement) {
+            //TODO use this when redland 1.0.15 comes out
+            //p = librdf_new_statement_from_statement(statement.p);
+            p = Statement::new_statement_from_statement(statement.p);
             init();
         }
-        Statement(librdf_statement *statement) { 
-            p = librdf_new_statement_from_statement(statement);
+        Statement(librdf_statement *statement) {
+            //TODO use this when redland 1.0.15 comes out
+            //p = librdf_new_statement_from_statement(statement);
+            p = Statement::new_statement_from_statement(statement);
             init();
         }
         Statement(librdf_world *world, librdf_node *subject, librdf_node *predicate, librdf_node *object) { 

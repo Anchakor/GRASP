@@ -152,12 +152,10 @@ namespace rdf
     }
 
     void addOrReplaceStatement(librdf_node *context, librdf_statement *replacement, librdf_statement *statement) {
-        printf("statement: %s\n", librdf_statement_to_string(statement));
         if(statement) {
             if(0 != librdf_model_context_remove_statement(model, context, statement))
                 throw ModelAccessException();
         }
-        printf("stat: %s\n", librdf_statement_to_string(replacement));
         if(0 != librdf_model_context_add_statement(model, context, replacement))
             throw ModelAccessException();
     }

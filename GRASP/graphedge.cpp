@@ -257,20 +257,11 @@ void GraphEdge::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     RDFNodeEditDialog dialog (&newnode, node, reinterpret_cast<Graph *>(scene()), true);
 
     if(dialog.exec() && newnode) {
-        printf("statement_:\t %s\n", librdf_statement_to_string(statement_));
-        librdf_statement *stat = librdf_new_statement_from_statement(statement_);
-        printf("statement_1:\t %s\n", librdf_statement_to_string(statement_));
-        printf("stat1:\t %s\n", librdf_statement_to_string(stat));
+        rdf::Statement stat (statement_);
         librdf_statement_set_predicate(stat, newnode);
-        printf("stat2:\t %s\n", librdf_statement_to_string(stat));
-        printf("statement_2:\t %s\n", librdf_statement_to_string(statement_));
-        // TODO seems statement copy constructor isn't working
         addOrReplaceStatement(reinterpret_cast<Graph *>(scene())->getContext(), stat, statement_);
-        setStatement(const_cast<const librdf_statement *>(stat));
-        /*char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(newnode, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
-        setText(QString::fromLocal8Bit(const_cast<const char *>(str)));
-        free(str);*/
-        librdf_free_statement(stat);
+        setStatement(const_cast<const librdf_statement *>(static_cast<librdf_statement *>(stat)));
+        //librdf_free_statement(stat);
     }
 }
 
