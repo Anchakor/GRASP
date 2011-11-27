@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
         return(1);
     }
 
-    rdf::model = librdf_new_model(rdf::world, rdf::storage, LIBRDF_MODEL_FEATURE_CONTEXTS);
+    rdf::model = librdf_new_model(rdf::world, rdf::storage, NULL);
     if(NULL == rdf::model) {
         fprintf(stderr, "Failed to create rdf::model\n");
         return(1);
