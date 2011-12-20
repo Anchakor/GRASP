@@ -1,11 +1,15 @@
 #include "graphicslabel.h"
+#include "graph.h"
+#include "graphutils.h"
 
 GraphicsLabel::GraphicsLabel(QGraphicsWidget *parent) : QGraphicsWidget(parent)
 {
+    if(parent) installEventFilter(parent);
 }
 
 GraphicsLabel::GraphicsLabel(const QString &text, QGraphicsWidget *parent) : QGraphicsWidget(parent)
 {
+    if(parent) installEventFilter(parent);
     setText(text);
 }
 
@@ -104,3 +108,70 @@ void GraphicsLabel::setGeometry(const QRectF &rect)
 }
 
 
+GraphicsNodeLabel::GraphicsNodeLabel(QGraphicsWidget *parent) : GraphicsLabel(parent)
+{
+    init();
+}
+
+GraphicsNodeLabel::GraphicsNodeLabel(librdf_node *node, QGraphicsWidget *parent) : GraphicsLabel(parent)
+{
+    init();
+    setNode(node);
+}
+
+GraphicsNodeLabel::~GraphicsNodeLabel()
+{
+    //if(node_ != NULL) librdf_free_node(node_);
+}
+
+void GraphicsNodeLabel::init()
+{
+    node_ = NULL;
+    //setAcceptHoverEvents(true);
+    setFlag(ItemIsSelectable);
+    //setFlag(ItemIsMovable);
+    setFocusPolicy(Qt::StrongFocus); // setFlag(ItemIsFocusable);
+    //setCacheMode(DeviceCoordinateCache);
+}
+
+void GraphicsNodeLabel::setNode(librdf_node *node) 
+{
+    if(node_ != NULL) librdf_free_node(node_);
+    node_ = librdf_new_node_from_node(node);
+
+    char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node_, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
+    setText(QString::fromLocal8Bit(str));
+    free(str);
+    updateGeometry();
+}
+
+const librdf_node *GraphicsNodeLabel::node() const
+{
+    return node_;
+}
+
+void GraphicsNodeLabel::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_UNUSED(event)
+
+    editDialog();
+}
+
+void GraphicsNodeLabel::editDialog()
+{
+    librdf_node *newnode = NULL;
+    RDFNodeEditDialog dialog (&newnode, node_, reinterpret_cast<Graph *>(scene()));
+
+    if(dialog.exec() && newnode) {
+        try {
+            rdf::replaceNode(reinterpret_cast<Graph *>(scene())->getContext(), newnode, node_);
+        } catch (std::exception& e) {
+            QString msg ("Error editing the node, probably illegal node form in this position");
+            msg.append("'\n Error: ").append(QString(typeid(e).name()));
+            alertPopup(msg);
+            return;
+        }
+        setNode(newnode);
+        librdf_free_node(newnode);
+    }
+}

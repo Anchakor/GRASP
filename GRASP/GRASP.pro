@@ -35,7 +35,7 @@ HEADERS  += mainwindow.h\
 FORMS    += mainwindow.ui\
         nodeedit.ui
 
-LIBS += -lrdf
+LIBS += -lrdf -lraptor2
 
 QMAKE_CC = gcc
 QMAKE_CXX = g++

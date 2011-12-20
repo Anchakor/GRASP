@@ -19,7 +19,6 @@ void GraphNode::init()
 {
     node_ = NULL;
     hover_ = false;
-    label_ = new GraphicsLabel(this);
     
     setAcceptHoverEvents(true);
     setFlag(ItemIsMovable);
@@ -34,22 +33,26 @@ void GraphNode::init()
     layout_->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     setLayout(layout_);
     
+    label_ = new GraphicsNodeLabel(this);
     layout_->addItem(label_);
 
     int framewidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
     setContentsMargins(framewidth,framewidth,framewidth,framewidth);
 }
 
-void GraphNode::setNode(const librdf_node *node) 
-{ 
+void GraphNode::setNode(librdf_node *node) 
+{
     if(node_ != NULL) librdf_free_node(node_);
-    node_ = librdf_new_node_from_node(const_cast<librdf_node *>(node));
-   
-    char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node_, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
-    label_->setText(QString::fromLocal8Bit(str));
-    free(str);
+    node_ = librdf_new_node_from_node(node);
 
-    QSizeF oldsize = size();
+    label_->setNode(node);
+}
+
+    /*char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node_, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
+    label_->setText(QString::fromLocal8Bit(str));
+    free(str);*/
+
+/*    QSizeF oldsize = size();
     adjustSize();
     setPos(x() + (oldsize.width() - size().width()) / 2, y() + (oldsize.height() - size().height()) / 2);
 
@@ -59,8 +62,19 @@ void GraphNode::setNode(const librdf_node *node)
 const librdf_node *GraphNode::node() const
 {
     return node_;
-}
+}*/
         
+void GraphNode::updateGeometry()
+{
+    QGraphicsLayoutItem::updateGeometry();
+
+    QSizeF oldsize = size();
+    adjustSize();
+    setPos(x() + (oldsize.width() - size().width()) / 2, y() + (oldsize.height() - size().height()) / 2);
+
+    adjustEdges();
+}
+
 void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->fillRect(option->rect, palette().color(QPalette::Button));
@@ -113,7 +127,16 @@ void GraphNode::adjustEdges() {
     while (i2.hasNext())
         i2.next()->adjust();
 }
-        
+
+bool GraphNode::eventFilter(QObject *obj, QEvent *event)
+{
+    // all mouse move events of children are to be sorted out by GraphNode
+    if(event->type() == QEvent::GraphicsSceneMouseMove) { 
+        scene()->sendEvent(this, event);
+        return true; }
+    return QObject::eventFilter(obj, event);
+}
+
 void GraphNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsWidget::mouseMoveEvent(event);
@@ -154,7 +177,7 @@ void GraphNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     update();
 }
         
-void GraphNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+/*void GraphNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event)
 
@@ -178,7 +201,7 @@ void GraphNode::editDialog()
         setNode(const_cast<const librdf_node *>(newnode));
         librdf_free_node(newnode);
     }
-}
+}*/
 
 GraphNode::~GraphNode()
 {

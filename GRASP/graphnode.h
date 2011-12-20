@@ -16,11 +16,12 @@ class GraphNode : public QGraphicsWidget
         ~GraphNode();
        
         /// copy node and set it as rdf node of the graph node 
-        void setNode(const librdf_node *node);
-        const librdf_node *node() const;
+        void setNode(librdf_node *node);
+        //const librdf_node *node() const;
 
-        void editDialog();
+        //void editDialog();
 
+        virtual void updateGeometry();
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
         enum { Type = UserType + 1 };
         int type() const { return Type; }
@@ -35,12 +36,13 @@ class GraphNode : public QGraphicsWidget
         void adjustEdges();
      
     protected:
+        bool eventFilter(QObject *obj, QEvent *event);
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
         virtual void focusInEvent(QFocusEvent *event);
         virtual void focusOutEvent(QFocusEvent *event);
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
         virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-        virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+        //virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
     private:
         void init();
@@ -49,21 +51,7 @@ class GraphNode : public QGraphicsWidget
         QSet<GraphEdge *> outEdges_;
         QSet<GraphEdge *> inEdges_;
         bool hover_;
-        GraphicsLabel *label_;
-};
-
-class GraphNodeObjectLayout : public QGraphicsLinearLayout
-{
-
-    public:
-        GraphNodeObjectLayout(QGraphicsLayoutItem *parent = 0) : QGraphicsLinearLayout(Qt::Vertical, parent) {}
-};
-
-class GraphNodePropertyLayout : public QGraphicsLinearLayout
-{
-
-    public:
-        GraphNodePropertyLayout(QGraphicsLayoutItem *parent = 0) : QGraphicsLinearLayout(parent) {}
+        GraphicsNodeLabel *label_;
 };
 
 #endif
