@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include "rdf.h"
+#include "graphicslabel.h"
 
 class GraphNode;
 
@@ -16,20 +17,20 @@ class GraphEdge : public QGraphicsWidget
         ~GraphEdge();
        
         /// copy statement and set it as rdf statement of the graph edge 
-        void setStatement(const librdf_statement *statement);
+        void setStatement(librdf_statement *statement);
         const librdf_statement *statement() const;
-        void setText(const QString &text);
+        /*void setText(const QString &text);
         QString text() const;
-        QRectF setupTextLayout(QTextLayout *layout);
+        QRectF setupTextLayout(QTextLayout *layout);*/
 
         void setSourceNode(GraphNode *node);
         GraphNode *sourceNode() const;
         void setDestNode(GraphNode *node);
         GraphNode *destNode() const;
 
-        void editDialog();
+        //void editDialog();
 
-        void adjust();
+        virtual void updateGeometry();
         QRectF boundingRect() const;
         QPainterPath shape() const;
 
@@ -37,7 +38,8 @@ class GraphEdge : public QGraphicsWidget
         enum { Type = UserType + 2 };
         int type() const { return Type; }
 
-    protected: 
+    protected:
+        //virtual bool sceneEvent(QEvent *event);
         virtual void focusInEvent(QFocusEvent *event);
         virtual void focusOutEvent(QFocusEvent *event);
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
@@ -46,10 +48,12 @@ class GraphEdge : public QGraphicsWidget
 
     private:
         void init();
-        librdf_statement *statement_;
-        QTextLayout textLayout;
+        /*librdf_statement *statement_;
+        QTextLayout textLayout;*/
         QRectF labelRect_;
+        GraphicsPropertyLabel *label_;
         bool hover_;
+
 
         QPainterPath arrow_;
 

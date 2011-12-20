@@ -52,13 +52,37 @@ class GraphicsNodeLabel : public GraphicsLabel
         explicit GraphicsNodeLabel(librdf_node *node, QGraphicsWidget *parent = 0);
         ~GraphicsNodeLabel();
 
-        /// copy node and set it as rdf node of the graph node 
+        /// copy node and set it as rdf node of the label
         void setNode(librdf_node *node);
         const librdf_node *node() const;
 
         void editDialog();
 
         librdf_node *node_;
+
+    protected:
+        virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+
+    private:
+        void init();
+};
+
+class GraphicsPropertyLabel : public GraphicsLabel
+{
+    Q_OBJECT
+
+    public:
+        explicit GraphicsPropertyLabel(QGraphicsWidget *parent);
+        explicit GraphicsPropertyLabel(librdf_statement *statement, QGraphicsWidget *parent = 0);
+        ~GraphicsPropertyLabel();
+
+        /// copy statement and set it as rdf statement of the label
+        void setStatement(librdf_statement *statement);
+        const librdf_statement *statement() const;
+
+        void editDialog();
+
+        librdf_statement *statement_;
 
     protected:
         virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);

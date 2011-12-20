@@ -142,7 +142,6 @@ void GraphicsNodeLabel::setNode(librdf_node *node)
     char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node_, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
     setText(QString::fromLocal8Bit(str));
     free(str);
-    updateGeometry();
 }
 
 const librdf_node *GraphicsNodeLabel::node() const
@@ -173,5 +172,72 @@ void GraphicsNodeLabel::editDialog()
         }
         setNode(newnode);
         librdf_free_node(newnode);
+    }
+}
+
+
+GraphicsPropertyLabel::GraphicsPropertyLabel(QGraphicsWidget *parent) : GraphicsLabel(parent)
+{
+    init();
+}
+
+GraphicsPropertyLabel::GraphicsPropertyLabel(librdf_statement *statement, QGraphicsWidget *parent) : GraphicsLabel(parent)
+{
+    init();
+    setStatement(statement);
+}
+
+GraphicsPropertyLabel::~GraphicsPropertyLabel()
+{
+    //if(statement_ != NULL) librdf_free_statement(statement_);
+}
+
+void GraphicsPropertyLabel::init()
+{
+    statement_ = NULL;
+}
+
+void GraphicsPropertyLabel::setStatement(librdf_statement *statement)
+{
+    if(statement_ != NULL) librdf_free_statement(statement_);
+    statement_ = librdf_new_statement_from_statement(const_cast<librdf_statement *>(statement));
+
+    librdf_node *node = librdf_statement_get_predicate(statement_);
+    char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
+    setText(QString::fromLocal8Bit(const_cast<const char *>(str)));
+    free(str);
+}
+
+const librdf_statement *GraphicsPropertyLabel::statement() const
+{
+    return statement_;
+}
+
+void GraphicsPropertyLabel::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_UNUSED(event)
+
+    editDialog();
+}
+
+void GraphicsPropertyLabel::editDialog() 
+{
+    librdf_node *node = librdf_statement_get_predicate(statement_);
+    librdf_node *newnode = NULL;
+    RDFNodeEditDialog dialog (&newnode, node, reinterpret_cast<Graph *>(scene()), true);
+
+    if(dialog.exec() && newnode) {
+        rdf::Statement stat (statement_);
+        librdf_statement_set_predicate(stat, newnode);
+        try {
+            rdf::addOrReplaceStatement(reinterpret_cast<Graph *>(scene())->getContext(), stat, statement_);
+        } catch (std::exception& e) {
+            QString msg ("Error editing the node, probably illegal node form in this position");
+            msg.append("'\n Error: ").append(QString(typeid(e).name()));
+            alertPopup(msg);
+            return;
+        }
+        setStatement(static_cast<librdf_statement *>(stat));
+        //librdf_free_statement(stat); TODO uncomment this when redland 1.0.15 comes out
     }
 }

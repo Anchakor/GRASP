@@ -73,8 +73,6 @@ void Graph::contextChanged()
                 e->setSourceNode(nodes_.value(x));
                 if(!nodes_.contains(y)) throw AddEdgeNodeNotFoundException();
                 e->setDestNode(nodes_.value(y));
-
-                e->adjust();
             }
         }
         if(librdf_stream_next(stream)) break;

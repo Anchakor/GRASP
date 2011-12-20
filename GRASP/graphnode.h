@@ -17,7 +17,7 @@ class GraphNode : public QGraphicsWidget
        
         /// copy node and set it as rdf node of the graph node 
         void setNode(librdf_node *node);
-        //const librdf_node *node() const;
+        const librdf_node *node() const;
 
         //void editDialog();
 
@@ -31,7 +31,7 @@ class GraphNode : public QGraphicsWidget
         const QSet<GraphEdge *> *outEdges() const;
         const QSet<GraphEdge *> *inEdges() const;
         bool operator==(const GraphNode &other) const {
-            return librdf_node_equals(node_, other.node_);      
+            return librdf_node_equals(const_cast<librdf_node *>(node()), const_cast<librdf_node *>(other.node()));
         }
         void adjustEdges();
      
@@ -47,7 +47,6 @@ class GraphNode : public QGraphicsWidget
     private:
         void init();
         QGraphicsLinearLayout *layout_;
-        librdf_node *node_;
         QSet<GraphEdge *> outEdges_;
         QSet<GraphEdge *> inEdges_;
         bool hover_;

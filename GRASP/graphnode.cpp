@@ -17,7 +17,6 @@ GraphNode::GraphNode(librdf_node *node, QGraphicsItem *parent, Qt::WindowFlags w
 
 void GraphNode::init()
 {
-    node_ = NULL;
     hover_ = false;
     
     setAcceptHoverEvents(true);
@@ -42,28 +41,14 @@ void GraphNode::init()
 
 void GraphNode::setNode(librdf_node *node) 
 {
-    if(node_ != NULL) librdf_free_node(node_);
-    node_ = librdf_new_node_from_node(node);
-
     label_->setNode(node);
 }
 
-    /*char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node_, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
-    label_->setText(QString::fromLocal8Bit(str));
-    free(str);*/
-
-/*    QSizeF oldsize = size();
-    adjustSize();
-    setPos(x() + (oldsize.width() - size().width()) / 2, y() + (oldsize.height() - size().height()) / 2);
-
-    adjustEdges();
-}
-        
 const librdf_node *GraphNode::node() const
 {
-    return node_;
-}*/
-        
+    return label_->node();
+}
+
 void GraphNode::updateGeometry()
 {
     QGraphicsLayoutItem::updateGeometry();
@@ -122,10 +107,10 @@ void GraphNode::adjustEdges() {
     // adjust connected edges
     QSetIterator<GraphEdge *> i(inEdges_);
     while (i.hasNext())
-        i.next()->adjust();
+        i.next()->updateGeometry();
     QSetIterator<GraphEdge *> i2(outEdges_);
     while (i2.hasNext())
-        i2.next()->adjust();
+        i2.next()->updateGeometry();
 }
 
 bool GraphNode::eventFilter(QObject *obj, QEvent *event)

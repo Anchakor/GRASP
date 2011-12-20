@@ -20,11 +20,14 @@ GraphEdge::GraphEdge(librdf_statement *statement, QGraphicsItem *parent, Qt::Win
 
 void GraphEdge::init()
 {
-    statement_ = NULL;
+    //statement_ = NULL;
     sourceNode_ = NULL;
     destNode_ = NULL;
     arrowSize = 10;
     hover_ = false;
+
+    label_ = new GraphicsPropertyLabel(this);
+    //scene()->addItem(label_);
 
     setAcceptHoverEvents(true);
     setFlag(ItemIsSelectable);
@@ -33,23 +36,24 @@ void GraphEdge::init()
     setZValue(-1);
 }
 
-void GraphEdge::setStatement(const librdf_statement *statement) 
-{ 
-    if(statement_ != NULL) librdf_free_statement(statement_);
+void GraphEdge::setStatement(librdf_statement *statement) 
+{
+    label_->setStatement(statement);
+    /*if(statement_ != NULL) librdf_free_statement(statement_);
     statement_ = librdf_new_statement_from_statement(const_cast<librdf_statement *>(statement));
     
     librdf_node *node = librdf_statement_get_predicate(statement_);
     char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
     setText(QString::fromLocal8Bit(const_cast<const char *>(str)));
-    free(str);
-}
-        
-const librdf_statement *GraphEdge::statement() const
-{
-    return statement_;
+    free(str);*/
 }
 
-void GraphEdge::setText(const QString &text)
+const librdf_statement *GraphEdge::statement() const
+{
+    return label_->statement();
+}
+
+/*void GraphEdge::setText(const QString &text)
 {
     //QString tmp(text);
     //tmp.replace(QLatin1Char('\n'), QChar::LineSeparator);
@@ -79,7 +83,7 @@ QRectF GraphEdge::setupTextLayout(QTextLayout *layout)
         y += line.height();
     }
     return QRectF(0, 0, maxWidth, y);
-}
+}*/
         
 void GraphEdge::setSourceNode(GraphNode *node)
 {
@@ -105,7 +109,8 @@ GraphNode *GraphEdge::destNode() const
     return destNode_;
 }
 
-void GraphEdge::adjust()
+//void GraphEdge::adjust()
+void GraphEdge::updateGeometry()
 {
     if (!sourceNode_ || !destNode_) return;
 
@@ -120,8 +125,10 @@ void GraphEdge::adjust()
     QPointF dP (dSBR.center());
     
     QLineF line(sP, dP);
-    QRectF label (textLayout.boundingRect());
+    //QRectF label (textLayout.boundingRect());
+    QRectF label (label_->boundingRect());
     label.translate(line.pointAt(0.5));
+    label_->setGeometry(label);
     labelRect_ = label;
 
     prepareGeometryChange();
@@ -140,7 +147,8 @@ void GraphEdge::adjust()
     } else {
         sourcePoint = destPoint = line.p1();
     }
-    update();
+    QGraphicsLayoutItem::updateGeometry();
+    //update();
 }
 
 QRectF GraphEdge::boundingRect() const
@@ -208,8 +216,17 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     if(!hasFocus() && !hover_) col.setAlphaF(0.7);
     painter->fillRect(labelRect_, col);
     painter->setPen(palette().color(QPalette::ButtonText));
-    textLayout.draw(painter, labelRect_.topLeft()); 
+    //textLayout.draw(painter, labelRect_.topLeft()); 
 }
+
+/*bool GraphEdge::sceneEvent(QEvent *event)
+{
+    printf("event %d\n", event->type());
+    if(event->type() == QEvent::GraphicsSceneMouseDoubleClick) { 
+        scene()->sendEvent(label_, event);
+        return true; }
+    return QGraphicsItem::sceneEvent(event);
+}*/
      
 void GraphEdge::focusInEvent(QFocusEvent *event)
 {
@@ -248,15 +265,16 @@ void GraphEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     setZValue(-1);
     update();
 }
-        
+
 void GraphEdge::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event)
 
-    editDialog();
+    label_->editDialog();
+    updateGeometry();
 }
 
-void GraphEdge::editDialog() 
+/*void GraphEdge::editDialog() 
 {
     librdf_node *node = librdf_statement_get_predicate(statement_);
     librdf_node *newnode = NULL;
@@ -276,7 +294,7 @@ void GraphEdge::editDialog()
         setStatement(const_cast<const librdf_statement *>(static_cast<librdf_statement *>(stat)));
         //librdf_free_statement(stat); TODO uncomment this when redland 1.0.15 comes out
     }
-}
+}*/
 
 GraphEdge::~GraphEdge()
 {
