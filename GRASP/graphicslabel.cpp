@@ -20,7 +20,7 @@ GraphicsLabel::~GraphicsLabel()
 void GraphicsLabel::setText(const QString &text)
 {
     QString tmp(text);
-    //tmp.replace(QLatin1Char('\n'), QChar::LineSeparator);
+    tmp.replace(QLatin1Char('\n'), QChar::LineSeparator);
     textLayout.setText(tmp);
     setupTextLayout(&textLayout);
     updateGeometry();
@@ -52,7 +52,7 @@ QRectF GraphicsLabel::setupTextLayout(QTextLayout *layout)
     layout->beginLayout();
     while (layout->createLine().isValid());
     layout->endLayout();
-    
+
     qreal maxWidth = 0;
     qreal y = 0;
     for (int i = 0; i < layout->lineCount(); ++i) {
@@ -68,7 +68,7 @@ void GraphicsLabel::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 {
     Q_UNUSED(widget);
     Q_UNUSED(option);
-    
+
 /*    QTextLayout::FormatRange range;
     range.start = 0;
     range.length = textLayout.text().length();

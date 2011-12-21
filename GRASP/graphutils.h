@@ -9,7 +9,7 @@
 class RDFNodeEditDialog : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     RDFNodeEditDialog(librdf_node **result, librdf_node *node, Graph *graph, bool urionly = false, QWidget *parent = 0, Qt::WindowFlags f = 0) : QDialog(parent, f), graph_(graph), result_(result) {
         ui.setupUi(this);
@@ -18,7 +18,7 @@ public:
             ui.tabWidget->removeTab(2);
             ui.tabWidget->removeTab(1);
         }
-        
+
         if(librdf_node_is_resource(node)) {
             ui.tabWidget->setCurrentIndex(0);
             char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, graph->nstack_, NULL));
@@ -116,8 +116,8 @@ public slots:
         QDialog::accept();
     }
 
-    
-private: 
+
+private:
     Ui::NodeEditDialog ui;
     Graph *graph_;
     librdf_node **result_;

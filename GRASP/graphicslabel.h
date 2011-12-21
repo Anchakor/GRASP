@@ -30,15 +30,6 @@ class GraphicsLabel : public QGraphicsWidget
         enum { Type =  UserType + 1 };
         int type() const;
 
-    protected:
-        /*virtual bool sceneEvent(QEvent *event) {
-            printf("event %d\n", event->type());
-            if(event->type() == QEvent::GraphicsSceneMouseMove) { 
-                scene()->sendEvent(reinterpret_cast<QGraphicsItem *>(parent()), event);
-                return false; }
-            return QGraphicsWidget::sceneEvent(event);
-        }*/
-
     private:
         QTextLayout textLayout;
 };

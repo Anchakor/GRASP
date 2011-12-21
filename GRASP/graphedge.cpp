@@ -1,9 +1,7 @@
 #include "graphedge.h"
 #include "graphnode.h"
 #include "graph.h"
-#include "graphutils.h"
-#include "guiutils.h"
-       
+
 static const double Pi = 3.14159265358979323846264338327950288419717;
 static double TwoPi = 2.0 * Pi;
 
@@ -11,7 +9,7 @@ GraphEdge::GraphEdge(QGraphicsItem *parent, Qt::WindowFlags wFlags) : QGraphicsW
 {
     init();
 }
-        
+
 GraphEdge::GraphEdge(librdf_statement *statement, QGraphicsItem *parent, Qt::WindowFlags wFlags) : QGraphicsWidget(parent, wFlags) 
 {
     init();
@@ -20,14 +18,12 @@ GraphEdge::GraphEdge(librdf_statement *statement, QGraphicsItem *parent, Qt::Win
 
 void GraphEdge::init()
 {
-    //statement_ = NULL;
     sourceNode_ = NULL;
     destNode_ = NULL;
     arrowSize = 10;
     hover_ = false;
 
     label_ = new GraphicsPropertyLabel(this);
-    //scene()->addItem(label_);
 
     setAcceptHoverEvents(true);
     setFlag(ItemIsSelectable);
@@ -39,13 +35,6 @@ void GraphEdge::init()
 void GraphEdge::setStatement(librdf_statement *statement) 
 {
     label_->setStatement(statement);
-    /*if(statement_ != NULL) librdf_free_statement(statement_);
-    statement_ = librdf_new_statement_from_statement(const_cast<librdf_statement *>(statement));
-    
-    librdf_node *node = librdf_statement_get_predicate(statement_);
-    char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
-    setText(QString::fromLocal8Bit(const_cast<const char *>(str)));
-    free(str);*/
 }
 
 const librdf_statement *GraphEdge::statement() const
@@ -53,57 +42,25 @@ const librdf_statement *GraphEdge::statement() const
     return label_->statement();
 }
 
-/*void GraphEdge::setText(const QString &text)
-{
-    //QString tmp(text);
-    //tmp.replace(QLatin1Char('\n'), QChar::LineSeparator);
-    textLayout.setText(text);
-    setupTextLayout(&textLayout);
-    adjust();
-}
-
-QString GraphEdge::text() const
-{
-    return textLayout.text();
-}
-
-QRectF GraphEdge::setupTextLayout(QTextLayout *layout)
-{
-    layout->setCacheEnabled(true);
-    layout->beginLayout();
-    while (layout->createLine().isValid());
-    layout->endLayout();
-    
-    qreal maxWidth = 0;
-    qreal y = 0;
-    for (int i = 0; i < layout->lineCount(); ++i) {
-        QTextLine line = layout->lineAt(i);
-        maxWidth = qMax(maxWidth, line.naturalTextWidth());
-        line.setPosition(QPointF(0, y));
-        y += line.height();
-    }
-    return QRectF(0, 0, maxWidth, y);
-}*/
-        
 void GraphEdge::setSourceNode(GraphNode *node)
 {
     if(sourceNode_ != NULL) sourceNode_->unregisterEdge(this);
     sourceNode_ = node;
     sourceNode_->registerEdge(this, false);
 }
-        
+
 GraphNode *GraphEdge::sourceNode() const
 {
     return sourceNode_;
 }
-        
+
 void GraphEdge::setDestNode(GraphNode *node)
 {
     if(destNode_ != NULL) destNode_->unregisterEdge(this);
     destNode_ = node;
     destNode_->registerEdge(this);
 }
-        
+
 GraphNode *GraphEdge::destNode() const
 {
     return destNode_;
@@ -123,7 +80,7 @@ void GraphEdge::updateGeometry()
     // line from center of sourceNode_ to center of destNode_
     QPointF sP (sSBR.center());
     QPointF dP (dSBR.center());
-    
+
     QLineF line(sP, dP);
     //QRectF label (textLayout.boundingRect());
     QRectF label (label_->boundingRect());
@@ -132,7 +89,7 @@ void GraphEdge::updateGeometry()
     labelRect_ = label;
 
     prepareGeometryChange();
-    
+
     // set the source and destination points
     if(!sSBR.intersects(dSBR)) {
         QPointF po;
@@ -148,7 +105,6 @@ void GraphEdge::updateGeometry()
         sourcePoint = destPoint = line.p1();
     }
     QGraphicsLayoutItem::updateGeometry();
-    //update();
 }
 
 QRectF GraphEdge::boundingRect() const
@@ -157,7 +113,7 @@ QRectF GraphEdge::boundingRect() const
 
     qreal penWidth = 1;
     qreal extra = (penWidth + arrowSize) / 2.0;
-    
+
     return labelRect_.united(QRectF(sourcePoint, QSizeF(destPoint.x() - sourcePoint.x(),
                                       destPoint.y() - sourcePoint.y()))
         .normalized()
@@ -216,18 +172,8 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     if(!hasFocus() && !hover_) col.setAlphaF(0.7);
     painter->fillRect(labelRect_, col);
     painter->setPen(palette().color(QPalette::ButtonText));
-    //textLayout.draw(painter, labelRect_.topLeft()); 
 }
 
-/*bool GraphEdge::sceneEvent(QEvent *event)
-{
-    printf("event %d\n", event->type());
-    if(event->type() == QEvent::GraphicsSceneMouseDoubleClick) { 
-        scene()->sendEvent(label_, event);
-        return true; }
-    return QGraphicsItem::sceneEvent(event);
-}*/
-     
 void GraphEdge::focusInEvent(QFocusEvent *event)
 {
     Q_UNUSED(event)
@@ -236,7 +182,7 @@ void GraphEdge::focusInEvent(QFocusEvent *event)
     setZValue(1);
     update();
 }
-        
+
 void GraphEdge::focusOutEvent(QFocusEvent *event)
 {
     Q_UNUSED(event)
@@ -245,7 +191,7 @@ void GraphEdge::focusOutEvent(QFocusEvent *event)
     setZValue(-1);
     update();
 }
-        
+
 void GraphEdge::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     Q_UNUSED(event)
@@ -255,7 +201,7 @@ void GraphEdge::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     setZValue(1);
     update();
 }
-        
+
 void GraphEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     Q_UNUSED(event)
@@ -274,29 +220,6 @@ void GraphEdge::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     updateGeometry();
 }
 
-/*void GraphEdge::editDialog() 
-{
-    librdf_node *node = librdf_statement_get_predicate(statement_);
-    librdf_node *newnode = NULL;
-    RDFNodeEditDialog dialog (&newnode, node, reinterpret_cast<Graph *>(scene()), true);
-
-    if(dialog.exec() && newnode) {
-        rdf::Statement stat (statement_);
-        librdf_statement_set_predicate(stat, newnode);
-        try {
-            addOrReplaceStatement(reinterpret_cast<Graph *>(scene())->getContext(), stat, statement_);
-        } catch (std::exception& e) {
-            QString msg ("Error editing the node, probably illegal node form in this position");
-            msg.append("'\n Error: ").append(QString(typeid(e).name()));
-            alertPopup(msg);
-            return;
-        }
-        setStatement(const_cast<const librdf_statement *>(static_cast<librdf_statement *>(stat)));
-        //librdf_free_statement(stat); TODO uncomment this when redland 1.0.15 comes out
-    }
-}*/
-
 GraphEdge::~GraphEdge()
 {
-    //if(statement_ != NULL) librdf_free_statement(statement_);
 }

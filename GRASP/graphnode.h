@@ -14,12 +14,9 @@ class GraphNode : public QGraphicsWidget
         explicit GraphNode(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
         explicit GraphNode(librdf_node *node, QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
         ~GraphNode();
-       
-        /// copy node and set it as rdf node of the graph node 
+
         void setNode(librdf_node *node);
         const librdf_node *node() const;
-
-        //void editDialog();
 
         virtual void updateGeometry();
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
@@ -34,7 +31,7 @@ class GraphNode : public QGraphicsWidget
             return librdf_node_equals(const_cast<librdf_node *>(node()), const_cast<librdf_node *>(other.node()));
         }
         void adjustEdges();
-     
+
     protected:
         bool eventFilter(QObject *obj, QEvent *event);
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -42,7 +39,6 @@ class GraphNode : public QGraphicsWidget
         virtual void focusOutEvent(QFocusEvent *event);
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
         virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-        //virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
     private:
         void init();

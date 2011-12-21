@@ -1,14 +1,12 @@
 #include "graphnode.h"
 #include "graphedge.h"
 #include "graph.h"
-#include "graphutils.h"
-#include "guiutils.h"
-        
+
 GraphNode::GraphNode(QGraphicsItem *parent, Qt::WindowFlags wFlags) : QGraphicsWidget(parent, wFlags) 
 {
     init();
 }
-        
+
 GraphNode::GraphNode(librdf_node *node, QGraphicsItem *parent, Qt::WindowFlags wFlags) : QGraphicsWidget(parent, wFlags) 
 {
     init();
@@ -18,7 +16,7 @@ GraphNode::GraphNode(librdf_node *node, QGraphicsItem *parent, Qt::WindowFlags w
 void GraphNode::init()
 {
     hover_ = false;
-    
+
     setAcceptHoverEvents(true);
     setFlag(ItemIsMovable);
     setFlag(ItemIsSelectable);
@@ -31,7 +29,7 @@ void GraphNode::init()
     layout_->setContentsMargins(0,0,0,0);
     layout_->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     setLayout(layout_);
-    
+
     label_ = new GraphicsNodeLabel(this);
     layout_->addItem(label_);
 
@@ -102,7 +100,7 @@ const QSet<GraphEdge *> *GraphNode::inEdges() const
 {
     return &inEdges_;
 }
-        
+
 void GraphNode::adjustEdges() {
     // adjust connected edges
     QSetIterator<GraphEdge *> i(inEdges_);
@@ -135,7 +133,7 @@ void GraphNode::focusInEvent(QFocusEvent *event)
     //QGraphicsWidget::focusInEvent(event);
     update();
 }
-        
+
 void GraphNode::focusOutEvent(QFocusEvent *event)
 {
     Q_UNUSED(event)
@@ -143,7 +141,7 @@ void GraphNode::focusOutEvent(QFocusEvent *event)
     //QGraphicsWidget::focusOutEvent(event);
     update();
 }
-        
+
 void GraphNode::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     Q_UNUSED(event)
@@ -152,7 +150,7 @@ void GraphNode::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     //QGraphicsWidget::hoverEnterEvent(event);
     update();
 }
-        
+
 void GraphNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     Q_UNUSED(event)
@@ -161,35 +159,8 @@ void GraphNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     //QGraphicsWidget::hoverLeaveEvent(event);
     update();
 }
-        
-/*void GraphNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_UNUSED(event)
-
-    editDialog();
-}
-
-void GraphNode::editDialog()
-{
-    librdf_node *newnode = NULL;
-    RDFNodeEditDialog dialog (&newnode, node_, reinterpret_cast<Graph *>(scene()));
-
-    if(dialog.exec() && newnode) {
-        try {
-            replaceNode(reinterpret_cast<Graph *>(scene())->getContext(), newnode, node_);
-        } catch (std::exception& e) {
-            QString msg ("Error editing the node, probably illegal node form in this position");
-            msg.append("'\n Error: ").append(QString(typeid(e).name()));
-            alertPopup(msg);
-            return;
-        }
-        setNode(const_cast<const librdf_node *>(newnode));
-        librdf_free_node(newnode);
-    }
-}*/
 
 GraphNode::~GraphNode()
 {
-    //if(node_ != NULL) librdf_free_node(node_);
 }
 
