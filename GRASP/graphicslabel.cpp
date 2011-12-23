@@ -195,6 +195,11 @@ GraphicsPropertyLabel::~GraphicsPropertyLabel()
 void GraphicsPropertyLabel::init()
 {
     statement_ = NULL;
+    //setAcceptHoverEvents(true);
+    setFlag(ItemIsSelectable);
+    //setFlag(ItemIsMovable);
+    setFocusPolicy(Qt::StrongFocus); // setFlag(ItemIsFocusable);
+    //setCacheMode(DeviceCoordinateCache);
 }
 
 void GraphicsPropertyLabel::setStatement(librdf_statement *statement)

@@ -202,14 +202,6 @@ void GraphEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     update();
 }
 
-void GraphEdge::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_UNUSED(event)
-
-    label_->editDialog();
-    updateGeometry();
-}
-
 GraphEdge::~GraphEdge()
 {
 }

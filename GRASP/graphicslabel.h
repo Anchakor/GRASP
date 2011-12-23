@@ -13,6 +13,10 @@ class GraphicsLabel : public QGraphicsWidget
         explicit GraphicsLabel(const QString &text, QGraphicsWidget *parent = 0);
         ~GraphicsLabel();
 
+        virtual bool contains (const QPointF & point) const {
+            return QGraphicsItem::contains(point);
+        }
+
         void setText(const QString &text);
         QString text() const;
 
@@ -52,6 +56,11 @@ class GraphicsNodeLabel : public GraphicsLabel
         librdf_node *node_;
 
     protected:
+        /*virtual bool sceneEvent(QEvent *event)
+        {
+            printf("node event %d\n", event->type());
+            return QGraphicsItem::sceneEvent(event);
+        }*/
         virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
     private:
