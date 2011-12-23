@@ -19,6 +19,7 @@ void GraphNode::init()
 {
     hover_ = false;
 
+    setFiltersChildEvents(true);
     setAcceptHoverEvents(true);
     setFlag(ItemIsMovable);
     setFlag(ItemIsSelectable);
@@ -166,13 +167,14 @@ void GraphNode::adjustEdges() {
         i2.next()->updateGeometry();
 }
 
-bool GraphNode::eventFilter(QObject *obj, QEvent *event)
+/*bool GraphNode::eventFilter(QObject *obj, QEvent *event)*/
+bool GraphNode::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 {
     // all mouse move events of children are to be sorted out by GraphNode
     if(event->type() == QEvent::GraphicsSceneMouseMove) { 
         scene()->sendEvent(this, event);
         return true; }
-    return QObject::eventFilter(obj, event);
+    return QGraphicsItem::sceneEventFilter(watched, event);
 }
 
 void GraphNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
