@@ -2,26 +2,36 @@
 
 Graph::Graph(QObject *parent) : QGraphicsScene(parent), context_(rdf::world)
 {
+    init();
 }
 
 Graph::Graph(rdf::Node &context, QObject *parent) : QGraphicsScene(parent), context_(context)
 {
+    init();
     contextChanged();
 }
 
 Graph::Graph(rdf::Node &context, raptor_namespace_stack *nstack, QObject *parent) : QGraphicsScene(parent), nstack_(nstack), context_(context)
 {
+    init();
     contextChanged();
 }
 
 Graph::Graph(rdf::Node &context, QString &file, QObject *parent) : QGraphicsScene(parent), file_(file), context_(context)
 {
+    init();
     contextChanged();
 }
 
 Graph::Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QObject *parent) : QGraphicsScene(parent), nstack_(nstack), file_(file), context_(context)
 {
+    init();
     nstack_ = nstack;
+    contextChanged();
+}
+void Graph::init()
+{
+    lens_ = new Lens();
     contextChanged();
 }
 
@@ -46,6 +56,7 @@ void Graph::contextChanged()
                     nodes_.insert(rdf::Node(node), n)
                         .key());
                 n->setPos((qrand()*1000.0)/RAND_MAX,(qrand()*1000.0)/RAND_MAX);
+                n->contextChanged();
             }
             node = librdf_statement_get_object(statement);
             rdf::Node y(node);
@@ -57,6 +68,7 @@ void Graph::contextChanged()
                     nodes_.insert(rdf::Node(node), n)
                         .key());
                 n->setPos((qrand()*1000.0)/RAND_MAX,(qrand()*1000.0)/RAND_MAX);
+                n->contextChanged();
             }
                 rdf::Node nodex (librdf_statement_get_predicate(statement));
                 //printf("DEBUG pred node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(nodex)));
@@ -100,6 +112,7 @@ const QHash<librdf_statement *, GraphEdge *> *Graph::edges() const
 
 Graph::~Graph()
 {
+    delete lens_;
     /*QList<GraphNode *> nl = nodes_.values();
     for (int i = 0; i < nl.size(); ++i) {
         delete nl.at(i);

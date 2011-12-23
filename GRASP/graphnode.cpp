@@ -1,6 +1,8 @@
 #include "graphnode.h"
 #include "graphedge.h"
 #include "graph.h"
+#include "lens.h"
+#include "aggreg.h"
 
 GraphNode::GraphNode(QGraphicsItem *parent, Qt::WindowFlags wFlags) : QGraphicsWidget(parent, wFlags) 
 {
@@ -37,14 +39,67 @@ void GraphNode::init()
     setContentsMargins(framewidth,framewidth,framewidth,framewidth);
 }
 
-void GraphNode::setNode(librdf_node *node) 
+void GraphNode::contextChanged()
 {
-    label_->setNode(node);
+    genAggregLevel(label_, layout_);
 }
 
-const librdf_node *GraphNode::node() const
+void GraphNode::genAggregLevel(GraphicsNodeLabel *subjNode, QGraphicsLinearLayout *aggregProps)
 {
-    return label_->node();
+    for(int i = 0; i < aggregProps->count(); i++) {
+        if(aggregProps->itemAt(i) != subjNode) aggregProps->removeAt(i);
+    }
+
+    Graph *graph = reinterpret_cast<Graph *>(scene());
+    rdf::Node context (graph->getContext());
+    Lens *lens = graph->lens_;
+
+    librdf_stream *stream;
+    librdf_statement *statement;
+    librdf_statement *streamstatement;
+
+    statement = librdf_new_statement_from_nodes(rdf::world, librdf_new_node_from_node(const_cast<librdf_node *>(subjNode->node())), NULL, NULL);
+    stream = librdf_model_find_statements_in_context(rdf::model, statement, context);
+    if(NULL == stream) throw rdf::ModelAccessException();
+
+    while(!librdf_stream_end(stream)) {
+        streamstatement = librdf_stream_get_object(stream);
+        if(!aggregStatements_.contains(streamstatement)) {
+            librdf_statement *pattern = librdf_new_statement_from_nodes(rdf::world,
+                                librdf_new_node_from_node(librdf_statement_get_subject(streamstatement)),
+                                librdf_new_node_from_node(librdf_statement_get_predicate(streamstatement)),
+                                NULL);
+
+            rdf::Node n (librdf_statement_get_predicate(streamstatement));
+            if(lens->aggregPropertyList_.contains(n)) {
+                GraphAggregProperty *gap;
+                bool found = false;
+                for(int i = 0; i < aggregProps->count(); i++) {
+                    if(aggregProps->itemAt(i) == subjNode) continue;
+                    gap = reinterpret_cast<GraphAggregProperty *>(aggregProps->itemAt(i));
+                    if(librdf_statement_equals(const_cast<librdf_statement *>(gap->statement()), pattern)) {
+                        found = true; break;
+                    }
+                }
+                if(!found) {
+                    gap = new GraphAggregProperty();
+                    aggregProps->addItem(gap);
+                    gap->setStatement(pattern);
+                }
+
+                GraphAggregNode *aggNode = new GraphAggregNode();
+                gap->objects()->addItem(aggNode);
+                aggNode->setNode(librdf_statement_get_object(streamstatement));
+                aggregStatements_.insert(streamstatement);
+                // recursive call on next level aggregation
+                genAggregLevel(aggNode->label(), aggNode);
+            }
+            librdf_free_statement(pattern);
+        }
+        librdf_stream_next(stream);
+    }
+    librdf_free_statement(statement);
+    librdf_free_stream(stream);
 }
 
 void GraphNode::updateGeometry()

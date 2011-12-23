@@ -103,7 +103,7 @@ namespace rdf
 
     char *Node::serialize() const
     {
-        return reinterpret_cast<char *>(raptor_term_to_turtle_string(p, NULL, NULL));
+        return reinterpret_cast<char *>(librdf_node_to_string(p));// raptor_term_to_turtle_string(p, NULL, NULL));
         //return reinterpret_cast<char *>(librdf_node_to_string(p));
     }
 

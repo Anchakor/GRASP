@@ -16,8 +16,12 @@ class GraphEdge : public QGraphicsWidget
         explicit GraphEdge(librdf_statement *statement, QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
         ~GraphEdge();
 
-        void setStatement(librdf_statement *statement);
-        const librdf_statement *statement() const;
+        void setStatement(librdf_statement *statement) {
+            label_->setStatement(statement);
+        }
+        const librdf_statement *statement() const {
+            return label_->statement();
+        }
 
         void setSourceNode(GraphNode *node);
         GraphNode *sourceNode() const;

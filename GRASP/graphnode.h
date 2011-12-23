@@ -15,8 +15,14 @@ class GraphNode : public QGraphicsWidget
         explicit GraphNode(librdf_node *node, QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
         ~GraphNode();
 
-        void setNode(librdf_node *node);
-        const librdf_node *node() const;
+        void setNode(librdf_node *node) {
+            label_->setNode(node);
+        }
+        const librdf_node *node() const {
+            return label_->node();
+        }
+        void contextChanged();
+        void genAggregLevel(GraphicsNodeLabel *subjNode, QGraphicsLinearLayout *aggregProps);
 
         virtual void updateGeometry();
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
@@ -42,11 +48,14 @@ class GraphNode : public QGraphicsWidget
 
     private:
         void init();
+
+        /// should contain only label_ and GraphAggregProperties
         QGraphicsLinearLayout *layout_;
         QSet<GraphEdge *> outEdges_;
         QSet<GraphEdge *> inEdges_;
         bool hover_;
         GraphicsNodeLabel *label_;
+        QSet<rdf::Statement> aggregStatements_;
 };
 
 #endif

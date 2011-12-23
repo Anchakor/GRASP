@@ -19,7 +19,9 @@ SOURCES += main.cpp\
         graph.cpp\
         graphicslabel.cpp\
         graphnode.cpp\
-        graphedge.cpp
+        graphedge.cpp\
+        lens.cpp\
+        aggreg.cpp
 
 HEADERS  += mainwindow.h\
         persistentcounter.h\
@@ -30,7 +32,9 @@ HEADERS  += mainwindow.h\
         graphnode.h\
         graphedge.h\
         graphutils.h\
-        guiutils.h
+        guiutils.h\
+        lens.h\
+        aggreg.h
 
 FORMS    += mainwindow.ui\
         nodeedit.ui

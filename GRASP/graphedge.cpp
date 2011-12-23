@@ -32,16 +32,6 @@ void GraphEdge::init()
     setZValue(-1);
 }
 
-void GraphEdge::setStatement(librdf_statement *statement) 
-{
-    label_->setStatement(statement);
-}
-
-const librdf_statement *GraphEdge::statement() const
-{
-    return label_->statement();
-}
-
 void GraphEdge::setSourceNode(GraphNode *node)
 {
     if(sourceNode_ != NULL) sourceNode_->unregisterEdge(this);

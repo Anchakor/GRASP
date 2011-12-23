@@ -39,7 +39,7 @@ class GraphicsNodeLabel : public GraphicsLabel
     Q_OBJECT
 
     public:
-        explicit GraphicsNodeLabel(QGraphicsWidget *parent);
+        explicit GraphicsNodeLabel(QGraphicsWidget *parent = 0);
         explicit GraphicsNodeLabel(librdf_node *node, QGraphicsWidget *parent = 0);
         ~GraphicsNodeLabel();
 
@@ -63,7 +63,7 @@ class GraphicsPropertyLabel : public GraphicsLabel
     Q_OBJECT
 
     public:
-        explicit GraphicsPropertyLabel(QGraphicsWidget *parent);
+        explicit GraphicsPropertyLabel(QGraphicsWidget *parent = 0);
         explicit GraphicsPropertyLabel(librdf_statement *statement, QGraphicsWidget *parent = 0);
         ~GraphicsPropertyLabel();
 

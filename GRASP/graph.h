@@ -6,6 +6,7 @@
 #include "graphicslabel.h"
 #include "graphnode.h"
 #include "graphedge.h"
+#include "lens.h"
 #include "ui_nodeedit.h"
 
 class Graph : public QGraphicsScene
@@ -25,8 +26,11 @@ class Graph : public QGraphicsScene
 
         raptor_namespace_stack *nstack_;
         QString file_;
+        Lens *lens_;
 
     private:
+        void init();
+
         rdf::Node context_;
         //QSet<librdf_node *> node_ids_;
         QHash<rdf::Node, GraphNode *> nodes_;
