@@ -28,7 +28,7 @@ void GraphEdge::init()
     setAcceptHoverEvents(true);
     setFlag(ItemIsSelectable);
     setFocusPolicy(Qt::StrongFocus); // setFlag(ItemIsFocusable);
-    setCacheMode(DeviceCoordinateCache);
+    //setCacheMode(DeviceCoordinateCache);
     setZValue(-1);
 }
 
