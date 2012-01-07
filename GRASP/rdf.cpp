@@ -7,7 +7,8 @@ namespace rdf
     librdf_storage *storage;
     librdf_model *model;
     raptor_world *raptor;
-    raptor_iostream *iostr;
+    librdf_uri *baseUri;
+    librdf_node *lensContext;
 
     QSet<Node *> contexts;
 

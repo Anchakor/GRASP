@@ -14,6 +14,8 @@ namespace rdf
     extern librdf_storage *storage;
     extern librdf_model *model;
     extern raptor_world *raptor;
+    extern librdf_uri *baseUri;
+    extern librdf_node *lensContext;
 
     struct NodeConstructException : public std::exception {};
     struct StreamConstructException : public std::exception {};

@@ -30,6 +30,12 @@ int main(int argc, char *argv[])
         return(1);
     }
 
+    rdf::baseUri = librdf_new_uri(rdf::world, (unsigned char *)"test:");
+
+    raptor_namespace_stack *nstack;
+    rdf::Node *lC = rdf::loadGraphFromFile(QString("../lens.ttl"), &nstack, "text/turtle", rdf::baseUri);
+    rdf::lensContext = librdf_new_node_from_node(*lC);
+    delete lC;
 
     QApplication a(argc, argv);
     MainWindow w;
@@ -40,6 +46,9 @@ int main(int argc, char *argv[])
 #endif
     ret = a.exec();
 
+    librdf_free_node(rdf::lensContext);
+    raptor_free_namespaces(nstack);
+    librdf_free_uri(rdf::baseUri);
     librdf_free_model(rdf::model);
     librdf_free_storage(rdf::storage);
     raptor_free_world(rdf::raptor);

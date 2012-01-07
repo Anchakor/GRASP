@@ -32,6 +32,8 @@ Graph::Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, 
 void Graph::init()
 {
     lens_ = new Lens();
+    rdf::Node n ("http://mud.cz/sw/ed#lens/test");
+    lens_->loadLens(n);
     contextChanged();
 }
 
@@ -113,6 +115,7 @@ const QHash<librdf_statement *, GraphEdge *> *Graph::edges() const
 Graph::~Graph()
 {
     delete lens_;
+    raptor_free_namespaces(nstack_);
     /*QList<GraphNode *> nl = nodes_.values();
     for (int i = 0; i < nl.size(); ++i) {
         delete nl.at(i);
