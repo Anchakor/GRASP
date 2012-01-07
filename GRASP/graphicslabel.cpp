@@ -171,6 +171,7 @@ void GraphicsNodeLabel::editDialog()
             return;
         }
         setNode(newnode);
+        reinterpret_cast<Graph *>(scene())->contextChanged();
         librdf_free_node(newnode);
     }
 }
@@ -243,6 +244,14 @@ void GraphicsPropertyLabel::editDialog()
             return;
         }
         setStatement(static_cast<librdf_statement *>(stat));
+        reinterpret_cast<Graph *>(scene())->contextChanged();
         //librdf_free_statement(stat); TODO uncomment this when redland 1.0.15 comes out
     }
+}
+
+void GraphicsPropertyPatternLabel::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_UNUSED(event)
+
+    editDialog();
 }

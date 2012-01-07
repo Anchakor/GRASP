@@ -7,5 +7,5 @@
 @prefix lens: <http://mud.cz/sw/ed#lens/> .
 
 lens:test a lens:Lens , lens:BlacklistProperties ;
-    lens:property rdf:type ;
+    lens:property rdf:typxe ;
     lens:aggregatedProperty rdf:type .

@@ -23,7 +23,7 @@ GraphAggregProperty::GraphAggregProperty(QGraphicsLayoutItem *parent) : QGraphic
     l_ = new GraphicsLabel();
     l_->setText(" ");
     addItem(l_);
-    label_ = new GraphicsPropertyLabel();
+    label_ = new GraphicsPropertyPatternLabel();
     addItem(label_);
     objects_ = new QGraphicsLinearLayout(Qt::Vertical);
     addItem(objects_);
