@@ -40,6 +40,10 @@ void Graph::init()
 class AddEdgeNodeNotFoundException {};
 void Graph::contextChanged()
 {
+    nodes_.clear();
+    edges_.clear();
+    clear();
+
     librdf_stream *stream = librdf_model_context_as_stream(rdf::model, context_);
     if(NULL == stream) throw rdf::StreamConstructException();
 
@@ -47,7 +51,9 @@ void Graph::contextChanged()
         librdf_statement *statement = librdf_stream_get_object(stream);
         if(NULL == statement) throw rdf::StatementConstructException();
 
-        if(true) { // triple/property not blacklisted TODO
+        rdf::Node nodepred (librdf_statement_get_predicate(statement));
+        //printf("DEBUG pred node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(nodepred)));
+        if(!(lens_->whitelistMode_ ^ lens_->propertyList_.contains(nodepred))) { // triple/property not blacklisted
             librdf_node *node = librdf_statement_get_subject(statement);
             rdf::Node x(node);
             //printf("DEBUG subj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(x)));
@@ -72,8 +78,6 @@ void Graph::contextChanged()
                 n->setPos((qrand()*1000.0)/RAND_MAX,(qrand()*1000.0)/RAND_MAX);
                 n->contextChanged();
             }
-                rdf::Node nodex (librdf_statement_get_predicate(statement));
-                //printf("DEBUG pred node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(nodex)));
             rdf::Statement z(statement);
             if(!edges_.contains(z)) {
                 GraphEdge *e = new GraphEdge();
