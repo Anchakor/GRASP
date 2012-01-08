@@ -12,7 +12,7 @@ namespace rdf
 
     QSet<Node *> contexts;
 
-    Node *loadGraphFromFile(const QString & path, raptor_namespace_stack **nstack, const char *mimeType, librdf_uri *baseUri) 
+    Node *loadGraphFromFile(const QString & path, raptor_namespace_stack **nstack, const char *mimeType, librdf_uri *baseUri, QHash<QString, QString> *nshash, QHash<QString, QPointF> *loadedNodePositions)
     {
         Parser parser (world, NULL, mimeType, NULL);
 
@@ -35,13 +35,32 @@ namespace rdf
             throw ModelAccessException();
         }
 
-        *nstack = getParsedNamespaces(parser);
+        *nstack = getParsedNamespaces(parser, nshash);
+
+        // load node positions
+        file.reset();
+        while(!file.atEnd()) {
+            QByteArray line = file.readLine();
+            if(line.size() < 20) continue;
+            QList<QByteArray> lineParts = line.split(' ');
+            if(lineParts.size() != 4) continue;
+            if(lineParts.at(0) != QString(NODEPOSITIONCOMMENTPREFIX)) continue;
+            bool ok = false;
+            float x = lineParts.at(2).toFloat(&ok);
+            if(!ok) continue;
+            QByteArray at3 (lineParts.at(3));
+            at3.replace("\n", QByteArray());
+            float y = at3.toFloat(&ok);
+            if(!ok) continue;
+            //printf("NP: %s %f %f\n", lineParts.at(1).constData(), x, y);
+            loadedNodePositions->insert(QString(lineParts.at(1)), QPointF(x, y));
+        }
 
         librdf_free_stream(stream);
         return contextNode;
     }
 
-    Node *loadGraphFromURI(const QString & uri, raptor_namespace_stack **nstack, const char *mimeType, librdf_uri *baseUri) 
+    Node *loadGraphFromURI(const QString & uri, raptor_namespace_stack **nstack, const char *mimeType, librdf_uri *baseUri, QHash<QString, QString> *nshash) 
     {
         Parser parser (world, NULL, mimeType, NULL);
 
@@ -63,7 +82,7 @@ namespace rdf
             throw ModelAccessException(); 
         }
 
-        *nstack = getParsedNamespaces(parser);
+        *nstack = getParsedNamespaces(parser, nshash);
 
         librdf_free_stream(stream);
         return contextNode;
@@ -130,7 +149,7 @@ namespace rdf
         return qstrdup(s.toLatin1().constData());
     }
 
-    raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser) {
+    raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser, QHash<QString, QString> *nshash) {
         int namespaces = librdf_parser_get_namespaces_seen_count(parser);
         if(namespaces < 1) return NULL;
 
@@ -142,6 +161,8 @@ namespace rdf
             librdf_uri* uri = librdf_parser_get_namespaces_seen_uri(parser, i);
             if(NULL == prefix || NULL == uri) return NULL;
             unsigned char *uric = librdf_uri_to_string(uri);
+
+            if(NULL != nshash) nshash->insert(QString((const char *)prefix), QString((const char *)uric));
 
             raptor_namespace *ns = raptor_new_namespace(nstack, prefix, uric, 0);
             if(NULL == ns) return NULL;

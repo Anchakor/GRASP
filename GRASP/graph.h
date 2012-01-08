@@ -16,9 +16,9 @@ class Graph : public QGraphicsScene
     public:
         explicit Graph(QObject *parent = 0);
         explicit Graph(rdf::Node &context, QObject *parent = 0);
-        explicit Graph(rdf::Node &context, raptor_namespace_stack *nstack, QObject *parent = 0);
+        explicit Graph(rdf::Node &context, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QObject *parent = 0);
         explicit Graph(rdf::Node &context, QString &file, QObject *parent = 0);
-        explicit Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QObject *parent = 0);
+        explicit Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QHash<QString, QPointF> &loadedNodePositions, QObject *parent = 0);
         ~Graph();
 
         void contextChanged();
@@ -27,6 +27,7 @@ class Graph : public QGraphicsScene
         void saveFile();
         void saveFileAs();
 
+        QHash<QString, QString> nshash_;
         raptor_namespace_stack *nstack_;
         QString file_;
         Lens *lens_;

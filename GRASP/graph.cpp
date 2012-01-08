@@ -11,7 +11,7 @@ Graph::Graph(rdf::Node &context, QObject *parent) : QGraphicsScene(parent), cont
     contextChanged();
 }
 
-Graph::Graph(rdf::Node &context, raptor_namespace_stack *nstack, QObject *parent) : QGraphicsScene(parent), nstack_(nstack), context_(context)
+Graph::Graph(rdf::Node &context, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QObject *parent) : QGraphicsScene(parent), nshash_(nshash), nstack_(nstack), context_(context)
 {
     init();
     contextChanged();
@@ -23,11 +23,21 @@ Graph::Graph(rdf::Node &context, QString &file, QObject *parent) : QGraphicsScen
     contextChanged();
 }
 
-Graph::Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QObject *parent) : QGraphicsScene(parent), nstack_(nstack), file_(file), context_(context)
+Graph::Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QHash<QString, QPointF> &loadedNodePositions, QObject *parent) : QGraphicsScene(parent), nshash_(nshash), nstack_(nstack), file_(file), context_(context)
 {
     init();
     nstack_ = nstack;
     contextChanged();
+
+    QHash<rdf::Node, GraphNode *>::const_iterator i = nodes_.constBegin();
+    while (i != nodes_.constEnd()) {
+        char *s = i.key().serialize();
+        if(loadedNodePositions.contains(QString(s))) {
+            i.value()->setPos(loadedNodePositions.value(QString(s)));
+        }
+        ++i;
+        free(s);
+    }
 }
 void Graph::init()
 {
@@ -109,7 +119,23 @@ void Graph::saveFile()
     //qDebug(file_.toLatin1().constData());
     if(!file_.isEmpty()) {
         FILE *file = fopen(file_.toLatin1().constData(), "w");
+        QHash<QString, QString>::const_iterator i = nshash_.constBegin();
+        while (i != nshash_.constEnd()) {
+            fprintf(file, "@prefix %s: <%s> .\n", i.key().toLatin1().constData(), i.value().toLatin1().constData());
+            ++i;
+        }
         rdf::saveGraphToFile(context_, file);
+
+        // write node positions
+        QHash<rdf::Node, GraphNode *>::const_iterator j = nodes_.constBegin();
+        while (j != nodes_.constEnd()) {
+            char *s = j.key().serialize();
+            QString out (NODEPOSITIONCOMMENTPREFIX);
+            out.append(' ').append(QString(s)).append(' ').append(QString::number(j.value()->x())).append(' ').append(QString::number(j.value()->y()));
+            fprintf(file, "%s\n", out.toLatin1().constData());
+            ++j;
+            free(s);
+        }
         fclose(file);
     } else
         saveFileAs();
