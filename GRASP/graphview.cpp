@@ -41,7 +41,7 @@ void GraphView::openFile()
     rdf::Node *context;
     raptor_namespace_stack *nstack = NULL;
     QHash<QString, QString> nshash;
-    QHash<QString, QPointF> loadedNodePositions;
+    QHash<uint, QPointF> loadedNodePositions;
     try {
         context = rdf::loadGraphFromFile(path, &nstack, "text/turtle", rdf::baseUri, &nshash, &loadedNodePositions);
     } catch (std::exception& e) {

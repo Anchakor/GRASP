@@ -18,7 +18,7 @@ class Graph : public QGraphicsScene
         explicit Graph(rdf::Node &context, QObject *parent = 0);
         explicit Graph(rdf::Node &context, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QObject *parent = 0);
         explicit Graph(rdf::Node &context, QString &file, QObject *parent = 0);
-        explicit Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QHash<QString, QPointF> &loadedNodePositions, QObject *parent = 0);
+        explicit Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QHash<uint, QPointF> &loadedNodePositions, QObject *parent = 0);
         ~Graph();
 
         void contextChanged();
@@ -39,6 +39,7 @@ class Graph : public QGraphicsScene
         //QSet<librdf_node *> node_ids_;
         QHash<rdf::Node, GraphNode *> nodes_;
         QHash<rdf::Statement, GraphEdge *> edges_;
+        QHash<uint, QPointF> loadedNodePositions_;
 };
 
 #endif

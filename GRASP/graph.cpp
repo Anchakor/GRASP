@@ -23,21 +23,11 @@ Graph::Graph(rdf::Node &context, QString &file, QObject *parent) : QGraphicsScen
     contextChanged();
 }
 
-Graph::Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QHash<QString, QPointF> &loadedNodePositions, QObject *parent) : QGraphicsScene(parent), nshash_(nshash), nstack_(nstack), file_(file), context_(context)
+Graph::Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QHash<uint, QPointF> &loadedNodePositions, QObject *parent) : QGraphicsScene(parent), nshash_(nshash), nstack_(nstack), file_(file), context_(context), loadedNodePositions_(loadedNodePositions)
 {
     init();
     nstack_ = nstack;
     contextChanged();
-
-    QHash<rdf::Node, GraphNode *>::const_iterator i = nodes_.constBegin();
-    while (i != nodes_.constEnd()) {
-        char *s = i.key().serialize();
-        if(loadedNodePositions.contains(QString(s))) {
-            i.value()->setPos(loadedNodePositions.value(QString(s)));
-        }
-        ++i;
-        free(s);
-    }
 }
 void Graph::init()
 {
@@ -106,6 +96,17 @@ void Graph::contextChanged()
         if(librdf_stream_next(stream)) break;
     }
 
+    QHash<rdf::Node, GraphNode *>::const_iterator i = nodes_.constBegin();
+    while (i != nodes_.constEnd()) {
+        char *s = i.key().serialize();
+        uint u = qHash(QByteArray(s));
+        if(loadedNodePositions_.contains(u)) {
+            i.value()->setPos(loadedNodePositions_.value(u));
+        }
+        ++i;
+        free(s);
+    }
+
     librdf_free_stream(stream);
 }
 
@@ -131,7 +132,7 @@ void Graph::saveFile()
         while (j != nodes_.constEnd()) {
             char *s = j.key().serialize();
             QString out (NODEPOSITIONCOMMENTPREFIX);
-            out.append(' ').append(QString(s)).append(' ').append(QString::number(j.value()->x())).append(' ').append(QString::number(j.value()->y()));
+            out.append(' ').append(QString::number(j.value()->x())).append(' ').append(QString::number(j.value()->y())).append(' ').append(QString::number(qHash(QByteArray(s))));
             fprintf(file, "%s\n", out.toLatin1().constData());
             ++j;
             free(s);
@@ -163,7 +164,7 @@ const QHash<librdf_statement *, GraphEdge *> *Graph::edges() const
 Graph::~Graph()
 {
     delete lens_;
-    raptor_free_namespaces(nstack_);
+    //raptor_free_namespaces(nstack_);
     /*QList<GraphNode *> nl = nodes_.values();
     for (int i = 0; i < nl.size(); ++i) {
         delete nl.at(i);

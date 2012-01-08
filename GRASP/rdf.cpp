@@ -12,7 +12,7 @@ namespace rdf
 
     QSet<Node *> contexts;
 
-    Node *loadGraphFromFile(const QString & path, raptor_namespace_stack **nstack, const char *mimeType, librdf_uri *baseUri, QHash<QString, QString> *nshash, QHash<QString, QPointF> *loadedNodePositions)
+    Node *loadGraphFromFile(const QString & path, raptor_namespace_stack **nstack, const char *mimeType, librdf_uri *baseUri, QHash<QString, QString> *nshash, QHash<uint, QPointF> *loadedNodePositions)
     {
         Parser parser (world, NULL, mimeType, NULL);
 
@@ -31,7 +31,7 @@ namespace rdf
         Node *contextNode = new Node(world, contextURI);
         contexts.insert(contextNode);
 
-        if(0 != librdf_storage_context_add_statements(storage, *contextNode, stream)) { 
+        if(0 != librdf_storage_context_add_statements(storage, *contextNode, stream)) {
             throw ModelAccessException();
         }
 
@@ -43,17 +43,19 @@ namespace rdf
             QByteArray line = file.readLine();
             if(line.size() < 20) continue;
             QList<QByteArray> lineParts = line.split(' ');
-            if(lineParts.size() != 4) continue;
+            if(lineParts.size() < 4) continue;
             if(lineParts.at(0) != QString(NODEPOSITIONCOMMENTPREFIX)) continue;
             bool ok = false;
-            float x = lineParts.at(2).toFloat(&ok);
+            float x = lineParts.at(1).toFloat(&ok);
+            if(!ok) continue;
+            float y = lineParts.at(2).toFloat(&ok);
             if(!ok) continue;
             QByteArray at3 (lineParts.at(3));
             at3.replace("\n", QByteArray());
-            float y = at3.toFloat(&ok);
+            uint u = at3.toUInt(&ok);
             if(!ok) continue;
-            //printf("NP: %s %f %f\n", lineParts.at(1).constData(), x, y);
-            loadedNodePositions->insert(QString(lineParts.at(1)), QPointF(x, y));
+            //printf("NP: %f %f %i\n", x, y, u);
+            loadedNodePositions->insert(u, QPointF(x, y));
         }
 
         librdf_free_stream(stream);
