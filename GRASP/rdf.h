@@ -84,6 +84,10 @@ namespace rdf
             if(NULL == p) { throw NodeConstructException(); }
         }
       public:
+        Node() {
+            p = librdf_new_node(world);
+            init();
+        }
         Node(const char *str) {
             p = librdf_new_node_from_uri_string(world, (unsigned char *)str);
             init();

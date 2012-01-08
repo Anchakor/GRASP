@@ -8,7 +8,7 @@ namespace rdf
     librdf_model *model;
     raptor_world *raptor;
     librdf_uri *baseUri;
-    librdf_node *lensContext;
+    librdf_node *lensContext = NULL;
 
     QSet<Node *> contexts;
 

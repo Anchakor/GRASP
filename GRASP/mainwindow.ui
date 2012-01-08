@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>621</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -47,7 +47,15 @@
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuLens">
+    <property name="title">
+     <string>&amp;Lens</string>
+    </property>
+    <addaction name="actionReload"/>
+    <addaction name="separator"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuLens"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -108,6 +116,11 @@
   <action name="actionS_ave_as">
    <property name="text">
     <string>S&amp;ave as...</string>
+   </property>
+  </action>
+  <action name="actionReload">
+   <property name="text">
+    <string>&amp;Reload</string>
    </property>
   </action>
  </widget>
