@@ -31,6 +31,7 @@ class Graph : public QGraphicsScene
         raptor_namespace_stack *nstack_;
         QString file_;
         Lens *lens_;
+        QHash<uint, QPointF> loadedNodePositions_;
 
     private:
         void init();
@@ -39,7 +40,6 @@ class Graph : public QGraphicsScene
         //QSet<librdf_node *> node_ids_;
         QHash<rdf::Node, GraphNode *> nodes_;
         QHash<rdf::Statement, GraphEdge *> edges_;
-        QHash<uint, QPointF> loadedNodePositions_;
 };
 
 #endif

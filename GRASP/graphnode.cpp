@@ -181,6 +181,11 @@ void GraphNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsWidget::mouseMoveEvent(event);
     adjustEdges();
+    Graph *graph = reinterpret_cast<Graph *>(scene());
+    char *s = rdf::Node(const_cast<librdf_node *>(label_->node())).serialize();
+    uint u = qHash(QByteArray(s));
+    graph->loadedNodePositions_[u] = pos();
+    free(s);
 }
 
 void GraphNode::focusInEvent(QFocusEvent *event)

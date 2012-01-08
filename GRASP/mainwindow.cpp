@@ -58,7 +58,6 @@ void MainWindow::loadLensMenu()
         librdf_node *ns = librdf_statement_get_subject(streamstatement);
         rdf::Node nis (ns);
         char *s = (char *)raptor_term_to_turtle_string(ns, nstack, NULL);
-        printf("lens: %s\n", s);
         QAction *a = new QAction(tr(s), this);
         free(s);
         ui->menuLens->addAction(a);

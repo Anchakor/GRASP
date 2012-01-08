@@ -12,4 +12,5 @@ lens:test a lens:Lens , lens:BlacklistProperties ;
 
 lens:test2 a lens:Lens , lens:WhitelistProperties ;
     lens:property rdf:type ;
+    lens:property foaf:nick ;
     lens:aggregatedProperty rdf:type .
