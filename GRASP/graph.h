@@ -24,6 +24,9 @@ class Graph : public QGraphicsScene
         void contextChanged();
         rdf::Node getContext();
 
+        void saveFile();
+        void saveFileAs();
+
         raptor_namespace_stack *nstack_;
         QString file_;
         Lens *lens_;

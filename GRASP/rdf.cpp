@@ -76,7 +76,7 @@ namespace rdf
 
         Serializer serializer (world, NULL, "text/turtle", NULL);
 
-        if(0 != librdf_serializer_serialize_stream_to_file_handle(serializer, file, NULL, stream)) {
+        if(0 != librdf_serializer_serialize_stream_to_file_handle(serializer, file, baseUri, stream)) {
             throw SerializationException();
         }
 
@@ -90,7 +90,7 @@ namespace rdf
 
         Serializer serializer (world, NULL, "text/turtle", NULL);
 
-        if(0 != librdf_serializer_serialize_stream_to_file_handle(serializer, stdout, NULL, stream)) {
+        if(0 != librdf_serializer_serialize_stream_to_file_handle(serializer, stdout, baseUri, stream)) {
             throw SerializationException();
         }
 
@@ -153,7 +153,7 @@ namespace rdf
     }
 
     void addOrReplaceStatement(librdf_node *context, librdf_statement *replacement, librdf_statement *statement) {
-        printf("%s\t%s\t%s\n", librdf_node_to_string(context), librdf_statement_to_string(replacement), librdf_statement_to_string(statement));
+        //printf("%s\t%s\t%s\n", librdf_node_to_string(context), librdf_statement_to_string(replacement), librdf_statement_to_string(statement));
         if(statement) {
             if(0 != librdf_model_context_remove_statement(model, context, statement))
                 throw ModelAccessException();

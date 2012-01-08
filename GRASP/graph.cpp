@@ -104,6 +104,24 @@ rdf::Node Graph::getContext()
     return rdf::Node(context_);
 }
 
+void Graph::saveFile()
+{
+    //qDebug(file_.toLatin1().constData());
+    if(!file_.isEmpty()) {
+        FILE *file = fopen(file_.toLatin1().constData(), "w");
+        rdf::saveGraphToFile(context_, file);
+        fclose(file);
+    } else
+        saveFileAs();
+}
+
+void Graph::saveFileAs()
+{
+    QString fileName = QFileDialog::getSaveFileName(NULL, tr("Save"), QString(), tr("Turtle files (*.ttl)"));
+    file_ = fileName;
+    saveFile();
+}
+
 
 /*
 const QHash<librdf_node *, GraphNode *> *Graph::nodes() const

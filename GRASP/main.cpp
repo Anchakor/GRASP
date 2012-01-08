@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
         return(1);
     }
 
-    rdf::baseUri = librdf_new_uri(rdf::world, (unsigned char *)"test:");
+    rdf::baseUri = librdf_new_uri(rdf::world, (unsigned char *)"grasp:baseUri");
 
     raptor_namespace_stack *nstack;
     rdf::Node *lC = rdf::loadGraphFromFile(QString("../lens.ttl"), &nstack, "text/turtle", rdf::baseUri);

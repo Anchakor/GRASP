@@ -80,25 +80,3 @@ void GraphView::openURL()
     setScene(g);
 }
 
-void GraphView::saveFile()
-{
-    QString path = graphs[currentGraph]->file_;
-    //qDebug(path.toLatin1().constData());
-    if(!path.isEmpty()) {
-        rdf::Node context = graphs[currentGraph]->getContext();
-        FILE *file = fopen(path.toLatin1().constData(), "w");
-        rdf::saveGraphToFile(context, file);
-        fclose(file);
-    } else
-        saveFileAs();
-}
-
-void GraphView::saveFileAs()
-{
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save"), QString(), tr("Turtle files (*.ttl)"));
-    rdf::Node context = graphs[currentGraph]->getContext();
-    FILE *file = fopen(fileName.toLatin1().constData(), "w");
-    rdf::saveGraphToFile(context, file);
-    fclose(file);
-    graphs[currentGraph]->file_ = fileName;
-}
