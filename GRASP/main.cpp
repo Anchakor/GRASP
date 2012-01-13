@@ -4,6 +4,7 @@
 #include <typeinfo>
 #include "rdf.h"
 #include "mainwindow.h"
+#include "graph.h"
 
 int main(int argc, char *argv[])
 {
@@ -41,7 +42,6 @@ int main(int argc, char *argv[])
 #endif
     ret = a.exec();
 
-    if(rdf::lensContext) librdf_free_node(rdf::lensContext);
     librdf_free_uri(rdf::baseUri);
     librdf_free_model(rdf::model);
     librdf_free_storage(rdf::storage);

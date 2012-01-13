@@ -1,5 +1,6 @@
 #include "lens.h"
 #include "rdf.h"
+#include "mainwindow.h"
 
 Lens::Lens()
 {
@@ -23,6 +24,7 @@ void Lens::clear()
 
 void Lens::loadLens(librdf_node *l)
 {
+    if(!lensGraph) return;
     clear();
 
     librdf_stream *stream;
@@ -30,7 +32,7 @@ void Lens::loadLens(librdf_node *l)
     librdf_statement *streamstatement;
 
     statement = librdf_new_statement_from_nodes(rdf::world, librdf_new_node_from_node(l), NULL, NULL);
-    stream = librdf_model_find_statements_in_context(rdf::model, statement, rdf::lensContext);
+    stream = librdf_model_find_statements_in_context(rdf::model, statement, lensGraph->getContext());
     if(NULL == stream) throw rdf::ModelAccessException();
 
     while(!librdf_stream_end(stream)) {

@@ -5,6 +5,8 @@
 #include "rdf.h"
 #include "graph.h"
 
+extern Graph *lensGraph;
+
 namespace Ui {
     class MainWindow;
 }
@@ -26,7 +28,6 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-    Graph *lensGraph_;
     QMap<QAction *, rdf::Node> lensActions_;
 
 };

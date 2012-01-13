@@ -4,11 +4,12 @@
 #include "rdf.h"
 #include "graph.h"
 
+Graph *lensGraph = NULL;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    lensGraph_ = NULL;
     ui->setupUi(this);
 
     connect(ui->action_File, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(openFile()));
@@ -22,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete lensGraph_;
+    delete lensGraph;
     delete ui;
 }
 
@@ -35,14 +36,9 @@ void MainWindow::loadLensMenu()
     }
     lensActions_.clear();
 
-    if(rdf::lensContext) {
-        librdf_model_context_remove_statements(rdf::model, rdf::lensContext);
-        librdf_free_node(rdf::lensContext);
-    }
-
-    if(!lensGraph_) delete lensGraph_;
-    lensGraph_ = new Graph(QString("../lens.ttl"), "text/turtle", rdf::baseUri);
-    rdf::lensContext = librdf_new_node_from_node(lensGraph_->getContext());
+    Graph *newLensGraph = new Graph(QString("../lens.ttl"), "text/turtle", rdf::baseUri);
+    if(lensGraph) delete lensGraph;
+    lensGraph = newLensGraph;
 
     librdf_stream *stream;
     librdf_statement *statement;
@@ -51,7 +47,7 @@ void MainWindow::loadLensMenu()
     rdf::Node ntype ("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
     rdf::Node nl ("http://mud.cz/sw/ed#lens/Lens");
     statement = librdf_new_statement_from_nodes(rdf::world, NULL, librdf_new_node_from_node(ntype), librdf_new_node_from_node(nl));
-    stream = librdf_model_find_statements_in_context(rdf::model, statement, rdf::lensContext);
+    stream = librdf_model_find_statements_in_context(rdf::model, statement, lensGraph->getContext());
     if(NULL == stream) throw rdf::ModelAccessException();
 
     while(!librdf_stream_end(stream)) {
@@ -59,7 +55,7 @@ void MainWindow::loadLensMenu()
 
         librdf_node *ns = librdf_statement_get_subject(streamstatement);
         rdf::Node nis (ns);
-        char *s = (char *)raptor_term_to_turtle_string(ns, lensGraph_->nstack_, NULL);
+        char *s = (char *)raptor_term_to_turtle_string(ns, lensGraph->nstack_, NULL);
         //printf("lens %s\n", s);
         QAction *a = new QAction(tr(s), this);
         free(s);
