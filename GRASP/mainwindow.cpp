@@ -37,10 +37,8 @@ void MainWindow::loadLensMenu()
         librdf_model_context_remove_statements(rdf::model, rdf::lensContext);
         librdf_free_node(rdf::lensContext);
     }
-    raptor_namespace_stack *nstack;
-    rdf::Node *lC = rdf::loadGraphFromFile(QString("../lens.ttl"), &nstack, "text/turtle", rdf::baseUri);
-    rdf::lensContext = librdf_new_node_from_node(*lC);
-    delete lC;
+    Graph g (QString("../lens.ttl"), "text/turtle", rdf::baseUri);
+    rdf::lensContext = librdf_new_node_from_node(g.getContext());
 
     librdf_stream *stream;
     librdf_statement *statement;
@@ -57,7 +55,8 @@ void MainWindow::loadLensMenu()
 
         librdf_node *ns = librdf_statement_get_subject(streamstatement);
         rdf::Node nis (ns);
-        char *s = (char *)raptor_term_to_turtle_string(ns, nstack, NULL);
+        char *s = (char *)raptor_term_to_turtle_string(ns, g.nstack_, NULL);
+        //printf("lens %s\n", s);
         QAction *a = new QAction(tr(s), this);
         free(s);
         ui->menuLens->addAction(a);
@@ -67,7 +66,6 @@ void MainWindow::loadLensMenu()
     }
     librdf_free_statement(statement);
     librdf_free_stream(stream);
-    raptor_free_namespaces(nstack);
 }
 
 void MainWindow::loadLens(QAction *act)

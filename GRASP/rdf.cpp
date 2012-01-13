@@ -12,56 +12,6 @@ namespace rdf
 
     QSet<Node *> contexts;
 
-    Node *loadGraphFromFile(const QString & path, raptor_namespace_stack **nstack, const char *mimeType, librdf_uri *baseUri, QHash<QString, QString> *nshash, QHash<uint, QPointF> *loadedNodePositions)
-    {
-        Parser parser (world, NULL, mimeType, NULL);
-
-        QFile file(path);
-        if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) throw FileOpenException();
-
-        librdf_stream *stream = librdf_parser_parse_string_as_stream(parser, (const unsigned char *)(file.readAll().constData()), baseUri);
-        if(NULL == stream) { 
-            throw ParsingException();
-        }
-
-        QString s(GRASPURIPREFIX);
-        s.append(QString::number(PersistentCounter::increment(PERSCOUNTERPATH)));
-        URI contextURI (world, (unsigned char *)s.toLatin1().constData());
-
-        Node *contextNode = new Node(world, contextURI);
-        contexts.insert(contextNode);
-
-        if(0 != librdf_storage_context_add_statements(storage, *contextNode, stream)) {
-            throw ModelAccessException();
-        }
-
-        *nstack = getParsedNamespaces(parser, nshash);
-
-        // load node positions
-        file.reset();
-        while(!file.atEnd()) {
-            QByteArray line = file.readLine();
-            if(line.size() < 20) continue;
-            QList<QByteArray> lineParts = line.split(' ');
-            if(lineParts.size() < 4) continue;
-            if(lineParts.at(0) != QString(NODEPOSITIONCOMMENTPREFIX)) continue;
-            bool ok = false;
-            float x = lineParts.at(1).toFloat(&ok);
-            if(!ok) continue;
-            float y = lineParts.at(2).toFloat(&ok);
-            if(!ok) continue;
-            QByteArray at3 (lineParts.at(3));
-            at3.replace("\n", QByteArray());
-            uint u = at3.toUInt(&ok);
-            if(!ok) continue;
-            //printf("NP: %f %f %i\n", x, y, u);
-            loadedNodePositions->insert(u, QPointF(x, y));
-        }
-
-        librdf_free_stream(stream);
-        return contextNode;
-    }
-
     Node *loadGraphFromURI(const QString & uri, raptor_namespace_stack **nstack, const char *mimeType, librdf_uri *baseUri, QHash<QString, QString> *nshash) 
     {
         Parser parser (world, NULL, mimeType, NULL);

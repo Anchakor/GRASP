@@ -15,11 +15,14 @@ class Graph : public QGraphicsScene
 
     public:
         explicit Graph(QObject *parent = 0);
+        explicit Graph(const QString &file, const char *mimeType = "text/turtle", librdf_uri *baseUri = rdf::baseUri, QObject *parent = 0);
         explicit Graph(rdf::Node &context, QObject *parent = 0);
         explicit Graph(rdf::Node &context, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QObject *parent = 0);
         explicit Graph(rdf::Node &context, QString &file, QObject *parent = 0);
         explicit Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QHash<uint, QPointF> &loadedNodePositions, QObject *parent = 0);
         ~Graph();
+
+        void loadGraphFromFile(const QString &path, const char *mimeType = "text/turtle", librdf_uri *baseUri = rdf::baseUri);
 
         void contextChanged();
         rdf::Node getContext();

@@ -1,33 +1,37 @@
 #include "graph.h"
+#include "rdf.h"
+#include "persistentcounter.h"
 
 Graph::Graph(QObject *parent) : QGraphicsScene(parent), context_(rdf::world)
 {
     init();
 }
 
+Graph::Graph(const QString &file, const char *mimeType, librdf_uri *baseUri, QObject *parent) : QGraphicsScene(parent), file_(file)
+{
+    loadGraphFromFile(file, mimeType, baseUri);
+    init();
+}
+
 Graph::Graph(rdf::Node &context, QObject *parent) : QGraphicsScene(parent), context_(context)
 {
     init();
-    contextChanged();
 }
 
 Graph::Graph(rdf::Node &context, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QObject *parent) : QGraphicsScene(parent), nshash_(nshash), nstack_(nstack), context_(context)
 {
     init();
-    contextChanged();
 }
 
 Graph::Graph(rdf::Node &context, QString &file, QObject *parent) : QGraphicsScene(parent), file_(file), context_(context)
 {
     init();
-    contextChanged();
 }
 
-Graph::Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QHash<uint, QPointF> &loadedNodePositions, QObject *parent) : QGraphicsScene(parent), nshash_(nshash), nstack_(nstack), file_(file), context_(context), loadedNodePositions_(loadedNodePositions)
+Graph::Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QHash<uint, QPointF> &loadedNodePositions, QObject *parent) : QGraphicsScene(parent), nshash_(nshash), nstack_(nstack), file_(file), loadedNodePositions_(loadedNodePositions), context_(context)
 {
-    init();
     nstack_ = nstack;
-    contextChanged();
+    init();
 }
 void Graph::init()
 {
@@ -35,6 +39,56 @@ void Graph::init()
     rdf::Node n ("http://mud.cz/sw/ed#lens/test");
     lens_->loadLens(n);
     contextChanged();
+}
+
+void Graph::loadGraphFromFile(const QString &path, const char *mimeType, librdf_uri *baseUri)
+{
+    rdf::Parser parser (rdf::world, NULL, mimeType, NULL);
+
+    QFile file(path);
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) throw rdf::FileOpenException();
+
+    librdf_stream *stream = librdf_parser_parse_string_as_stream(parser, (const unsigned char *)(file.readAll().constData()), baseUri);
+    if(NULL == stream) { 
+        throw rdf::ParsingException();
+    }
+
+    QString s(GRASPURIPREFIX);
+    s.append(QString::number(PersistentCounter::increment(PERSCOUNTERPATH)));
+    rdf::URI contextURI (rdf::world, (unsigned char *)s.toLatin1().constData());
+
+    rdf::Node *cont = new rdf::Node(rdf::world, contextURI);
+    context_ = *cont;
+    rdf::contexts.insert(&context_);
+
+    if(0 != librdf_storage_context_add_statements(rdf::storage, context_, stream)) {
+        throw rdf::ModelAccessException();
+    }
+
+    nstack_ = rdf::getParsedNamespaces(parser, &nshash_);
+
+    // load node positions
+    file.reset();
+    while(!file.atEnd()) {
+        QByteArray line = file.readLine();
+        if(line.size() < 20) continue;
+        QList<QByteArray> lineParts = line.split(' ');
+        if(lineParts.size() < 4) continue;
+        if(lineParts.at(0) != QString(NODEPOSITIONCOMMENTPREFIX)) continue;
+        bool ok = false;
+        float x = lineParts.at(1).toFloat(&ok);
+        if(!ok) continue;
+        float y = lineParts.at(2).toFloat(&ok);
+        if(!ok) continue;
+        QByteArray at3 (lineParts.at(3));
+        at3.replace("\n", QByteArray());
+        uint u = at3.toUInt(&ok);
+        if(!ok) continue;
+        //printf("NP: %f %f %i\n", x, y, u);
+        loadedNodePositions_.insert(u, QPointF(x, y));
+    }
+
+    librdf_free_stream(stream);
 }
 
 class AddEdgeNodeNotFoundException {};

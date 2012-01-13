@@ -38,12 +38,9 @@ void GraphView::openFile()
     QString path = QFileDialog::getOpenFileName(this,tr("Open graph"), QString(), tr("RDF Files (*.rdf *.ttl *.nt *.n3);;All Files (*.*)"));
     if(NULL == path || path.isEmpty()) return;
 
-    rdf::Node *context;
-    raptor_namespace_stack *nstack = NULL;
-    QHash<QString, QString> nshash;
-    QHash<uint, QPointF> loadedNodePositions;
+    Graph *g;
     try {
-        context = rdf::loadGraphFromFile(path, &nstack, "text/turtle", rdf::baseUri, &nshash, &loadedNodePositions);
+        g = new Graph(path, "text/turtle", rdf::baseUri, this);
     } catch (std::exception& e) {
         QString msg("Couldn't open graph '");
         msg.append(path).append("'\n Error: ").append(QString(typeid(e).name()));
@@ -51,8 +48,6 @@ void GraphView::openFile()
         return;
     }
 
-    Graph *g = new Graph(*context, path, nstack, nshash, loadedNodePositions, this);
-    delete context;
     graphs.append(g);
     currentGraph = graphs.size() - 1;
     setScene(g);

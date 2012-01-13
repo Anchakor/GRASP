@@ -4,6 +4,7 @@
 #include <QtCore>
 #include <librdf.h>
 #include <exception>
+#include <algorithm>
 
 #define PERSCOUNTERPATH "maindb-counter"
 #define GRASPURIPREFIX "grasp:"
@@ -369,10 +370,10 @@ namespace rdf
         ~NamespaceStack() { raptor_free_namespaces(p); }
     };
 
-
+    
+    extern QSet<Node *> contexts;
 
 #define NODEPOSITIONCOMMENTPREFIX "#&&&NodePosition"
-    Node *loadGraphFromFile(const QString & path, raptor_namespace_stack **nstack, const char *mimeType = NULL, librdf_uri *baseUri = NULL, QHash<QString, QString> *nshash = NULL, QHash<uint, QPointF> *loadedNodePositions = NULL);
     Node *loadGraphFromURI(const QString & uri, raptor_namespace_stack **nstack, const char *mimeType = NULL, librdf_uri *baseUri = NULL, QHash<QString, QString> *nshash = NULL);
     void saveGraphToFile(librdf_node *context, FILE *file);
     void printContext(librdf_node *context);
