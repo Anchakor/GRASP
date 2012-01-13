@@ -57,8 +57,9 @@ void Graph::loadGraphFromFile(const QString &path, const char *mimeType, librdf_
     s.append(QString::number(PersistentCounter::increment(PERSCOUNTERPATH)));
     rdf::URI contextURI (rdf::world, (unsigned char *)s.toLatin1().constData());
 
-    rdf::Node *cont = new rdf::Node(rdf::world, contextURI);
-    context_ = *cont;
+    //rdf::Node *cont = new rdf::Node(rdf::world, contextURI);
+    //context_ = *cont;
+    context_ = rdf::Node(rdf::world, contextURI);
     rdf::contexts.insert(&context_);
 
     if(0 != librdf_storage_context_add_statements(rdf::storage, context_, stream)) {

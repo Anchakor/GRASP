@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "rdf.h"
+#include "graph.h"
 
 namespace Ui {
     class MainWindow;
@@ -25,7 +26,8 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-    QMap<QAction *, rdf::Node> lensActions;
+    Graph *lensGraph_;
+    QMap<QAction *, rdf::Node> lensActions_;
 
 };
 

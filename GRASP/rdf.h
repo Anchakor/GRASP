@@ -146,6 +146,13 @@ namespace rdf
             init(); 
         }*/
         operator librdf_node*() const { return p; }
+        Node &operator=(const Node &other) {
+            if(*this != other) {
+                librdf_free_node(p);
+                p = librdf_new_node_from_node(other.p);
+            }
+            return *this;
+        }
         bool operator==(const Node &other) const {
             /* this function didn't work as expected: */
             return librdf_node_equals(p, other.p);
@@ -154,6 +161,7 @@ namespace rdf
             printf("CMP TEST: 1: %s 2: %s 3: %d\n", s1.toLatin1().constData(), s2.toLatin1().constData(), librdf_node_equals(p, other.p));
             return s1 == s2;*/
         }
+        bool operator!=(const Node &other) const { return !(*this == other); }
         ~Node() { librdf_free_node(p); }
         char *serialize() const; // needs to be delete[]d
     };

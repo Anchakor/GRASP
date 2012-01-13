@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    lensGraph_ = NULL;
     ui->setupUi(this);
 
     connect(ui->action_File, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(openFile()));
@@ -21,24 +22,27 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete lensGraph_;
     delete ui;
 }
 
 void MainWindow::loadLensMenu()
 {
-    QMap<QAction *, rdf::Node>::const_iterator j = lensActions.constBegin();
-    while (j != lensActions.constEnd()) {
+    QMap<QAction *, rdf::Node>::const_iterator j = lensActions_.constBegin();
+    while (j != lensActions_.constEnd()) {
         delete j.key();
         ++j;
     }
-    lensActions.clear();
+    lensActions_.clear();
 
     if(rdf::lensContext) {
         librdf_model_context_remove_statements(rdf::model, rdf::lensContext);
         librdf_free_node(rdf::lensContext);
     }
-    Graph g (QString("../lens.ttl"), "text/turtle", rdf::baseUri);
-    rdf::lensContext = librdf_new_node_from_node(g.getContext());
+
+    if(!lensGraph_) delete lensGraph_;
+    lensGraph_ = new Graph(QString("../lens.ttl"), "text/turtle", rdf::baseUri);
+    rdf::lensContext = librdf_new_node_from_node(lensGraph_->getContext());
 
     librdf_stream *stream;
     librdf_statement *statement;
@@ -55,12 +59,12 @@ void MainWindow::loadLensMenu()
 
         librdf_node *ns = librdf_statement_get_subject(streamstatement);
         rdf::Node nis (ns);
-        char *s = (char *)raptor_term_to_turtle_string(ns, g.nstack_, NULL);
+        char *s = (char *)raptor_term_to_turtle_string(ns, lensGraph_->nstack_, NULL);
         //printf("lens %s\n", s);
         QAction *a = new QAction(tr(s), this);
         free(s);
         ui->menuLens->addAction(a);
-        lensActions.insert(a, nis);
+        lensActions_.insert(a, nis);
 
         librdf_stream_next(stream);
     }
@@ -70,9 +74,9 @@ void MainWindow::loadLensMenu()
 
 void MainWindow::loadLens(QAction *act)
 {
-    if(!lensActions.contains(act)) return;
+    if(!lensActions_.contains(act)) return;
     Graph *g = reinterpret_cast<Graph *>(ui->mainGraphicsView->scene());
-    g->lens_->loadLens(lensActions.value(act));
+    g->lens_->loadLens(lensActions_.value(act));
     g->contextChanged();
     g->update();
 }
