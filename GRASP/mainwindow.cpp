@@ -36,7 +36,7 @@ void MainWindow::loadLensMenu()
     }
     lensActions_.clear();
 
-    Graph *newLensGraph = new Graph(QString("../lens.ttl"), "text/turtle", rdf::baseUri);
+    Graph *newLensGraph = Graph::fromFile(QString("../lens.ttl"), "text/turtle", rdf::baseUri);
     if(lensGraph) delete lensGraph;
     lensGraph = newLensGraph;
 

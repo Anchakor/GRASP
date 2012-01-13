@@ -40,7 +40,7 @@ void GraphView::openFile()
 
     Graph *g;
     try {
-        g = new Graph(path, "text/turtle", rdf::baseUri, this);
+        g = Graph::fromFile(path, "text/turtle", rdf::baseUri, this);
     } catch (std::exception& e) {
         QString msg("Couldn't open graph '");
         msg.append(path).append("'\n Error: ").append(QString(typeid(e).name()));

@@ -2,14 +2,13 @@
 #include "rdf.h"
 #include "persistentcounter.h"
 
-Graph::Graph(QObject *parent) : QGraphicsScene(parent), context_(rdf::world)
+Graph::Graph(QObject *parent) : QGraphicsScene(parent)
 {
-    init();
 }
 
 Graph::Graph(const QString &file, const char *mimeType, librdf_uri *baseUri, QObject *parent) : QGraphicsScene(parent), file_(file)
 {
-    loadGraphFromFile(file, mimeType, baseUri);
+    //loadGraphFromFile(file, mimeType, baseUri);
     init();
 }
 
@@ -41,8 +40,9 @@ void Graph::init()
     contextChanged();
 }
 
-void Graph::loadGraphFromFile(const QString &path, const char *mimeType, librdf_uri *baseUri)
+Graph *Graph::fromFile(const QString &path, const char *mimeType, librdf_uri *baseUri, QObject *parent)
 {
+    Graph *g = new Graph(parent);
     rdf::Parser parser (rdf::world, NULL, mimeType, NULL);
 
     QFile file(path);
@@ -59,14 +59,14 @@ void Graph::loadGraphFromFile(const QString &path, const char *mimeType, librdf_
 
     //rdf::Node *cont = new rdf::Node(rdf::world, contextURI);
     //context_ = *cont;
-    context_ = rdf::Node(rdf::world, contextURI);
-    rdf::contexts.insert(&context_);
+    g->context_ = rdf::Node(rdf::world, contextURI);
+    rdf::contexts.insert(&(g->context_));
 
-    if(0 != librdf_storage_context_add_statements(rdf::storage, context_, stream)) {
+    if(0 != librdf_storage_context_add_statements(rdf::storage, g->context_, stream)) {
         throw rdf::ModelAccessException();
     }
 
-    nstack_ = rdf::getParsedNamespaces(parser, &nshash_);
+    g->nstack_ = rdf::getParsedNamespaces(parser, &(g->nshash_));
 
     // load node positions
     file.reset();
@@ -86,10 +86,12 @@ void Graph::loadGraphFromFile(const QString &path, const char *mimeType, librdf_
         uint u = at3.toUInt(&ok);
         if(!ok) continue;
         //printf("NP: %f %f %i\n", x, y, u);
-        loadedNodePositions_.insert(u, QPointF(x, y));
+        g->loadedNodePositions_.insert(u, QPointF(x, y));
     }
 
     librdf_free_stream(stream);
+    g->init();
+    return g;
 }
 
 class AddEdgeNodeNotFoundException {};
