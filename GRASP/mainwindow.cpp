@@ -72,7 +72,7 @@ void MainWindow::loadLens(QAction *act)
 {
     if(!lensActions_.contains(act)) return;
     Graph *g = reinterpret_cast<Graph *>(ui->mainGraphicsView->scene());
-    g->lens_->loadLens(lensActions_.value(act));
+    g->lens_.loadLens(lensActions_.value(act));
     g->contextChanged();
     g->update();
 }

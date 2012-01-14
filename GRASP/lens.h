@@ -8,8 +8,6 @@ class Lens {
     public:
         Lens();
 
-        //rdf::Node lens_;
-
         // relations to blacklist/whitelist generally
         bool whitelistMode_;
         QSet<rdf::Node> propertyList_;

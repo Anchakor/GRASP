@@ -6,37 +6,10 @@ Graph::Graph(QObject *parent) : QGraphicsScene(parent)
 {
 }
 
-Graph::Graph(const QString &file, const char *mimeType, librdf_uri *baseUri, QObject *parent) : QGraphicsScene(parent), file_(file)
-{
-    //loadGraphFromFile(file, mimeType, baseUri);
-    init();
-}
-
-Graph::Graph(rdf::Node &context, QObject *parent) : QGraphicsScene(parent), context_(context)
-{
-    init();
-}
-
-Graph::Graph(rdf::Node &context, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QObject *parent) : QGraphicsScene(parent), nshash_(nshash), nstack_(nstack), context_(context)
-{
-    init();
-}
-
-Graph::Graph(rdf::Node &context, QString &file, QObject *parent) : QGraphicsScene(parent), file_(file), context_(context)
-{
-    init();
-}
-
-Graph::Graph(rdf::Node &context, QString &file, raptor_namespace_stack *nstack, QHash<QString, QString> &nshash, QHash<uint, QPointF> &loadedNodePositions, QObject *parent) : QGraphicsScene(parent), nshash_(nshash), nstack_(nstack), file_(file), loadedNodePositions_(loadedNodePositions), context_(context)
-{
-    nstack_ = nstack;
-    init();
-}
 void Graph::init()
 {
-    lens_ = new Lens();
     rdf::Node n ("http://mud.cz/sw/ed#lens/test");
-    lens_->loadLens(n);
+    lens_.loadLens(n);
     contextChanged();
 }
 
@@ -44,6 +17,8 @@ Graph *Graph::fromFile(const QString &path, const char *mimeType, librdf_uri *ba
 {
     Graph *g = new Graph(parent);
     rdf::Parser parser (rdf::world, NULL, mimeType, NULL);
+
+    g->file_ = path;
 
     QFile file(path);
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) throw rdf::FileOpenException();
@@ -57,8 +32,6 @@ Graph *Graph::fromFile(const QString &path, const char *mimeType, librdf_uri *ba
     s.append(QString::number(PersistentCounter::increment(PERSCOUNTERPATH)));
     rdf::URI contextURI (rdf::world, (unsigned char *)s.toLatin1().constData());
 
-    //rdf::Node *cont = new rdf::Node(rdf::world, contextURI);
-    //context_ = *cont;
     g->context_ = rdf::Node(rdf::world, contextURI);
     rdf::contexts.insert(&(g->context_));
 
@@ -94,6 +67,36 @@ Graph *Graph::fromFile(const QString &path, const char *mimeType, librdf_uri *ba
     return g;
 }
 
+Graph *Graph::fromURI(const QString &uri, const char *mimeType, librdf_uri *baseUri, QObject *parent)
+{
+    Graph *g = new Graph(parent);
+    rdf::Parser parser (rdf::world, NULL, mimeType, NULL);
+
+    rdf::URI lURI (rdf::world, (unsigned char *)uri.toLatin1().constData());
+
+    librdf_stream *stream = librdf_parser_parse_as_stream(parser, lURI, baseUri);
+    if(NULL == stream) { 
+        throw rdf::ParsingException();
+    }
+
+    QString s(GRASPURIPREFIX);
+    s.append(QString::number(PersistentCounter::increment(PERSCOUNTERPATH)));
+    rdf::URI contextURI (rdf::world, (unsigned char *)s.toLatin1().constData());
+
+    g->context_ = rdf::Node(rdf::world, contextURI);
+    rdf::contexts.insert(&(g->context_));
+
+    if(0 != librdf_storage_context_add_statements(rdf::storage, g->context_, stream)) {
+        throw rdf::ModelAccessException(); 
+    }
+
+    g->nstack_ = rdf::getParsedNamespaces(parser, &(g->nshash_));
+
+    librdf_free_stream(stream);
+    g->init();
+    return g;
+}
+
 class AddEdgeNodeNotFoundException {};
 void Graph::contextChanged()
 {
@@ -110,7 +113,7 @@ void Graph::contextChanged()
 
         rdf::Node nodepred (librdf_statement_get_predicate(statement));
         //printf("DEBUG pred node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(nodepred)));
-        if(!(lens_->whitelistMode_ ^ lens_->propertyList_.contains(nodepred))) { // triple/property not blacklisted
+        if(!(lens_.whitelistMode_ ^ lens_.propertyList_.contains(nodepred))) { // triple/property not blacklisted
             librdf_node *node = librdf_statement_get_subject(statement);
             rdf::Node x(node);
             //printf("DEBUG subj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(x)));
@@ -206,28 +209,7 @@ void Graph::saveFileAs()
     saveFile();
 }
 
-
-/*
-const QHash<librdf_node *, GraphNode *> *Graph::nodes() const
-{
-    return &nodes_;
-}
-
-const QHash<librdf_statement *, GraphEdge *> *Graph::edges() const
-{
-    return &edges_;
-}*/
-
 Graph::~Graph()
 {
-    delete lens_;
     //raptor_free_namespaces(nstack_);
-    /*QList<GraphNode *> nl = nodes_.values();
-    for (int i = 0; i < nl.size(); ++i) {
-        delete nl.at(i);
-    }
-    QList<GraphEdge *> el = edges_.values();
-    for (int i = 0; i < el.size(); ++i) {
-        delete el.at(i);
-    }*/
 }

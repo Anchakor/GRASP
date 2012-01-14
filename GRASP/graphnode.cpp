@@ -53,7 +53,7 @@ void GraphNode::genAggregLevel(GraphicsNodeLabel *subjNode, QGraphicsLinearLayou
 
     Graph *graph = reinterpret_cast<Graph *>(scene());
     rdf::Node context (graph->getContext());
-    Lens *lens = graph->lens_;
+    Lens *lens = &(graph->lens_);
 
     librdf_stream *stream;
     librdf_statement *statement;

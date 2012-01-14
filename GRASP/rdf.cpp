@@ -11,34 +11,6 @@ namespace rdf
 
     QSet<Node *> contexts;
 
-    Node *loadGraphFromURI(const QString & uri, raptor_namespace_stack **nstack, const char *mimeType, librdf_uri *baseUri, QHash<QString, QString> *nshash) 
-    {
-        Parser parser (world, NULL, mimeType, NULL);
-
-        URI lURI (world, (unsigned char *)uri.toLatin1().constData());
-
-        librdf_stream *stream = librdf_parser_parse_as_stream(parser, lURI, baseUri);
-        if(NULL == stream) { 
-            throw ParsingException();
-        }
-
-        QString s(GRASPURIPREFIX);
-        s.append(QString::number(PersistentCounter::increment(PERSCOUNTERPATH)));
-        URI contextURI (world, (unsigned char *)s.toLatin1().constData());
-
-        Node *contextNode = new Node(world, contextURI);
-        contexts.insert(contextNode);
-
-        if(0 != librdf_storage_context_add_statements(storage, *contextNode, stream)) { 
-            throw ModelAccessException(); 
-        }
-
-        *nstack = getParsedNamespaces(parser, nshash);
-
-        librdf_free_stream(stream);
-        return contextNode;
-    }
-
     void saveGraphToFile(librdf_node *context, FILE *file)
     {
         librdf_stream *stream = librdf_model_context_as_stream(model, context);
