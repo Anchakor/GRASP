@@ -1,6 +1,7 @@
 #include "graph.h"
 #include "rdf.h"
 #include "persistentcounter.h"
+#include "mainwindow.h"
 
 Graph::Graph(QObject *parent) : QGraphicsScene(parent)
 {
@@ -8,8 +9,6 @@ Graph::Graph(QObject *parent) : QGraphicsScene(parent)
 
 void Graph::init()
 {
-    rdf::Node n ("http://mud.cz/sw/ed#lens/test");
-    lens_.loadLens(n);
     contextChanged();
 }
 
@@ -42,28 +41,50 @@ Graph *Graph::fromFile(const QString &path, const char *mimeType, librdf_uri *ba
     g->nstack_ = rdf::getParsedNamespaces(parser, &(g->nshash_));
 
     // load node positions
+    bool foundLensDef = false;
+    rdf::Node lensDef ("http://mud.cz/sw/ed#lens/test");
+
     file.reset();
     while(!file.atEnd()) {
         QByteArray line = file.readLine();
-        if(line.size() < 20) continue;
+        if(line.size() < 10) continue;
         QList<QByteArray> lineParts = line.split(' ');
-        if(lineParts.size() < 4) continue;
-        if(lineParts.at(0) != QString(NODEPOSITIONCOMMENTPREFIX)) continue;
-        bool ok = false;
-        float x = lineParts.at(1).toFloat(&ok);
-        if(!ok) continue;
-        float y = lineParts.at(2).toFloat(&ok);
-        if(!ok) continue;
-        QByteArray at3 (lineParts.at(3));
-        at3.replace("\n", QByteArray());
-        uint u = at3.toUInt(&ok);
-        if(!ok) continue;
-        //printf("NP: %f %f %i\n", x, y, u);
-        g->loadedNodePositions_.insert(u, QPointF(x, y));
+        if(lineParts.at(0) == QString(LENSCOMMENTPREFIX)) {
+            //TODO
+            QMap<QAction *, rdf::Node>::const_iterator i = lensActions.constBegin();
+            while (i != lensActions.constEnd()) {
+                char *sl = i.value().serialize();
+                QByteArray at1 (lineParts.at(1));
+                at1.replace("\n", QByteArray());
+                if(QString(at1) == QString::number(qHash(QByteArray(sl)))) {
+                    foundLensDef = true;
+                    //printf("found lensDef: %s\n", sl);
+                    lensDef = i.value();
+                    free(sl);
+                    break;
+                }
+                free(sl);
+                ++i;
+            }
+        } else if(lineParts.at(0) == QString(NODEPOSITIONCOMMENTPREFIX)) {
+            if(lineParts.size() < 4) continue;
+            bool ok = false;
+            float x = lineParts.at(1).toFloat(&ok);
+            if(!ok) continue;
+            float y = lineParts.at(2).toFloat(&ok);
+            if(!ok) continue;
+            QByteArray at3 (lineParts.at(3));
+            at3.replace("\n", QByteArray());
+            uint u = at3.toUInt(&ok);
+            if(!ok) continue;
+            //printf("NP: %f %f %i\n", x, y, u);
+            g->loadedNodePositions_.insert(u, QPointF(x, y));
+        }
     }
 
     librdf_free_stream(stream);
-    g->init();
+    if(foundLensDef) g->lens_.loadLens(lensDef);
+    g->contextChanged();
     return g;
 }
 
@@ -197,6 +218,12 @@ void Graph::saveFile()
             ++j;
             free(s);
         }
+        char *sl = lens_.lensNode_.serialize();
+        QString outl (LENSCOMMENTPREFIX);
+        outl.append(' ').append(QString::number(qHash(QByteArray(sl))));
+        fprintf(file, "%s\n", outl.toLatin1().constData());
+        free(sl);
+
         fclose(file);
     } else
         saveFileAs();

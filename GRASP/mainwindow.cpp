@@ -5,6 +5,7 @@
 #include "graph.h"
 
 Graph *lensGraph = NULL;
+QMap<QAction *, rdf::Node> lensActions;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -29,12 +30,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::loadLensMenu()
 {
-    QMap<QAction *, rdf::Node>::const_iterator j = lensActions_.constBegin();
-    while (j != lensActions_.constEnd()) {
+    QMap<QAction *, rdf::Node>::const_iterator j = lensActions.constBegin();
+    while (j != lensActions.constEnd()) {
         delete j.key();
         ++j;
     }
-    lensActions_.clear();
+    lensActions.clear();
 
     Graph *newLensGraph = Graph::fromFile(QString("../lens.ttl"), "text/turtle", rdf::baseUri);
     if(lensGraph) delete lensGraph;
@@ -60,7 +61,7 @@ void MainWindow::loadLensMenu()
         QAction *a = new QAction(tr(s), this);
         free(s);
         ui->menuLens->addAction(a);
-        lensActions_.insert(a, nis);
+        lensActions.insert(a, nis);
 
         librdf_stream_next(stream);
     }
@@ -70,9 +71,9 @@ void MainWindow::loadLensMenu()
 
 void MainWindow::loadLens(QAction *act)
 {
-    if(!lensActions_.contains(act)) return;
+    if(!lensActions.contains(act)) return;
     Graph *g = reinterpret_cast<Graph *>(ui->mainGraphicsView->scene());
-    g->lens_.loadLens(lensActions_.value(act));
+    g->lens_.loadLens(lensActions.value(act));
     g->contextChanged();
     g->update();
 }

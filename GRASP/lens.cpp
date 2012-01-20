@@ -27,6 +27,8 @@ void Lens::loadLens(librdf_node *l)
     if(!lensGraph) return;
     clear();
 
+    lensNode_ = rdf::Node(l);
+
     librdf_stream *stream;
     librdf_statement *statement;
     librdf_statement *streamstatement;

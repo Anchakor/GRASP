@@ -381,6 +381,7 @@ namespace rdf
     extern QSet<Node *> contexts;
 
 #define NODEPOSITIONCOMMENTPREFIX "#&&&NodePosition"
+#define LENSCOMMENTPREFIX "#&&&Lens"
     void saveGraphToFile(librdf_node *context, FILE *file);
     void printContext(librdf_node *context);
     void freeContext(librdf_node *context);
