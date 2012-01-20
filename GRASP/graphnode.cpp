@@ -185,6 +185,7 @@ void GraphNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     char *s = rdf::Node(const_cast<librdf_node *>(label_->node())).serialize();
     uint u = qHash(QByteArray(s));
     graph->loadedNodePositions_[u] = pos();
+    //printf("move: %f %f\n", pos().x(), pos().y());
     free(s);
 }
 

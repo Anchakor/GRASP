@@ -84,7 +84,7 @@ Graph *Graph::fromFile(const QString &path, const char *mimeType, librdf_uri *ba
 
     librdf_free_stream(stream);
     if(foundLensDef) g->lens_.loadLens(lensDef);
-    g->contextChanged();
+    g->init();
     return g;
 }
 
@@ -144,8 +144,6 @@ void Graph::contextChanged()
                 n->setNode(
                     nodes_.insert(rdf::Node(node), n)
                         .key());
-                n->setPos((qrand()*1000.0)/RAND_MAX,(qrand()*1000.0)/RAND_MAX);
-                n->contextChanged();
             }
             node = librdf_statement_get_object(statement);
             rdf::Node y(node);
@@ -156,8 +154,6 @@ void Graph::contextChanged()
                 n->setNode(
                     nodes_.insert(rdf::Node(node), n)
                         .key());
-                n->setPos((qrand()*1000.0)/RAND_MAX,(qrand()*1000.0)/RAND_MAX);
-                n->contextChanged();
             }
             rdf::Statement z(statement);
             if(!edges_.contains(z)) {
@@ -183,7 +179,11 @@ void Graph::contextChanged()
         uint u = qHash(QByteArray(s));
         if(loadedNodePositions_.contains(u)) {
             i.value()->setPos(loadedNodePositions_.value(u));
+            //printf("load: %f %f\n", loadedNodePositions_.value(u).x(), loadedNodePositions_.value(u).y());
+        } else {
+            i.value()->setPos((qrand()*1000.0)/RAND_MAX,(qrand()*1000.0)/RAND_MAX);
         }
+        i.value()->contextChanged();
         ++i;
         free(s);
     }
@@ -209,14 +209,13 @@ void Graph::saveFile()
         rdf::saveGraphToFile(context_, file);
 
         // write node positions
-        QHash<rdf::Node, GraphNode *>::const_iterator j = nodes_.constBegin();
-        while (j != nodes_.constEnd()) {
-            char *s = j.key().serialize();
+        //QHash<rdf::Node, GraphNode *>::const_iterator j = nodes_.constBegin();
+        QHash<uint, QPointF>::const_iterator j = loadedNodePositions_.constBegin();
+        while (j != loadedNodePositions_.constEnd()) {
             QString out (NODEPOSITIONCOMMENTPREFIX);
-            out.append(' ').append(QString::number(j.value()->x())).append(' ').append(QString::number(j.value()->y())).append(' ').append(QString::number(qHash(QByteArray(s))));
+            out.append(' ').append(QString::number(j.value().x())).append(' ').append(QString::number(j.value().y())).append(' ').append(QString::number(j.key()));
             fprintf(file, "%s\n", out.toLatin1().constData());
             ++j;
-            free(s);
         }
         char *sl = lens_.lensNode_.serialize();
         QString outl (LENSCOMMENTPREFIX);
