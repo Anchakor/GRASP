@@ -1,6 +1,7 @@
 #include "graphicslabel.h"
 #include "graph.h"
 #include "graphutils.h"
+#include "contextmenu.h"
 
 GraphicsLabel::GraphicsLabel(QGraphicsWidget *parent) : QGraphicsWidget(parent)
 {
@@ -154,6 +155,17 @@ void GraphicsNodeLabel::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     Q_UNUSED(event)
 
     editDialog();
+}
+
+void GraphicsNodeLabel::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+    Graph *g = reinterpret_cast<Graph *>(scene());
+    ContextMenu menu (g);
+    rdf::Node n (node_);
+    //printf("DEBUG context menu node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(n)));
+    menu.addGeneralNodeActions(n);
+    menu.exec(event->screenPos());
+    //menu.exec(g->views().at(0)->mapFromScene(mapToScene(QPoint(0,0))));
 }
 
 void GraphicsNodeLabel::editDialog()

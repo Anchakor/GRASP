@@ -62,6 +62,7 @@ class GraphicsNodeLabel : public GraphicsLabel
             return QGraphicsItem::sceneEvent(event);
         }*/
         virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+        virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
     private:
         void init();

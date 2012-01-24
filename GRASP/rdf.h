@@ -7,7 +7,7 @@
 #include <algorithm>
 
 #define PERSCOUNTERPATH "maindb-counter"
-#define GRASPURIPREFIX "grasp:"
+#define GRASPURIPREFIX "urn:grasp:"
 
 namespace rdf
 {
@@ -180,6 +180,10 @@ namespace rdf
             if(NULL == p) { throw StatementConstructException(); }
         }
       public:
+        Statement() {
+            p = librdf_new_statement(world);
+            init();
+        }
         Statement(librdf_world *world) { 
             p = librdf_new_statement(world);
             init();
@@ -242,6 +246,15 @@ namespace rdf
             init();
         }
         operator librdf_statement*() const { return p; }
+        Statement &operator=(const Statement &other) {
+            if(*this != other) {
+                librdf_free_statement(p);
+                //TODO use this when redland 1.0.15 comes out
+                //p = librdf_new_statement_from_statement(other.p);
+                p = Statement::new_statement_from_statement(other.p);
+            }
+            return *this;
+        }
         bool operator==(const Statement &other) const {
             return librdf_statement_equals(p, other.p);      
         }
