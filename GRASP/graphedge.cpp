@@ -61,8 +61,8 @@ void GraphEdge::updateGeometry()
 {
     if (!sourceNode_ || !destNode_) return;
 
-    sourceNode_->adjustSize();
-    destNode_->adjustSize();
+    //sourceNode_->adjustSize();
+    //destNode_->adjustSize();
 
     QRectF sSBR (sourceNode_->sceneBoundingRect());
     QRectF dSBR (destNode_->sceneBoundingRect());

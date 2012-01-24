@@ -40,7 +40,7 @@ class GraphNode : public QGraphicsWidget
 
     protected:
         virtual bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
-        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+        virtual void moveEvent(QGraphicsSceneMoveEvent *event);
         virtual void focusInEvent(QFocusEvent *event);
         virtual void focusOutEvent(QFocusEvent *event);
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);

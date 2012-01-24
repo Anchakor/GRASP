@@ -107,9 +107,12 @@ void GraphNode::updateGeometry()
 {
     QGraphicsLayoutItem::updateGeometry();
 
-    QSizeF oldsize = size();
-    adjustSize();
-    setPos(x() + (oldsize.width() - size().width()) / 2, y() + (oldsize.height() - size().height()) / 2);
+    Graph *graph = reinterpret_cast<Graph *>(scene());
+    if(graph && graph->views().size() > 0) {
+        QSizeF oldsize = size();
+        adjustSize();
+        setPos(x() + (oldsize.width() - size().width()) / 2, y() + (oldsize.height() - size().height()) / 2);
+    }
 
     adjustEdges();
 }
@@ -177,16 +180,17 @@ bool GraphNode::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
     return QGraphicsItem::sceneEventFilter(watched, event);
 }
 
-void GraphNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void GraphNode::moveEvent(QGraphicsSceneMoveEvent *event)
 {
-    QGraphicsWidget::mouseMoveEvent(event);
+    QGraphicsWidget::moveEvent(event);
     adjustEdges();
     Graph *graph = reinterpret_cast<Graph *>(scene());
-    char *s = rdf::Node(const_cast<librdf_node *>(label_->node())).serialize();
-    uint u = qHash(QByteArray(s));
-    graph->loadedNodePositions_[u] = pos();
-    free(s);
-    //printf("move: %f %f\n", pos().x(), pos().y());
+    if(graph && graph->views().size() > 0) {
+        char *s = rdf::Node(const_cast<librdf_node *>(label_->node())).serialize();
+        uint u = qHash(QByteArray(s));
+        graph->loadedNodePositions_[u] = event->newPos();
+        free(s);
+    }
 }
 
 void GraphNode::focusInEvent(QFocusEvent *event)
