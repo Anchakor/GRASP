@@ -11,6 +11,8 @@ void ContextMenu::addGeneralNodeActions(rdf::Node &node)
     node_ = node;
     QAction *aAddRelation = addAction(tr("Add Relation"));
     connect(aAddRelation, SIGNAL(triggered()), SLOT(addRelation()));
+    QAction *aRemoveNode = addAction(tr("Remove Node"));
+    connect(aRemoveNode, SIGNAL(triggered()), SLOT(removeNode()));
 }
 
 void ContextMenu::addRelation()
@@ -30,3 +32,17 @@ void ContextMenu::addRelation()
     }
     graph_->contextChanged();
 }
+
+void ContextMenu::removeNode()
+{
+    try {
+        rdf::replaceOrDeleteNode(graph_->getContext(), node_);
+    } catch (std::exception& e) {
+        QString msg ("Error removing the node");
+        msg.append("'\n Error: ").append(QString(typeid(e).name()));
+        alertPopup(msg);
+        return;
+    }
+    graph_->contextChanged();
+}
+

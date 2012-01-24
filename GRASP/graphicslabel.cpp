@@ -175,7 +175,7 @@ void GraphicsNodeLabel::editDialog()
 
     if(dialog.exec() && newnode) {
         try {
-            rdf::replaceNode(reinterpret_cast<Graph *>(scene())->getContext(), newnode, node_);
+            rdf::replaceOrDeleteNode(reinterpret_cast<Graph *>(scene())->getContext(), node_, newnode);
         } catch (std::exception& e) {
             QString msg ("Error editing the node, probably illegal node form in this position");
             msg.append("'\n Error: ").append(QString(typeid(e).name()));

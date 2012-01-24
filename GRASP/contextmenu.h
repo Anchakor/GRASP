@@ -20,6 +20,7 @@ class ContextMenu : public QMenu
 
     public slots:
         void addRelation();
+        void removeNode();
 
 };
 

@@ -106,14 +106,14 @@ namespace rdf
             throw ModelAccessException();
     }
 
-    void replaceNode(librdf_node *context, librdf_node *replacement, librdf_node *node) {
+    void replaceOrDeleteNode(librdf_node *context, librdf_node *node, librdf_node *replacement) {
         librdf_stream *stream;
         librdf_statement *statement;
         librdf_statement *streamstatement;
         librdf_statement *newstatement;
         librdf_node *n;
 
-        if(librdf_node_equals(node, replacement)) return;
+        if(replacement && librdf_node_equals(node, replacement)) return;
 
         // processing subject positions
         statement = librdf_new_statement_from_nodes(world, librdf_new_node_from_node(node), NULL, NULL);
@@ -123,11 +123,13 @@ namespace rdf
         while(!librdf_stream_end(stream)) {
             streamstatement = librdf_stream_get_object(stream);
 
-            newstatement = librdf_new_statement_from_statement(streamstatement);
-            n = librdf_new_node_from_node(replacement);
-            librdf_statement_set_subject(newstatement, n);
-            if(0 != librdf_model_context_add_statement(model, context, newstatement))
-                throw ModelAccessException();
+            if(replacement) {
+                newstatement = librdf_new_statement_from_statement(streamstatement);
+                n = librdf_new_node_from_node(replacement);
+                librdf_statement_set_subject(newstatement, n);
+                if(0 != librdf_model_context_add_statement(model, context, newstatement))
+                    throw ModelAccessException();
+            }
             if(0 != librdf_model_context_remove_statement(model, context, streamstatement))
                 throw ModelAccessException();
 
@@ -144,11 +146,13 @@ namespace rdf
         while(!librdf_stream_end(stream)) {
             streamstatement = librdf_stream_get_object(stream);
 
-            newstatement = librdf_new_statement_from_statement(streamstatement);
-            n = librdf_new_node_from_node(replacement);
-            librdf_statement_set_object(newstatement, n);
-            if(0 != librdf_model_context_add_statement(model, context, newstatement))
-                throw ModelAccessException();
+            if(replacement) {
+                newstatement = librdf_new_statement_from_statement(streamstatement);
+                n = librdf_new_node_from_node(replacement);
+                librdf_statement_set_object(newstatement, n);
+                if(0 != librdf_model_context_add_statement(model, context, newstatement))
+                    throw ModelAccessException();
+            }
             if(0 != librdf_model_context_remove_statement(model, context, streamstatement))
                 throw ModelAccessException();
 
