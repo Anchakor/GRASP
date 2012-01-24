@@ -182,8 +182,17 @@ void GraphicsNodeLabel::editDialog()
             alertPopup(msg);
             return;
         }
+        rdf::Node n (node_);
+        Graph *g = reinterpret_cast<Graph *>(scene());
+        if(g->nodes_.value(n)) {
+            rdf::Node n2 (newnode);
+            char *s = n2.serialize();
+            uint u = qHash(QByteArray(s));
+            g->loadedNodePositions_[u] = g->nodes_.value(n)->pos();
+            free(s);
+        }
         setNode(newnode);
-        reinterpret_cast<Graph *>(scene())->contextChanged();
+        g->contextChanged();
         librdf_free_node(newnode);
     }
 }

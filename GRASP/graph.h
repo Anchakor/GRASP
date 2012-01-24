@@ -33,8 +33,6 @@ class Graph : public QGraphicsScene
         QString file_;
         Lens lens_;
         QHash<uint, QPointF> loadedNodePositions_;
-
-    private:
         QHash<rdf::Node, GraphNode *> nodes_;
         QHash<rdf::Statement, GraphEdge *> edges_;
 };
