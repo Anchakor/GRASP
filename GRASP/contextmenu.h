@@ -19,6 +19,7 @@ class ContextMenu : public QMenu
         rdf::Statement statement_;
 
     public slots:
+        // node actions
         void addRelation();
         void removeNode();
 

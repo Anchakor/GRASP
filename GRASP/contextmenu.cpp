@@ -20,7 +20,20 @@ void ContextMenu::addRelation()
     QString s (GRASPURIPREFIX);
     s.append("NULL");
     rdf::Node n (s.toLatin1().constData());
-    rdf::Statement stat (rdf::world, node_, n, n);
+    rdf::Statement stat;
+    if(librdf_node_is_literal(node_)) {
+        stat = rdf::Statement(rdf::world, n, n, node_);
+    } else {
+        int ret = QMessageBox::question(this, tr("Add Relation"),
+                                tr("Add relation from the node (instead of to it)?"),
+                                QMessageBox::Yes | QMessageBox::No,
+                                QMessageBox::Yes);
+        if(ret == QMessageBox::Yes) {
+            stat = rdf::Statement(rdf::world, node_, n, n);
+        } else {
+            stat = rdf::Statement(rdf::world, n, n, node_);
+        }
+    }
     //printf("add relation: %s\n", librdf_statement_to_string(stat));
     try {
         rdf::addOrReplaceStatement(graph_->getContext(), stat);
