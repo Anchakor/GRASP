@@ -121,7 +121,16 @@ void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 {
     painter->fillRect(option->rect, palette().color(QPalette::Button));
 
-    QStyleOptionFrameV3 frameOptionV3;
+    QPen p;
+    if(isSelected())
+        p.setColor(palette().color(QPalette::Highlight));
+    else
+        p.setColor(palette().color(QPalette::Dark));
+    p.setWidth(1);
+    painter->setPen(p);
+    painter->drawRect(option->rect);
+
+    /*QStyleOptionFrameV3 frameOptionV3;
     frameOptionV3.direction     = option->direction;
     frameOptionV3.fontMetrics   = option->fontMetrics;
     frameOptionV3.palette       = option->palette;
@@ -134,7 +143,7 @@ void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     frameOptionV3.frameShape = QFrame::StyledPanel;
     frameOptionV3.lineWidth = 1;
     frameOptionV3.midLineWidth = 0;
-    style()->drawPrimitive(QStyle::PE_Frame, &frameOptionV3, painter, widget);
+    style()->drawPrimitive(QStyle::PE_Frame, &frameOptionV3, painter, widget);*/
 }
 
 void GraphNode::registerEdge(GraphEdge *edge, bool in)
