@@ -85,16 +85,13 @@ void GraphEdge::updateGeometry()
         QHash<rdf::Statement, GraphEdge *>::const_iterator i = graph->edges_.constBegin();
         while (i != graph->edges_.constEnd()) {
             GraphEdge *e = i.value();
-            printf("edge %f %f\n", e->label()->geometry().x(), e->label()->geometry().y());
             if(e != this && e->label()->geometry().intersects(label)) {
-                label.moveTo(label.x(), label.y() - e->label()->geometry().intersected(label).height());
+                label.moveTo(label.x(), label.y() + e->label()->geometry().intersected(label).height());
                 overlapped = true;
-                printf("Overlapped\n");
             }
             ++i;
         }
         if(!overlapped) break;
-        printf("looping; label: %f %f %f %f\n", label.x(), label.y(), label.width(), label.height());
     };
 
     label_->setGeometry(label);

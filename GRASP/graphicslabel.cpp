@@ -5,12 +5,12 @@
 
 GraphicsLabel::GraphicsLabel(QGraphicsWidget *parent) : QGraphicsWidget(parent)
 {
-    if(parent) installEventFilter(parent);
+    //if(parent) installEventFilter(parent);
 }
 
 GraphicsLabel::GraphicsLabel(const QString &text, QGraphicsWidget *parent) : QGraphicsWidget(parent)
 {
-    if(parent) installEventFilter(parent);
+    //if(parent) installEventFilter(parent);
     setText(text);
 }
 

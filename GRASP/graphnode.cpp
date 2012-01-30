@@ -186,6 +186,7 @@ bool GraphNode::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
     if(event->type() == QEvent::GraphicsSceneMouseMove) { 
         scene()->sendEvent(this, event);
         return true; }
+
     return QGraphicsItem::sceneEventFilter(watched, event);
 }
 
