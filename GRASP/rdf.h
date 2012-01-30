@@ -256,7 +256,7 @@ namespace rdf
             return *this;
         }
         bool operator==(const Statement &other) const {
-            return librdf_statement_equals(p, other.p);      
+            return librdf_statement_equals(p, other.p);
         }
         ~Statement() { librdf_free_statement(p); }
         char *serialize() const; // needs to be delete[]d

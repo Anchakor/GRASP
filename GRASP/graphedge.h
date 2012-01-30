@@ -27,6 +27,7 @@ class GraphEdge : public QGraphicsWidget
         GraphNode *sourceNode() const;
         void setDestNode(GraphNode *node);
         GraphNode *destNode() const;
+        GraphicsPropertyLabel *label() const { return label_; }
 
         virtual void updateGeometry();
         QRectF boundingRect() const;

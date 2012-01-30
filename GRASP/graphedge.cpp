@@ -64,17 +64,39 @@ void GraphEdge::updateGeometry()
     //sourceNode_->adjustSize();
     //destNode_->adjustSize();
 
+    // line from center of sourceNode_ to center of destNode_
     QRectF sSBR (sourceNode_->sceneBoundingRect());
     QRectF dSBR (destNode_->sceneBoundingRect());
-
-    // line from center of sourceNode_ to center of destNode_
     QPointF sP (sSBR.center());
     QPointF dP (dSBR.center());
-
     QLineF line(sP, dP);
-    //QRectF label (textLayout.boundingRect());
+
+    // set label centered in the middle of the arrow
     QRectF label (label_->boundingRect());
     label.translate(line.pointAt(0.5));
+    label.translate(-label.width()/2, -label.height()/2);
+
+    // avoid overlapping
+    bool overlapped;
+    while(true) {
+        overlapped = false;
+        Graph *graph = reinterpret_cast<Graph *>(scene());
+        if(!graph || graph->views().size() < 1) break;
+        QHash<rdf::Statement, GraphEdge *>::const_iterator i = graph->edges_.constBegin();
+        while (i != graph->edges_.constEnd()) {
+            GraphEdge *e = i.value();
+            printf("edge %f %f\n", e->label()->geometry().x(), e->label()->geometry().y());
+            if(e != this && e->label()->geometry().intersects(label)) {
+                label.moveTo(label.x(), label.y() - e->label()->geometry().intersected(label).height());
+                overlapped = true;
+                printf("Overlapped\n");
+            }
+            ++i;
+        }
+        if(!overlapped) break;
+        printf("looping; label: %f %f %f %f\n", label.x(), label.y(), label.width(), label.height());
+    };
+
     label_->setGeometry(label);
     labelRect_ = label;
 
