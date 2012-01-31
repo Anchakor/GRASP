@@ -103,6 +103,7 @@ void GraphNode::updateGeometry()
 
 void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(widget);
     painter->fillRect(option->rect, palette().color(QPalette::Button));
 
     QPen p;

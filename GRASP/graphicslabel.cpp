@@ -281,9 +281,3 @@ void GraphicsPropertyLabel::editDialog()
     }
 }
 
-void GraphicsPropertyPatternLabel::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_UNUSED(event)
-
-    editDialog();
-}

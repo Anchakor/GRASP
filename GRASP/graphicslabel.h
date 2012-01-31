@@ -93,20 +93,5 @@ class GraphicsPropertyLabel : public GraphicsLabel
         void init();
 };
 
-class GraphicsPropertyPatternLabel : public GraphicsPropertyLabel
-{
-    Q_OBJECT
-
-    public:
-        //explicit GraphicsPropertyPatternLabel(QGraphicsWidget *parent = 0);
-        //explicit GraphicsPropertyPatternLabel(librdf_statement *statement, QGraphicsWidget *parent = 0);
-
-        void editDialog() { /* TODO */ };
-
-    protected:
-        virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-        virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) { Q_UNUSED(event) return; /* TODO */ };
-};
-
 
 #endif 
