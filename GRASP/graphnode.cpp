@@ -66,27 +66,12 @@ void GraphNode::genAggregLevel(GraphicsNodeLabel *subjNode, QGraphicsLinearLayou
     while(!librdf_stream_end(stream)) {
         streamstatement = librdf_stream_get_object(stream);
         if(!aggregStatements_.contains(streamstatement)) {
-            librdf_statement *pattern = librdf_new_statement_from_nodes(rdf::world,
-                                librdf_new_node_from_node(librdf_statement_get_subject(streamstatement)),
-                                librdf_new_node_from_node(librdf_statement_get_predicate(streamstatement)),
-                                NULL);
-
             rdf::Node n (librdf_statement_get_predicate(streamstatement));
             if(lens->aggregPropertyList_.contains(n)) {
                 GraphAggregProperty *gap;
-                bool found = false;
-                for(int i = 0; i < aggregProps->count(); i++) {
-                    if(aggregProps->itemAt(i) == subjNode) continue;
-                    gap = reinterpret_cast<GraphAggregProperty *>(aggregProps->itemAt(i));
-                    if(librdf_statement_equals(const_cast<librdf_statement *>(gap->statement()), pattern)) {
-                        found = true; break;
-                    }
-                }
-                if(!found) {
-                    gap = new GraphAggregProperty();
-                    aggregProps->addItem(gap);
-                    gap->setStatement(pattern);
-                }
+                gap = new GraphAggregProperty();
+                aggregProps->addItem(gap);
+                gap->setStatement(streamstatement);
 
                 GraphAggregNode *aggNode = new GraphAggregNode();
                 gap->objects()->addItem(aggNode);
@@ -95,7 +80,6 @@ void GraphNode::genAggregLevel(GraphicsNodeLabel *subjNode, QGraphicsLinearLayou
                 // recursive call on next level aggregation
                 genAggregLevel(aggNode->label(), aggNode);
             }
-            librdf_free_statement(pattern);
         }
         librdf_stream_next(stream);
     }

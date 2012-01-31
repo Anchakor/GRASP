@@ -41,7 +41,7 @@ class GraphAggregProperty : public QGraphicsLinearLayout
 
     private:
         GraphicsLabel *l_;
-        GraphicsPropertyPatternLabel *label_;
+        GraphicsPropertyLabel *label_;
         QGraphicsLinearLayout *objects_;
 };
 
