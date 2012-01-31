@@ -87,6 +87,7 @@ class GraphicsPropertyLabel : public GraphicsLabel
 
     protected:
         virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+        virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
     private:
         void init();
@@ -104,6 +105,7 @@ class GraphicsPropertyPatternLabel : public GraphicsPropertyLabel
 
     protected:
         virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+        virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) { Q_UNUSED(event) return; /* TODO */ };
 };
 
 

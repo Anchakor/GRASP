@@ -400,6 +400,7 @@ namespace rdf
     void freeContext(librdf_node *context);
     raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser, QHash<QString, QString> *nshash = NULL);
     void addOrReplaceStatement(librdf_node *context, librdf_statement *replacement, librdf_statement *statement = NULL);
+    void removeStatement(librdf_node *context, librdf_statement *statement);
     void replaceOrDeleteNode(librdf_node *context, librdf_node *node, librdf_node *replacement = NULL);
 
 }

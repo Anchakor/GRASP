@@ -247,6 +247,17 @@ void GraphicsPropertyLabel::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
     editDialog();
 }
 
+void GraphicsPropertyLabel::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+    Graph *g = reinterpret_cast<Graph *>(scene());
+    ContextMenu menu (g);
+    rdf::Statement s (statement_);
+    //printf("DEBUG context menu node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(n)));
+    menu.addGeneralEdgeActions(s);
+    menu.exec(event->screenPos());
+    //menu.exec(g->views().at(0)->mapFromScene(mapToScene(QPoint(0,0))));
+}
+
 void GraphicsPropertyLabel::editDialog() 
 {
     librdf_node *node = librdf_statement_get_predicate(statement_);

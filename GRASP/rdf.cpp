@@ -106,6 +106,11 @@ namespace rdf
             throw ModelAccessException();
     }
 
+    void removeStatement(librdf_node *context, librdf_statement *statement) {
+        if(0 != librdf_model_context_remove_statement(model, context, statement))
+            throw ModelAccessException();
+    }
+
     void replaceOrDeleteNode(librdf_node *context, librdf_node *node, librdf_node *replacement) {
         librdf_stream *stream;
         librdf_statement *statement;

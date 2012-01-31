@@ -13,6 +13,7 @@ class ContextMenu : public QMenu
         explicit ContextMenu(Graph *g, QWidget *parent = 0);
 
         void addGeneralNodeActions(rdf::Node &node);
+        void addGeneralEdgeActions(rdf::Statement &statement);
 
         Graph *graph_;
         rdf::Node node_;
@@ -22,6 +23,9 @@ class ContextMenu : public QMenu
         // node actions
         void addRelation();
         void removeNode();
+
+        // edge actions
+        void removeRelation();
 
 };
 

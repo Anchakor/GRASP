@@ -15,6 +15,13 @@ void ContextMenu::addGeneralNodeActions(rdf::Node &node)
     connect(aRemoveNode, SIGNAL(triggered()), SLOT(removeNode()));
 }
 
+void ContextMenu::addGeneralEdgeActions(rdf::Statement &statement)
+{
+    statement_ = statement;
+    QAction *aRemoveRelation = addAction(tr("Remove Relation"));
+    connect(aRemoveRelation, SIGNAL(triggered()), SLOT(removeRelation()));
+}
+
 void ContextMenu::addRelation()
 {
     QString s (GRASPURIPREFIX);
@@ -39,6 +46,19 @@ void ContextMenu::addRelation()
         rdf::addOrReplaceStatement(graph_->getContext(), stat);
     } catch (std::exception& e) {
         QString msg ("Error adding the relation, probably illegal RDF triple form");
+        msg.append("'\n Error: ").append(QString(typeid(e).name()));
+        alertPopup(msg);
+        return;
+    }
+    graph_->contextChanged();
+}
+
+void ContextMenu::removeRelation()
+{
+    try {
+        rdf::removeStatement(graph_->getContext(), statement_);
+    } catch (std::exception& e) {
+        QString msg ("Error removing the statement");
         msg.append("'\n Error: ").append(QString(typeid(e).name()));
         alertPopup(msg);
         return;
