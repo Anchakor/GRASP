@@ -35,6 +35,9 @@ class Graph : public QGraphicsScene
         QHash<uint, QPointF> loadedNodePositions_;
         QHash<rdf::Node, GraphNode *> nodes_;
         QHash<rdf::Statement, GraphEdge *> edges_;
+
+    protected:
+        virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 };
 
 #endif

@@ -2,6 +2,7 @@
 #include "rdf.h"
 #include "persistentcounter.h"
 #include "mainwindow.h"
+#include "contextmenu.h"
 
 Graph::Graph(QObject *parent) : QGraphicsScene(parent)
 {
@@ -233,6 +234,17 @@ void Graph::saveFileAs()
     QString fileName = QFileDialog::getSaveFileName(NULL, tr("Save"), QString(), tr("Turtle files (*.ttl)"));
     file_ = fileName;
     saveFile();
+}
+
+void Graph::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+    QGraphicsScene::contextMenuEvent(event);
+    if(event->isAccepted()) return;
+
+    ContextMenu menu (this);
+    menu.addGeneralGraphActions();
+    menu.exec(event->screenPos());
+    //menu.exec(g->views().at(0)->mapFromScene(mapToScene(QPoint(0,0))));
 }
 
 Graph::~Graph()

@@ -22,6 +22,12 @@ void ContextMenu::addGeneralEdgeActions(rdf::Statement &statement)
     connect(aRemoveRelation, SIGNAL(triggered()), SLOT(removeRelation()));
 }
 
+void ContextMenu::addGeneralGraphActions()
+{
+    QAction *aAddTriple = addAction(tr("Add Relation"));
+    connect(aAddTriple, SIGNAL(triggered()), SLOT(addTriple()));
+}
+
 void ContextMenu::addRelation()
 {
     QString s (GRASPURIPREFIX);
@@ -79,3 +85,23 @@ void ContextMenu::removeNode()
     graph_->contextChanged();
 }
 
+void ContextMenu::addTriple()
+{
+    QString s (GRASPURIPREFIX);
+    s.append("NULL");
+    rdf::Node n (s.toLatin1().constData());
+    s.append("2");
+    rdf::Node n2 (s.toLatin1().constData());
+    rdf::Statement stat;
+    stat = rdf::Statement(rdf::world, n, n, n2);
+    //printf("add relation: %s\n", librdf_statement_to_string(stat));
+    try {
+        rdf::addOrReplaceStatement(graph_->getContext(), stat);
+    } catch (std::exception& e) {
+        QString msg ("Error adding the relation, probably illegal RDF triple form");
+        msg.append("'\n Error: ").append(QString(typeid(e).name()));
+        alertPopup(msg);
+        return;
+    }
+    graph_->contextChanged();
+}

@@ -14,6 +14,7 @@ class ContextMenu : public QMenu
 
         void addGeneralNodeActions(rdf::Node &node);
         void addGeneralEdgeActions(rdf::Statement &statement);
+        void addGeneralGraphActions();
 
         Graph *graph_;
         rdf::Node node_;
@@ -27,6 +28,8 @@ class ContextMenu : public QMenu
         // edge actions
         void removeRelation();
 
+        // graph actions
+        void addTriple();
 };
 
 #endif
