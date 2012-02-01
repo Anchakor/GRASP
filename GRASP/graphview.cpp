@@ -5,9 +5,15 @@ GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
 { 
     setDragMode(QGraphicsView::ScrollHandDrag);
 
-    Graph *graph = new Graph(this);
+    Graph *g = Graph::newEmpty(this);
+    addGraph(g);
+}
 
-    setScene(graph);
+void GraphView::addGraph(Graph *g)
+{
+    graphs.append(g);
+    currentGraph_ = graphs.size() - 1;
+    setScene(g);
 }
 
 void GraphView::openFile()
@@ -24,10 +30,7 @@ void GraphView::openFile()
         alertPopup(msg);
         return;
     }
-
-    graphs.append(g);
-    currentGraph = graphs.size() - 1;
-    setScene(g);
+    addGraph(g);
 }
 
 void GraphView::openURL()
@@ -45,9 +48,6 @@ void GraphView::openURL()
         alertPopup(msg);
         return;
     }
-
-    graphs.append(g);
-    currentGraph = graphs.size() - 1;
-    setScene(g);
+    addGraph(g);
 }
 

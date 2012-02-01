@@ -20,6 +20,7 @@ class Graph : public QGraphicsScene
 
         static Graph *fromFile(const QString &path, const char *mimeType = "text/turtle", librdf_uri *baseUri = rdf::baseUri, QObject *parent = 0);
         static Graph *fromURI(const QString &uri, const char *mimeType = "text/turtle", librdf_uri *baseUri = rdf::baseUri, QObject *parent = 0);
+        static Graph *newEmpty(QObject *parent = 0);
 
         void contextChanged();
         rdf::Node getContext();

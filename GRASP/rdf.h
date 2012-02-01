@@ -382,6 +382,10 @@ namespace rdf
             if(NULL == p) { throw NamespaceStackConstructException(); }
         }
       public:
+        NamespaceStack() {
+            p = raptor_new_namespaces(raptor, 2);
+            init();
+        }
         NamespaceStack(raptor_world *world, int defaults) {
             p = raptor_new_namespaces(world, defaults);
             init();

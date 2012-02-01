@@ -13,6 +13,21 @@ void Graph::init()
     contextChanged();
 }
 
+Graph *Graph::newEmpty(QObject *parent)
+{
+    Graph *g = new Graph(parent);
+    g->nstack_ = raptor_new_namespaces(rdf::raptor, 2);
+
+    QString s(GRASPURIPREFIX);
+    s.append(QString::number(PersistentCounter::increment(PERSCOUNTERPATH)));
+    rdf::URI contextURI (rdf::world, (unsigned char *)s.toLatin1().constData());
+
+    g->context_ = rdf::Node(rdf::world, contextURI);
+    rdf::contexts.insert(&(g->context_));
+    g->init();
+    return g;
+}
+
 Graph *Graph::fromFile(const QString &path, const char *mimeType, librdf_uri *baseUri, QObject *parent)
 {
     Graph *g = new Graph(parent);

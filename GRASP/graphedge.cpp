@@ -86,7 +86,7 @@ void GraphEdge::updateGeometry()
         while (i != graph->edges_.constEnd()) {
             GraphEdge *e = i.value();
             if(e != this && e->label()->geometry().intersects(label)) {
-                label.moveTo(label.x(), label.y() + e->label()->geometry().intersected(label).height());
+                label.moveTo(label.x(), label.y() + 1 + e->label()->geometry().intersected(label).height());
                 overlapped = true;
             }
             ++i;
