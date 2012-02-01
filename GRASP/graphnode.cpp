@@ -9,7 +9,7 @@ GraphNode::GraphNode(QGraphicsItem *parent, Qt::WindowFlags wFlags) : QGraphicsW
     init();
 }
 
-GraphNode::GraphNode(librdf_node *node, QGraphicsItem *parent, Qt::WindowFlags wFlags) : QGraphicsWidget(parent, wFlags) 
+GraphNode::GraphNode(rdf::Node &node, QGraphicsItem *parent, Qt::WindowFlags wFlags) : QGraphicsWidget(parent, wFlags) 
 {
     init();
     setNode(node);
@@ -59,7 +59,7 @@ void GraphNode::genAggregLevel(GraphicsNodeLabel *subjNode, QGraphicsLinearLayou
     librdf_statement *statement;
     librdf_statement *streamstatement;
 
-    statement = librdf_new_statement_from_nodes(rdf::world, librdf_new_node_from_node(const_cast<librdf_node *>(subjNode->node())), NULL, NULL);
+    statement = librdf_new_statement_from_nodes(rdf::world, librdf_new_node_from_node(subjNode->node()), NULL, NULL);
     stream = librdf_model_find_statements_in_context(rdf::model, statement, context);
     if(NULL == stream) throw rdf::ModelAccessException();
 
@@ -71,11 +71,13 @@ void GraphNode::genAggregLevel(GraphicsNodeLabel *subjNode, QGraphicsLinearLayou
                 GraphAggregProperty *gap;
                 gap = new GraphAggregProperty();
                 aggregProps->addItem(gap);
-                gap->setStatement(streamstatement);
+                rdf::Statement sstat (streamstatement);
+                gap->setStatement(sstat);
 
                 GraphAggregNode *aggNode = new GraphAggregNode();
                 gap->objects()->addItem(aggNode);
-                aggNode->setNode(librdf_statement_get_object(streamstatement));
+                rdf::Node nobj (librdf_statement_get_object(streamstatement));
+                aggNode->setNode(nobj);
                 aggregStatements_.insert(streamstatement);
                 // recursive call on next level aggregation
                 genAggregLevel(aggNode->label(), aggNode);
@@ -181,7 +183,7 @@ void GraphNode::moveEvent(QGraphicsSceneMoveEvent *event)
     adjustEdges();
     Graph *graph = reinterpret_cast<Graph *>(scene());
     if(graph && graph->views().size() > 0) {
-        char *s = rdf::Node(const_cast<librdf_node *>(label_->node())).serialize();
+        char *s = label_->node().serialize();
         uint u = qHash(QByteArray(s));
         graph->loadedNodePositions_[u] = event->newPos();
         free(s);

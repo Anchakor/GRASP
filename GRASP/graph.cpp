@@ -157,9 +157,9 @@ void Graph::contextChanged()
             if(!nodes_.contains(x)) {
                 GraphNode *n = new GraphNode();
                 addItem(n);
-                n->setNode(
+                n->setNode(const_cast<rdf::Node&>(
                     nodes_.insert(rdf::Node(node), n)
-                        .key());
+                        .key()));
             }
             node = librdf_statement_get_object(statement);
             rdf::Node y(node);
@@ -167,17 +167,17 @@ void Graph::contextChanged()
             if(!nodes_.contains(y)) {
                 GraphNode *n = new GraphNode();
                 addItem(n);
-                n->setNode(
+                n->setNode(const_cast<rdf::Node&>(
                     nodes_.insert(rdf::Node(node), n)
-                        .key());
+                        .key()));
             }
             rdf::Statement z(statement);
             if(!edges_.contains(z)) {
                 GraphEdge *e = new GraphEdge();
                 addItem(e);
-                e->setStatement(
+                e->setStatement(const_cast<rdf::Statement&>(
                         edges_.insert(rdf::Statement(statement), e)
-                            .key());
+                            .key()));
 
                 //if(nodes_.value(reinterpret_cast<const char *>(librdf_node_to_string(node)) == 0) throw AddEdgeNodeNotFoundException();
                 if(!nodes_.contains(x)) throw AddEdgeNodeNotFoundException();

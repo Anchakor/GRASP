@@ -13,13 +13,13 @@ class GraphEdge : public QGraphicsWidget
 
     public:
         explicit GraphEdge(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
-        explicit GraphEdge(librdf_statement *statement, QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
+        explicit GraphEdge(rdf::Statement &statement, QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
         ~GraphEdge();
 
-        void setStatement(librdf_statement *statement) {
+        void setStatement(rdf::Statement &statement) {
             label_->setStatement(statement);
         }
-        const librdf_statement *statement() const {
+        rdf::Statement statement() const {
             return label_->statement();
         }
 

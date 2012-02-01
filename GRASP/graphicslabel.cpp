@@ -114,7 +114,7 @@ GraphicsNodeLabel::GraphicsNodeLabel(QGraphicsWidget *parent) : GraphicsLabel(pa
     init();
 }
 
-GraphicsNodeLabel::GraphicsNodeLabel(librdf_node *node, QGraphicsWidget *parent) : GraphicsLabel(parent)
+GraphicsNodeLabel::GraphicsNodeLabel(rdf::Node &node, QGraphicsWidget *parent) : GraphicsLabel(parent)
 {
     init();
     setNode(node);
@@ -127,7 +127,6 @@ GraphicsNodeLabel::~GraphicsNodeLabel()
 
 void GraphicsNodeLabel::init()
 {
-    node_ = NULL;
     //setAcceptHoverEvents(true);
     setFlag(ItemIsSelectable);
     //setFlag(ItemIsMovable);
@@ -135,19 +134,18 @@ void GraphicsNodeLabel::init()
     //setCacheMode(DeviceCoordinateCache);
 }
 
-void GraphicsNodeLabel::setNode(librdf_node *node) 
+void GraphicsNodeLabel::setNode(rdf::Node &node) 
 {
-    if(node_ != NULL) librdf_free_node(node_);
-    node_ = librdf_new_node_from_node(node);
+    node_ = rdf::Node(node);
 
     char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node_, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
     setText(QString::fromLocal8Bit(str));
     free(str);
 }
 
-const librdf_node *GraphicsNodeLabel::node() const
+rdf::Node GraphicsNodeLabel::node() const
 {
-    return node_;
+    return rdf::Node(node_);
 }
 
 void GraphicsNodeLabel::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
@@ -161,9 +159,8 @@ void GraphicsNodeLabel::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     Graph *g = reinterpret_cast<Graph *>(scene());
     ContextMenu menu (g);
-    rdf::Node n (node_);
-    //printf("DEBUG context menu node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(n)));
-    menu.addGeneralNodeActions(n);
+    //printf("DEBUG context menu node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(node_)));
+    menu.addGeneralNodeActions(node_);
     menu.exec(event->screenPos());
     //menu.exec(g->views().at(0)->mapFromScene(mapToScene(QPoint(0,0))));
 }
@@ -182,16 +179,16 @@ void GraphicsNodeLabel::editDialog()
             alertPopup(msg);
             return;
         }
-        rdf::Node n (node_);
         Graph *g = reinterpret_cast<Graph *>(scene());
-        if(g->nodes_.value(n)) {
+        if(g->nodes_.value(node_)) {
             rdf::Node n2 (newnode);
             char *s = n2.serialize();
             uint u = qHash(QByteArray(s));
-            g->loadedNodePositions_[u] = g->nodes_.value(n)->pos();
+            g->loadedNodePositions_[u] = g->nodes_.value(node_)->pos();
             free(s);
         }
-        setNode(newnode);
+        rdf::Node nn = rdf::Node(newnode);
+        setNode(nn);
         g->contextChanged();
         librdf_free_node(newnode);
     }
@@ -203,7 +200,7 @@ GraphicsPropertyLabel::GraphicsPropertyLabel(QGraphicsWidget *parent) : Graphics
     init();
 }
 
-GraphicsPropertyLabel::GraphicsPropertyLabel(librdf_statement *statement, QGraphicsWidget *parent) : GraphicsLabel(parent)
+GraphicsPropertyLabel::GraphicsPropertyLabel(rdf::Statement &statement, QGraphicsWidget *parent) : GraphicsLabel(parent)
 {
     init();
     setStatement(statement);
@@ -216,7 +213,6 @@ GraphicsPropertyLabel::~GraphicsPropertyLabel()
 
 void GraphicsPropertyLabel::init()
 {
-    statement_ = NULL;
     //setAcceptHoverEvents(true);
     setFlag(ItemIsSelectable);
     //setFlag(ItemIsMovable);
@@ -224,10 +220,9 @@ void GraphicsPropertyLabel::init()
     //setCacheMode(DeviceCoordinateCache);
 }
 
-void GraphicsPropertyLabel::setStatement(librdf_statement *statement)
+void GraphicsPropertyLabel::setStatement(rdf::Statement &statement)
 {
-    if(statement_ != NULL) librdf_free_statement(statement_);
-    statement_ = librdf_new_statement_from_statement(const_cast<librdf_statement *>(statement));
+    statement_ = rdf::Statement(statement);
 
     librdf_node *node = librdf_statement_get_predicate(statement_);
     char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
@@ -235,9 +230,9 @@ void GraphicsPropertyLabel::setStatement(librdf_statement *statement)
     free(str);
 }
 
-const librdf_statement *GraphicsPropertyLabel::statement() const
+rdf::Statement GraphicsPropertyLabel::statement() const
 {
-    return statement_;
+    return rdf::Statement(statement_);
 }
 
 void GraphicsPropertyLabel::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
@@ -251,9 +246,7 @@ void GraphicsPropertyLabel::contextMenuEvent(QGraphicsSceneContextMenuEvent *eve
 {
     Graph *g = reinterpret_cast<Graph *>(scene());
     ContextMenu menu (g);
-    rdf::Statement s (statement_);
-    //printf("DEBUG context menu node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(n)));
-    menu.addGeneralEdgeActions(s);
+    menu.addGeneralEdgeActions(statement_);
     menu.exec(event->screenPos());
     //menu.exec(g->views().at(0)->mapFromScene(mapToScene(QPoint(0,0))));
 }
@@ -275,7 +268,7 @@ void GraphicsPropertyLabel::editDialog()
             alertPopup(msg);
             return;
         }
-        setStatement(static_cast<librdf_statement *>(stat));
+        setStatement(stat);
         reinterpret_cast<Graph *>(scene())->contextChanged();
         //librdf_free_statement(stat); TODO uncomment this when redland 1.0.15 comes out
     }

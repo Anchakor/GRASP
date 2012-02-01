@@ -10,10 +10,10 @@ class GraphAggregNode : public QGraphicsLinearLayout
     public:
         GraphAggregNode(QGraphicsLayoutItem *parent = 0);
         ~GraphAggregNode();
-        void setNode(librdf_node *node) {
+        void setNode(rdf::Node &node) {
             label_->setNode(node);
         }
-        const librdf_node *node() const {
+        rdf::Node node() const {
             return label_->node();
         }
         GraphicsNodeLabel *label() {
@@ -29,10 +29,10 @@ class GraphAggregProperty : public QGraphicsLinearLayout
     public:
         GraphAggregProperty(QGraphicsLayoutItem *parent = 0);
         ~GraphAggregProperty();
-        void setStatement(librdf_statement *statement) {
+        void setStatement(rdf::Statement &statement) {
             label_->setStatement(statement);
         }
-        const librdf_statement *statement() const {
+        rdf::Statement statement() const {
             return label_->statement();
         }
         QGraphicsLinearLayout *objects() {

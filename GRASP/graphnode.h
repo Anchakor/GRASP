@@ -12,13 +12,13 @@ class GraphNode : public QGraphicsWidget
 
     public:
         explicit GraphNode(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
-        explicit GraphNode(librdf_node *node, QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
+        explicit GraphNode(rdf::Node &node, QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
         ~GraphNode();
 
-        void setNode(librdf_node *node) {
+        void setNode(rdf::Node &node) {
             label_->setNode(node);
         }
-        const librdf_node *node() const {
+        rdf::Node node() const {
             return label_->node();
         }
         void contextChanged();
@@ -34,7 +34,7 @@ class GraphNode : public QGraphicsWidget
         const QSet<GraphEdge *> *outEdges() const;
         const QSet<GraphEdge *> *inEdges() const;
         bool operator==(const GraphNode &other) const {
-            return librdf_node_equals(const_cast<librdf_node *>(node()), const_cast<librdf_node *>(other.node()));
+            return librdf_node_equals(node(), other.node());
         }
         void adjustEdges();
 
