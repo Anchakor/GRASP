@@ -91,6 +91,17 @@ void GraphEdge::updateGeometry()
             }
             ++i;
         }
+        // node overlapping
+        QHash<rdf::Node, GraphNode *>::const_iterator j = graph->nodes_.constBegin();
+        while (j != graph->nodes_.constEnd()) {
+            GraphNode *n = j.value();
+            if(n->geometry().intersects(label)) {
+                label.moveTo(label.x(), label.y() + 1 + n->geometry().intersected(label).height());
+                overlapped = true;
+            }
+            ++j;
+        }
+
         if(!overlapped) break;
     };
 
@@ -110,8 +121,10 @@ void GraphEdge::updateGeometry()
         else if(QLineF::BoundedIntersection == line.intersect(QLineF(dSBR.bottomRight(), dSBR.topRight()), &po)) destPoint = po;
         else if(QLineF::BoundedIntersection == line.intersect(QLineF(dSBR.bottomLeft(), dSBR.bottomRight()), &po)) destPoint = po;
         else if(QLineF::BoundedIntersection == line.intersect(QLineF(dSBR.topLeft(), dSBR.bottomLeft()), &po)) destPoint = po;
+        setVisible(true);
     } else {
         sourcePoint = destPoint = line.p1();
+        setVisible(false);
     }
     QGraphicsLayoutItem::updateGeometry();
 }
@@ -176,7 +189,7 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->setBrush(c);
     painter->drawPolygon(polygon);
 
-    // Draw the label
+    // Draw the label background
     QColor col (palette().color(QPalette::Button));
     if(!hasFocus() && !hover_) col.setAlphaF(0.7);
     painter->fillRect(labelRect_, col);
