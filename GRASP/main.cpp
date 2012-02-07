@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
         return(1);
     }
 
-    rdf::baseUri = librdf_new_uri(rdf::world, (unsigned char *)"grasp:baseUri");
+    rdf::baseUri = librdf_new_uri(rdf::world, (unsigned char *)GRASPURIPREFIX"baseUri");
 
     QApplication a(argc, argv);
     MainWindow w;
