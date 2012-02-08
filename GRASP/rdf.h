@@ -8,6 +8,9 @@
 
 #define PERSCOUNTERPATH "maindb-counter"
 #define GRASPURIPREFIX "urn:grasp:"
+#define RDFURIPREFIX "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+#define LENSURIPREFIX "http://mud.cz/sw/ed#lens/"
+#define TEMPLATESURIPREFIX "http://mud.cz/sw/ed#templates/"
 
 namespace rdf
 {
@@ -112,7 +115,7 @@ namespace rdf
             p = librdf_new_node_from_literal(world, string, xml_language, is_wf_xml); 
             init(); 
         }
-        Node(Node &node) { 
+        Node(const Node &node) {
             p = librdf_new_node_from_node(node.p); 
             init(); 
         }
@@ -229,7 +232,7 @@ namespace rdf
             raptor_free_term(subject);
           return NULL;
         }
-        Statement(Statement &statement) {
+        Statement(const Statement &statement) {
             //TODO use this when redland 1.0.15 comes out
             //p = librdf_new_statement_from_statement(statement.p);
             p = Statement::new_statement_from_statement(statement.p);

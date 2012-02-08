@@ -6,6 +6,7 @@
 
 Graph *lensGraph = NULL;
 QMap<QAction *, rdf::Node> lensActions;
+TemplateMap templates;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionReload, SIGNAL(triggered()), this, SLOT(loadLensMenu()));
     connect(ui->menuLens, SIGNAL(triggered(QAction *)), this, SLOT(loadLens(QAction *)));
     loadLensMenu();
+    loadTemplates();
 }
 
 MainWindow::~MainWindow()
@@ -45,8 +47,8 @@ void MainWindow::loadLensMenu()
     librdf_statement *statement;
     librdf_statement *streamstatement;
 
-    rdf::Node ntype ("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-    rdf::Node nl ("http://mud.cz/sw/ed#lens/Lens");
+    rdf::Node ntype (RDFURIPREFIX"type");
+    rdf::Node nl (LENSURIPREFIX"Lens");
     statement = librdf_new_statement_from_nodes(rdf::world, NULL, librdf_new_node_from_node(ntype), librdf_new_node_from_node(nl));
     stream = librdf_model_find_statements_in_context(rdf::model, statement, lensGraph->getContext());
     if(NULL == stream) throw rdf::ModelAccessException();
@@ -67,6 +69,51 @@ void MainWindow::loadLensMenu()
     }
     librdf_free_statement(statement);
     librdf_free_stream(stream);
+}
+
+void MainWindow::loadTemplates()
+{
+    templates.clear();
+
+    Graph *templatesGraph = Graph::fromFile(QString("../templates.ttl"), "text/turtle", rdf::baseUri);
+
+    librdf_stream *stream;
+    librdf_statement *streamstatement;
+    /// template -> template class
+    QMap<rdf::Node, rdf::Node> classes;
+
+    for(int pass = 1; pass <= 2; pass++) {
+        stream = librdf_model_context_as_stream(rdf::model, templatesGraph->getContext());
+        if(NULL == stream) throw rdf::ModelAccessException();
+
+        while(!librdf_stream_end(stream)) {
+            streamstatement = librdf_stream_get_object(stream);
+
+            librdf_node *ns = librdf_statement_get_subject(streamstatement);
+            rdf::Node nis (ns);
+            librdf_node *np = librdf_statement_get_predicate(streamstatement);
+            rdf::Node nip (np);
+            librdf_node *no = librdf_statement_get_object(streamstatement);
+            rdf::Node nio (no);
+
+            if(1 == pass) {
+                if(nip == rdf::Node(TEMPLATESURIPREFIX"class") && librdf_node_is_resource(no)) {
+                    classes.insert(nis, nio);
+                }
+            } else if(2 == pass) {
+                if(nip == rdf::Node(TEMPLATESURIPREFIX"path") && librdf_node_is_literal(no) && classes.contains(nis)) {
+                    TemplatePair p = templates[classes.value(nis)];
+                    p.first = QString(reinterpret_cast<char *>(librdf_node_get_literal_value(no)));
+                } else if(nip == rdf::Node(TEMPLATESURIPREFIX"variable") && librdf_node_is_resource(no) && classes.contains(nis)) {
+                    TemplatePair p = templates[classes.value(nis)];
+                    p.second = nio;
+                }
+            }
+            librdf_stream_next(stream);
+        }
+        librdf_free_stream(stream);
+    }
+    delete templatesGraph;
 }
 
 void MainWindow::loadLens(QAction *act)

@@ -7,6 +7,9 @@
 
 extern Graph *lensGraph;
 extern QMap<QAction *, rdf::Node> lensActions;
+typedef QPair<QString, rdf::Node> TemplatePair; // path, variable
+typedef QMap<rdf::Node, TemplatePair> TemplateMap; // class -> ...
+extern TemplateMap templates;
 
 namespace Ui {
     class MainWindow;
@@ -22,6 +25,7 @@ public:
 
 public slots:
     void loadLensMenu();
+    void loadTemplates();
     void loadLens(QAction *act);
 
 protected:
