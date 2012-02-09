@@ -66,8 +66,7 @@ Graph *Graph::fromFile(const QString &path, const char *mimeType, librdf_uri *ba
         if(line.size() < 10) continue;
         QList<QByteArray> lineParts = line.split(' ');
         if(lineParts.at(0) == QString(LENSCOMMENTPREFIX)) {
-            //TODO
-            QMap<QAction *, rdf::Node>::const_iterator i = lensActions.constBegin();
+            LensActionsMap::const_iterator i = lensActions.constBegin();
             while (i != lensActions.constEnd()) {
                 char *sl = i.value().serialize();
                 QByteArray at1 (lineParts.at(1));

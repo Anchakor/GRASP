@@ -6,7 +6,8 @@
 #include "graph.h"
 
 extern Graph *lensGraph;
-extern QMap<QAction *, rdf::Node> lensActions;
+typedef QMap<QAction *, rdf::Node> LensActionsMap;
+extern LensActionsMap lensActions;
 typedef QPair<QString, rdf::Node> TemplatePair; // path, variable
 typedef QMap<rdf::Node, TemplatePair> TemplateMap; // class -> ...
 extern TemplateMap templates;

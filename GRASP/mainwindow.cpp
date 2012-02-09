@@ -5,7 +5,7 @@
 #include "graph.h"
 
 Graph *lensGraph = NULL;
-QMap<QAction *, rdf::Node> lensActions;
+LensActionsMap lensActions;
 TemplateMap templates;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -32,7 +32,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::loadLensMenu()
 {
-    QMap<QAction *, rdf::Node>::const_iterator j = lensActions.constBegin();
+    LensActionsMap::const_iterator j = lensActions.constBegin();
     while (j != lensActions.constEnd()) {
         delete j.key();
         ++j;
@@ -122,7 +122,6 @@ void MainWindow::loadLens(QAction *act)
     Graph *g = reinterpret_cast<Graph *>(ui->mainGraphicsView->scene());
     g->lens_.loadLens(lensActions.value(act));
     g->contextChanged();
-    g->update();
 }
 
 void MainWindow::changeEvent(QEvent *e)
