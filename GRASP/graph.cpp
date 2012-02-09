@@ -66,7 +66,7 @@ Graph *Graph::fromFile(const QString &path, const char *mimeType, librdf_uri *ba
         if(line.size() < 10) continue;
         QList<QByteArray> lineParts = line.split(' ');
         if(lineParts.at(0) == QString(LENSCOMMENTPREFIX)) {
-            LensActionsMap::const_iterator i = lensActions.constBegin();
+            LensActions::const_iterator i = lensActions.constBegin();
             while (i != lensActions.constEnd()) {
                 char *sl = i.value().serialize();
                 QByteArray at1 (lineParts.at(1));
@@ -188,7 +188,7 @@ void Graph::contextChanged()
         if(librdf_stream_next(stream)) break;
     }
 
-    QHash<rdf::Node, GraphNode *>::const_iterator i = nodes_.constBegin();
+    Nodes::const_iterator i = nodes_.constBegin();
     while (i != nodes_.constEnd()) {
         char *s = i.key().serialize();
         uint u = qHash(QByteArray(s));
@@ -216,7 +216,7 @@ void Graph::saveFile()
     //qDebug(file_.toLatin1().constData());
     if(!file_.isEmpty()) {
         FILE *file = fopen(file_.toLatin1().constData(), "w");
-        QHash<QString, QString>::const_iterator i = nshash_.constBegin();
+        rdf::NSHash::const_iterator i = nshash_.constBegin();
         while (i != nshash_.constEnd()) {
             fprintf(file, "@prefix %s: <%s> .\n", i.key().toLatin1().constData(), i.value().toLatin1().constData());
             ++i;
@@ -224,8 +224,7 @@ void Graph::saveFile()
         rdf::saveGraphToFile(context_, file);
 
         // write node positions
-        //QHash<rdf::Node, GraphNode *>::const_iterator j = nodes_.constBegin();
-        QHash<uint, QPointF>::const_iterator j = loadedNodePositions_.constBegin();
+        LoadedNodePositions::const_iterator j = loadedNodePositions_.constBegin();
         while (j != loadedNodePositions_.constEnd()) {
             QString out (NODEPOSITIONCOMMENTPREFIX);
             out.append(' ').append(QString::number(j.value().x())).append(' ').append(QString::number(j.value().y())).append(' ').append(QString::number(j.key()));

@@ -9,6 +9,10 @@
 #include "lens.h"
 #include "ui_nodeedit.h"
 
+typedef QHash<uint, QPointF> LoadedNodePositions; // hash -> point
+typedef QHash<rdf::Node, GraphNode *> Nodes;
+typedef QHash<rdf::Statement, GraphEdge *> Edges;
+
 class Graph : public QGraphicsScene
 {
     Q_OBJECT
@@ -29,13 +33,13 @@ class Graph : public QGraphicsScene
         void saveFileAs();
 
         rdf::Node context_;
-        QHash<QString, QString> nshash_;
+        rdf::NSHash nshash_;
         raptor_namespace_stack *nstack_;
         QString file_;
         Lens lens_;
-        QHash<uint, QPointF> loadedNodePositions_;
-        QHash<rdf::Node, GraphNode *> nodes_;
-        QHash<rdf::Statement, GraphEdge *> edges_;
+        LoadedNodePositions loadedNodePositions_;
+        Nodes nodes_;
+        Edges edges_;
 
     protected:
         virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);

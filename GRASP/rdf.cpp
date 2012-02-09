@@ -72,7 +72,7 @@ namespace rdf
         return qstrdup(s.toLatin1().constData());
     }
 
-    raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser, QHash<QString, QString> *nshash) {
+    raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser, NSHash *nshash) {
         int namespaces = librdf_parser_get_namespaces_seen_count(parser);
         if(namespaces < 1) return NULL;
 

@@ -82,7 +82,7 @@ void GraphEdge::updateGeometry()
         overlapped = false;
         Graph *graph = reinterpret_cast<Graph *>(scene());
         if(!graph || graph->views().size() < 1) break;
-        QHash<rdf::Statement, GraphEdge *>::const_iterator i = graph->edges_.constBegin();
+        Edges::const_iterator i = graph->edges_.constBegin();
         while (i != graph->edges_.constEnd()) {
             GraphEdge *e = i.value();
             if(e != this && e->label()->geometry().intersects(label)) {
@@ -92,7 +92,7 @@ void GraphEdge::updateGeometry()
             ++i;
         }
         // node overlapping
-        QHash<rdf::Node, GraphNode *>::const_iterator j = graph->nodes_.constBegin();
+        Nodes::const_iterator j = graph->nodes_.constBegin();
         while (j != graph->nodes_.constEnd()) {
             GraphNode *n = j.value();
             if(n->geometry().intersects(label)) {

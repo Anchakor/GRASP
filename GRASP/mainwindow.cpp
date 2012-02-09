@@ -5,8 +5,8 @@
 #include "graph.h"
 
 Graph *lensGraph = NULL;
-LensActionsMap lensActions;
-TemplateMap templates;
+LensActions lensActions;
+Templates templates;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -32,7 +32,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::loadLensMenu()
 {
-    LensActionsMap::const_iterator j = lensActions.constBegin();
+    LensActions::const_iterator j = lensActions.constBegin();
     while (j != lensActions.constEnd()) {
         delete j.key();
         ++j;

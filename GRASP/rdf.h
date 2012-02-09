@@ -397,15 +397,17 @@ namespace rdf
         ~NamespaceStack() { raptor_free_namespaces(p); }
     };
 
-    
+
     extern QSet<Node *> contexts;
+
+    typedef QHash<QString, QString> NSHash; // prefix -> uri
 
 #define NODEPOSITIONCOMMENTPREFIX "#&&&NodePosition"
 #define LENSCOMMENTPREFIX "#&&&Lens"
     void saveGraphToFile(librdf_node *context, FILE *file);
     void printContext(librdf_node *context);
     void freeContext(librdf_node *context);
-    raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser, QHash<QString, QString> *nshash = NULL);
+    raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser, NSHash *nshash = NULL);
     void addOrReplaceStatement(librdf_node *context, librdf_statement *replacement, librdf_statement *statement = NULL);
     void removeStatement(librdf_node *context, librdf_statement *statement);
     void replaceOrDeleteNode(librdf_node *context, librdf_node *node, librdf_node *replacement = NULL);

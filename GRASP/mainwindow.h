@@ -6,11 +6,11 @@
 #include "graph.h"
 
 extern Graph *lensGraph;
-typedef QMap<QAction *, rdf::Node> LensActionsMap;
-extern LensActionsMap lensActions;
+typedef QHash<QAction *, rdf::Node> LensActions;
+extern LensActions lensActions;
 typedef QPair<QString, rdf::Node> TemplatePair; // path, variable
-typedef QMap<rdf::Node, TemplatePair> TemplateMap; // class -> ...
-extern TemplateMap templates;
+typedef QHash<rdf::Node, TemplatePair> Templates; // class -> ...
+extern Templates templates;
 
 namespace Ui {
     class MainWindow;
