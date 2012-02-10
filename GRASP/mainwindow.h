@@ -16,7 +16,7 @@ struct Template {
     rdf::Node variable;
     rdf::Node ofClass;
 };
-typedef QHash<rdf::Node, Template> Templates; // id -> template
+typedef QHash<rdf::Node, Template *> Templates; // id -> template
 extern Templates templates;
 
 namespace Ui {

@@ -1,6 +1,7 @@
 #include "contextmenu.h"
 #include "guiutils.h"
 #include "graphutils.h"
+#include "templatemenu.h"
 
 ContextMenu::ContextMenu(Graph *g, QWidget *parent) : QMenu(parent), graph_(g)
 {
@@ -13,6 +14,10 @@ void ContextMenu::addGeneralNodeActions(rdf::Node &node)
     connect(aAddRelation, SIGNAL(triggered()), SLOT(addRelation()));
     QAction *aRemoveNode = addAction(tr("Remove Node"));
     connect(aRemoveNode, SIGNAL(triggered()), SLOT(removeNode()));
+    TemplateMenu *m = new TemplateMenu(graph_, this);
+    m->setTitle(tr("Insert Template"));
+    m->addNodeTemplates(node);
+    addMenu(m);
 }
 
 void ContextMenu::addGeneralEdgeActions(rdf::Statement &statement)

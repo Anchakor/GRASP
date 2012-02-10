@@ -178,8 +178,8 @@ namespace rdf
     QList<Node> *getNodeClasses(librdf_node *context, librdf_node *node)
     {
         QList<Node> *list = new QList<Node>();
-        rdf::Node type (RDFURIPREFIX"type");
-        Statement s (world, node, type, NULL);
+        Node type (RDFURIPREFIX"type");
+        Statement s (world, librdf_new_node_from_node(node), librdf_new_node_from_node(type), NULL);
         librdf_stream *stream;
         librdf_statement *streamstatement;
 
@@ -189,7 +189,8 @@ namespace rdf
         while(!librdf_stream_end(stream)) {
             streamstatement = librdf_stream_get_object(stream);
 
-            list->append(Node(librdf_statement_get_object(streamstatement)));
+            Node n (librdf_statement_get_object(streamstatement));
+            list->append(n);
 
             librdf_stream_next(stream);
         }

@@ -70,6 +70,9 @@ void MainWindow::loadLensMenu()
 
 void MainWindow::loadTemplates()
 {
+    for(Templates::iterator i = templates.begin(); i != templates.end(); i++) {
+        delete i.value();
+    }
     templates.clear();
 
     Graph *templatesGraph = Graph::fromFile(QString("../templates.ttl"), "text/turtle", rdf::baseUri);
@@ -91,17 +94,25 @@ void MainWindow::loadTemplates()
         rdf::Node nio (no);
 
         if(nip == rdf::Node(TEMPLATESURIPREFIX"class") && librdf_node_is_resource(no)) {
-            Template t = templates[nis];
-            t.variable = nio;
+            Template *t = templates[nis];
+            if(!t) t = new Template();
+            t->ofClass = nio;
+            templates[nis] = t;
         } else if(nip == rdf::Node(TEMPLATESURIPREFIX"variable") && librdf_node_is_resource(no)) {
-            Template t = templates[nis];
-            t.variable = nio;
+            Template *t = templates[nis];
+            if(!t) t = new Template();
+            t->variable = nio;
+            templates[nis] = t;
         } else if(nip == rdf::Node(TEMPLATESURIPREFIX"path") && librdf_node_is_literal(no)) {
-            Template t = templates[nis];
-            t.path = QString(reinterpret_cast<char *>(librdf_node_get_literal_value(no)));
+            Template *t = templates[nis];
+            if(!t) t = new Template();
+            t->path = QString(reinterpret_cast<char *>(librdf_node_get_literal_value(no)));
+            templates[nis] = t;
         } else if(nip == rdf::Node(TEMPLATESURIPREFIX"name") && librdf_node_is_literal(no)) {
-            Template t = templates[nis];
-            t.name = QString(reinterpret_cast<char *>(librdf_node_get_literal_value(no)));
+            Template *t = templates[nis];
+            if(!t) t = new Template();
+            t->name = QString(reinterpret_cast<char *>(librdf_node_get_literal_value(no)));
+            templates[nis] = t;
         }
         librdf_stream_next(stream);
     }

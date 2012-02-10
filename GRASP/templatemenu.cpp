@@ -2,16 +2,16 @@
 
 TemplateMenu::TemplateMenu(Graph *g, QWidget *parent) : QMenu(parent), graph_(g)
 {
-    connect(this, SIGNAL(triggered(QAction *)), this, SLOT(loadLens(QAction *)));
+    connect(this, SIGNAL(triggered(QAction *)), this, SLOT(insertTemplate(QAction *)));
 }
 
 void TemplateMenu::addGeneralTemplates()
 {
     Templates::const_iterator i = templates.constBegin();
     while(i != templates.constEnd()) {
-        if(!i.value().path.isEmpty()) {
-            QAction *aTemplate = (!i.value().name.isEmpty()) ? addAction(i.value().name) : addAction(tr("Unnamed Template"));
-            templateActions_.insert(aTemplate, &const_cast<Template &>(i.value()));
+        if(!i.value()->path.isEmpty() && !librdf_node_is_resource(i.value()->ofClass)) {
+            QAction *aTemplate = (!i.value()->name.isEmpty()) ? addAction(i.value()->name) : addAction(tr("Unnamed Template"));
+            templateActions_.insert(aTemplate, i.value());
         }
         i++;
     }
@@ -21,9 +21,10 @@ void TemplateMenu::addClassTemplates(const rdf::Node &nclass)
 {
     Templates::const_iterator i = templates.constBegin();
     while(i != templates.constEnd()) {
-        if(!i.value().path.isEmpty() && i.value().ofClass == nclass) {
-            QAction *aTemplate = (!i.value().name.isEmpty()) ? addAction(i.value().name) : addAction(tr("Unnamed Template"));
-            templateActions_.insert(aTemplate, &const_cast<Template &>(i.value()));
+        //qDebug() << i.value()->name;
+        if(!i.value()->path.isEmpty() && i.value()->ofClass == nclass) {
+            QAction *aTemplate = (!i.value()->name.isEmpty()) ? addAction(i.value()->name) : addAction(tr("Unnamed Template"));
+            templateActions_.insert(aTemplate, i.value());
         }
         i++;
     }
