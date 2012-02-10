@@ -9,8 +9,10 @@
 t:test a t:Template ;
     t:path "templates/test.ttl" ;
     t:class foaf:Person ;
-    t:variable t:VAR .
+    t:variable t:VAR ;
+    t:name "test" .
 
 t:test2 a t:Template ;
-    t:path "templates/test2.ttl" .
+    t:path "templates/test2.ttl" ;
+    t:name "test2" .
 

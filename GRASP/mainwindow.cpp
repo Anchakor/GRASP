@@ -79,40 +79,36 @@ void MainWindow::loadTemplates()
 
     librdf_stream *stream;
     librdf_statement *streamstatement;
-    /// template -> template class
-    QMap<rdf::Node, rdf::Node> classes;
 
-    for(int pass = 1; pass <= 2; pass++) {
-        stream = librdf_model_context_as_stream(rdf::model, templatesGraph->getContext());
-        if(NULL == stream) throw rdf::ModelAccessException();
+    stream = librdf_model_context_as_stream(rdf::model, templatesGraph->getContext());
+    if(NULL == stream) throw rdf::ModelAccessException();
 
-        while(!librdf_stream_end(stream)) {
-            streamstatement = librdf_stream_get_object(stream);
+    while(!librdf_stream_end(stream)) {
+        streamstatement = librdf_stream_get_object(stream);
 
-            librdf_node *ns = librdf_statement_get_subject(streamstatement);
-            rdf::Node nis (ns);
-            librdf_node *np = librdf_statement_get_predicate(streamstatement);
-            rdf::Node nip (np);
-            librdf_node *no = librdf_statement_get_object(streamstatement);
-            rdf::Node nio (no);
+        librdf_node *ns = librdf_statement_get_subject(streamstatement);
+        rdf::Node nis (ns);
+        librdf_node *np = librdf_statement_get_predicate(streamstatement);
+        rdf::Node nip (np);
+        librdf_node *no = librdf_statement_get_object(streamstatement);
+        rdf::Node nio (no);
 
-            if(1 == pass) {
-                if(nip == rdf::Node(TEMPLATESURIPREFIX"class") && librdf_node_is_resource(no)) {
-                    classes.insert(nis, nio);
-                }
-            } else if(2 == pass) {
-                if(nip == rdf::Node(TEMPLATESURIPREFIX"path") && librdf_node_is_literal(no) && classes.contains(nis)) {
-                    TemplatePair p = templates[classes.value(nis)];
-                    p.first = QString(reinterpret_cast<char *>(librdf_node_get_literal_value(no)));
-                } else if(nip == rdf::Node(TEMPLATESURIPREFIX"variable") && librdf_node_is_resource(no) && classes.contains(nis)) {
-                    TemplatePair p = templates[classes.value(nis)];
-                    p.second = nio;
-                }
-            }
-            librdf_stream_next(stream);
+        if(nip == rdf::Node(TEMPLATESURIPREFIX"class") && librdf_node_is_resource(no)) {
+            Template t = templates[nis];
+            t.variable = nio;
+        } else if(nip == rdf::Node(TEMPLATESURIPREFIX"variable") && librdf_node_is_resource(no)) {
+            Template t = templates[nis];
+            t.variable = nio;
+        } else if(nip == rdf::Node(TEMPLATESURIPREFIX"path") && librdf_node_is_literal(no)) {
+            Template t = templates[nis];
+            t.path = QString(reinterpret_cast<char *>(librdf_node_get_literal_value(no)));
+        } else if(nip == rdf::Node(TEMPLATESURIPREFIX"name") && librdf_node_is_literal(no)) {
+            Template t = templates[nis];
+            t.name = QString(reinterpret_cast<char *>(librdf_node_get_literal_value(no)));
         }
-        librdf_free_stream(stream);
+        librdf_stream_next(stream);
     }
+    librdf_free_stream(stream);
     delete templatesGraph;
 }
 

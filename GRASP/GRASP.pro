@@ -23,7 +23,8 @@ SOURCES += main.cpp\
         graphutils.cpp\
         lens.cpp\
         aggreg.cpp\
-        contextmenu.cpp
+        contextmenu.cpp\
+        templatemenu.cpp
 
 HEADERS  += mainwindow.h\
         persistentcounter.h\
@@ -37,7 +38,8 @@ HEADERS  += mainwindow.h\
         guiutils.h\
         lens.h\
         aggreg.h\
-        contextmenu.h
+        contextmenu.h\
+        templatemenu.h
 
 FORMS    += mainwindow.ui\
         nodeedit.ui

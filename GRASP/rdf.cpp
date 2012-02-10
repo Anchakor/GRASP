@@ -50,6 +50,22 @@ namespace rdf
         //return reinterpret_cast<char *>(librdf_node_to_string(p));
     }
 
+    QString Node::toQString() const
+    {
+        char *s = serialize();
+        QString str (s);
+        free(s);
+        return str;
+    }
+
+    QString Node::toQString(raptor_namespace_stack *nstack) const
+    {
+        char *s = reinterpret_cast<char *>(raptor_term_to_turtle_string(p, nstack, NULL));
+        QString str (s);
+        free(s);
+        return str;
+    }
+
     char *Statement::serialize() const
     {
         QString s;
@@ -165,6 +181,28 @@ namespace rdf
         }
         librdf_free_statement(statement);
         librdf_free_stream(stream);
+    }
+
+    QList<Node> *getNodeClasses(librdf_node *context, librdf_node *node)
+    {
+        QList<Node> *list = new QList<Node>();
+        rdf::Node type (RDFURIPREFIX"type");
+        Statement s (world, node, type, NULL);
+        librdf_stream *stream;
+        librdf_statement *streamstatement;
+
+        stream = librdf_model_find_statements_in_context(model, s, context);
+        if(NULL == stream) throw ModelAccessException();
+
+        while(!librdf_stream_end(stream)) {
+            streamstatement = librdf_stream_get_object(stream);
+
+            list->append(Node(librdf_statement_get_object(streamstatement)));
+
+            librdf_stream_next(stream);
+        }
+        librdf_free_stream(stream);
+        return list;
     }
 
 }

@@ -166,6 +166,8 @@ namespace rdf
         bool operator!=(const Node &other) const { return !(*this == other); }
         ~Node() { librdf_free_node(p); }
         char *serialize() const; // needs to be delete[]d
+        QString toQString() const;
+        QString toQString(raptor_namespace_stack *nstack) const;
     };
     inline uint qHash(const Node &key)
     {
@@ -411,6 +413,7 @@ namespace rdf
     void addOrReplaceStatement(librdf_node *context, librdf_statement *replacement, librdf_statement *statement = NULL);
     void removeStatement(librdf_node *context, librdf_statement *statement);
     void replaceOrDeleteNode(librdf_node *context, librdf_node *node, librdf_node *replacement = NULL);
+    QList<Node> *getNodeClasses(librdf_node *context, librdf_node *node);
 
 }
 
