@@ -183,10 +183,8 @@ void GraphNode::moveEvent(QGraphicsSceneMoveEvent *event)
     adjustEdges();
     Graph *graph = reinterpret_cast<Graph *>(scene());
     if(graph && graph->views().size() > 0) {
-        char *s = label_->node().serialize();
-        uint u = qHash(QByteArray(s));
+        uint u = qHash(label_->node());
         graph->loadedNodePositions_[u] = event->newPos();
-        free(s);
     }
 }
 

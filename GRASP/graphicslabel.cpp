@@ -180,10 +180,8 @@ void GraphicsNodeLabel::editDialog()
         Graph *g = reinterpret_cast<Graph *>(scene());
         if(g->nodes_.value(node_)) {
             rdf::Node n2 (newnode);
-            char *s = n2.serialize();
-            uint u = qHash(QByteArray(s));
+            uint u = qHash(n2);
             g->loadedNodePositions_[u] = g->nodes_.value(node_)->pos();
-            free(s);
         }
         rdf::Node nn = rdf::Node(newnode);
         setNode(nn);

@@ -103,10 +103,6 @@ namespace rdf
             p = librdf_new_node_from_blank_identifier(world, identifier); 
             init(); 
         }
-     /*   Node(librdf_world *world, unsigned char *identifier, size_t identifier_len) { 
-            p = librdf_new_node_from_counted_blank_identifier(world, identifier, identifier_len); 
-            init(); 
-        } */
         Node(librdf_world *world, unsigned char *uri_string, size_t len) { 
             p = librdf_new_node_from_counted_uri_string(world, uri_string, len); 
             init(); 
@@ -143,10 +139,6 @@ namespace rdf
             p = librdf_new_node_from_uri_local_name(world, uri, local_name); 
             init(); 
         }
-     /*   Node(librdf_world *world, unsigned char *uri_string) { 
-            p = librdf_new_node_from_uri_string(world, uri_string); 
-            init(); 
-        }*/
         operator librdf_node*() const { return p; }
         Node &operator=(const Node &other) {
             if(*this != other) {
@@ -156,24 +148,16 @@ namespace rdf
             return *this;
         }
         bool operator==(const Node &other) const {
-            /* this function didn't work as expected: */
             return librdf_node_equals(p, other.p);
-            /*QString s1 (serialize());
-            QString s2 (other.serialize());
-            printf("CMP TEST: 1: %s 2: %s 3: %d\n", s1.toLatin1().constData(), s2.toLatin1().constData(), librdf_node_equals(p, other.p));
-            return s1 == s2;*/
         }
         bool operator!=(const Node &other) const { return !(*this == other); }
         ~Node() { librdf_free_node(p); }
-        char *serialize() const; // needs to be delete[]d
-        QString toQString() const;
-        QString toQString(raptor_namespace_stack *nstack) const;
+        char *serialize(raptor_namespace_stack *nstack = NULL) const; // needs to be delete[]d
+        QString toQString(raptor_namespace_stack *nstack = NULL) const;
     };
     inline uint qHash(const Node &key)
     {
-        char *str = key.serialize();
-        uint out = qHash(QString(const_cast<const char *>(str)));
-        free(str);
+        uint out = qHash(key.toQString());
         return out;
     }
 
@@ -264,14 +248,12 @@ namespace rdf
             return librdf_statement_equals(p, other.p);
         }
         ~Statement() { librdf_free_statement(p); }
-        char *serialize() const; // needs to be delete[]d
+        char *serialize(raptor_namespace_stack *nstack = NULL) const; // needs to be delete[]d
+        QString toQString(raptor_namespace_stack *nstack = NULL) const;
     };
     inline uint qHash(const Statement &key)
     {
-        char *str = key.serialize();
-        //printf("DEBUG stat ser: %s\n", const_cast<const char *>(str));
-        uint out = qHash(QString(const_cast<const char *>(str)));
-        delete[] str;
+        uint out = qHash(key.toQString());
         return out;
     }
 

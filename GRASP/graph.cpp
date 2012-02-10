@@ -68,17 +68,14 @@ Graph *Graph::fromFile(const QString &path, const char *mimeType, librdf_uri *ba
         if(lineParts.at(0) == QString(LENSCOMMENTPREFIX)) {
             LensActions::const_iterator i = lensActions.constBegin();
             while (i != lensActions.constEnd()) {
-                char *sl = i.value().serialize();
                 QByteArray at1 (lineParts.at(1));
                 at1.replace("\n", QByteArray());
-                if(QString(at1) == QString::number(qHash(QByteArray(sl)))) {
+                if(QString(at1) == QString::number(qHash(i.value()))) {
                     foundLensDef = true;
                     //printf("found lensDef: %s\n", sl);
                     lensDef = i.value();
-                    free(sl);
                     break;
                 }
-                free(sl);
                 ++i;
             }
         } else if(lineParts.at(0) == QString(NODEPOSITIONCOMMENTPREFIX)) {
@@ -190,8 +187,7 @@ void Graph::contextChanged()
 
     Nodes::const_iterator i = nodes_.constBegin();
     while (i != nodes_.constEnd()) {
-        char *s = i.key().serialize();
-        uint u = qHash(QByteArray(s));
+        uint u = qHash(i.key());
         if(loadedNodePositions_.contains(u)) {
             i.value()->setPos(loadedNodePositions_.value(u));
             //printf("load: %f %f\n", loadedNodePositions_.value(u).x(), loadedNodePositions_.value(u).y());
@@ -200,7 +196,6 @@ void Graph::contextChanged()
         }
         i.value()->contextChanged();
         ++i;
-        free(s);
     }
 
     librdf_free_stream(stream);
@@ -231,11 +226,9 @@ void Graph::saveFile()
             fprintf(file, "%s\n", out.toLatin1().constData());
             ++j;
         }
-        char *sl = lens_.lensNode_.serialize();
         QString outl (LENSCOMMENTPREFIX);
-        outl.append(' ').append(QString::number(qHash(QByteArray(sl))));
+        outl.append(' ').append(QString::number(qHash(lens_.lensNode_)));
         fprintf(file, "%s\n", outl.toLatin1().constData());
-        free(sl);
 
         fclose(file);
     } else

@@ -44,40 +44,39 @@ namespace rdf
         if(0 != librdf_model_context_remove_statements(model, context)) throw ModelAccessException();
     }
 
-    char *Node::serialize() const
+    char *Node::serialize(raptor_namespace_stack *nstack) const
     {
-        return reinterpret_cast<char *>(librdf_node_to_string(p));
-    }
-
-    QString Node::toQString() const
-    {
-        char *s = serialize();
-        QString str = QString::fromLocal8Bit(s);
-        free(s);
-        return str;
+        return (NULL != nstack) ? reinterpret_cast<char *>(raptor_term_to_turtle_string(p, nstack, baseUri))
+            : reinterpret_cast<char *>(librdf_node_to_string(p));
     }
 
     QString Node::toQString(raptor_namespace_stack *nstack) const
     {
-        char *s = reinterpret_cast<char *>(raptor_term_to_turtle_string(p, nstack, baseUri));
+        char *s = serialize(nstack);
         QString str = QString::fromLocal8Bit(s);
         free(s);
         return str;
     }
 
-    char *Statement::serialize() const
+    QString Statement::toQString(raptor_namespace_stack *nstack) const
     {
         QString s;
         Node n;
         n = librdf_statement_get_subject(p);
-        s.append(n.toQString());
+        s.append(n.toQString(nstack));
         s.append(" ");
         n = librdf_statement_get_predicate(p);
-        s.append(n.toQString());
+        s.append(n.toQString(nstack));
         s.append(" ");
         n = librdf_statement_get_object(p);
-        s.append(n.toQString());
+        s.append(n.toQString(nstack));
         s.append(" . \n");
+        return s;
+    }
+
+    char *Statement::serialize(raptor_namespace_stack *nstack) const
+    {
+        QString s = toQString(nstack);
         return qstrdup(s.toLatin1().constData());
     }
 
