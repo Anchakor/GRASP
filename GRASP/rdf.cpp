@@ -46,22 +46,21 @@ namespace rdf
 
     char *Node::serialize() const
     {
-        return reinterpret_cast<char *>(librdf_node_to_string(p));// raptor_term_to_turtle_string(p, NULL, NULL));
-        //return reinterpret_cast<char *>(librdf_node_to_string(p));
+        return reinterpret_cast<char *>(librdf_node_to_string(p));
     }
 
     QString Node::toQString() const
     {
         char *s = serialize();
-        QString str (s);
+        QString str = QString::fromLocal8Bit(s);
         free(s);
         return str;
     }
 
     QString Node::toQString(raptor_namespace_stack *nstack) const
     {
-        char *s = reinterpret_cast<char *>(raptor_term_to_turtle_string(p, nstack, NULL));
-        QString str (s);
+        char *s = reinterpret_cast<char *>(raptor_term_to_turtle_string(p, nstack, baseUri));
+        QString str = QString::fromLocal8Bit(s);
         free(s);
         return str;
     }
@@ -69,21 +68,15 @@ namespace rdf
     char *Statement::serialize() const
     {
         QString s;
-        librdf_node *n;
+        Node n;
         n = librdf_statement_get_subject(p);
-        char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(n, NULL, NULL));
-        s.append(const_cast<const char *>(str));
-        free(str);
+        s.append(n.toQString());
         s.append(" ");
         n = librdf_statement_get_predicate(p);
-        str = reinterpret_cast<char *>(raptor_term_to_turtle_string(n, NULL, NULL));
-        s.append(const_cast<const char *>(str));
-        free(str);
+        s.append(n.toQString());
         s.append(" ");
         n = librdf_statement_get_object(p);
-        str = reinterpret_cast<char *>(raptor_term_to_turtle_string(n, NULL, NULL));
-        s.append(const_cast<const char *>(str));
-        free(str);
+        s.append(n.toQString());
         s.append(" . \n");
         return qstrdup(s.toLatin1().constData());
     }

@@ -138,9 +138,7 @@ void GraphicsNodeLabel::setNode(rdf::Node &node)
 {
     node_ = rdf::Node(node);
 
-    char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node_, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
-    setText(QString::fromLocal8Bit(str));
-    free(str);
+    setText(node_.toQString((reinterpret_cast<Graph *>(scene()))->nstack_));
 }
 
 rdf::Node GraphicsNodeLabel::node() const
@@ -224,10 +222,8 @@ void GraphicsPropertyLabel::setStatement(rdf::Statement &statement)
 {
     statement_ = rdf::Statement(statement);
 
-    librdf_node *node = librdf_statement_get_predicate(statement_);
-    char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, (reinterpret_cast<Graph *>(scene()))->nstack_, NULL));
-    setText(QString::fromLocal8Bit(const_cast<const char *>(str)));
-    free(str);
+    rdf::Node node (librdf_statement_get_predicate(statement_));
+    setText(node.toQString((reinterpret_cast<Graph *>(scene()))->nstack_));
 }
 
 rdf::Statement GraphicsPropertyLabel::statement() const

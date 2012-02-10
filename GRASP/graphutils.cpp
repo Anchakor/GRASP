@@ -13,9 +13,8 @@ RDFNodeEditDialog::RDFNodeEditDialog(librdf_node **result, librdf_node *node, Gr
 
     if(librdf_node_is_resource(node)) {
         ui.tabWidget->setCurrentIndex(0);
-        char *str = reinterpret_cast<char *>(raptor_term_to_turtle_string(node, graph->nstack_, NULL));
-        ui.uriedit->setText(QString::fromLocal8Bit(str));
-        free(str);
+        rdf::Node n (node);
+        ui.uriedit->setText(n.toQString(graph->nstack_));
     } else if(librdf_node_is_literal(node)) {
         ui.tabWidget->setCurrentIndex(1);
         ui.valueedit->setPlainText(QString::fromLocal8Bit(reinterpret_cast<char *>(librdf_node_get_literal_value(node))));
