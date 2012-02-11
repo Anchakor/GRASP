@@ -15,9 +15,10 @@ class TemplateMenu : public QMenu
     public:
         explicit TemplateMenu(Graph *g, QWidget *parent = 0);
 
-        void addGeneralTemplates(bool forNode = true);
-        void addClassTemplates(const rdf::Node &nclass, bool forNode = true);
+        void addGeneralTemplates(bool forNode = true, bool withVariables = true);
+        void addClassTemplates(const rdf::Node &nclass, bool forNode = true, bool withVariables = true);
         void addNodeTemplates(const rdf::Node &node);
+        void addGraphTemplates(bool withVariables = true);
 
         Graph *graph_;
         TemplateActions templateActions_;

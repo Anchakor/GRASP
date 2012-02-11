@@ -31,6 +31,10 @@ void ContextMenu::addGeneralGraphActions()
 {
     QAction *aAddTriple = addAction(tr("Add Relation"));
     connect(aAddTriple, SIGNAL(triggered()), SLOT(addTriple()));
+    TemplateMenu *m = new TemplateMenu(graph_, this);
+    m->setTitle(tr("Insert Template"));
+    m->addGraphTemplates(true);
+    addMenu(m);
 }
 
 void ContextMenu::addRelation()

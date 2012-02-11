@@ -6,31 +6,27 @@ TemplateMenu::TemplateMenu(Graph *g, QWidget *parent) : QMenu(parent), graph_(g)
     connect(this, SIGNAL(triggered(QAction *)), this, SLOT(insertTemplate(QAction *)));
 }
 
-void TemplateMenu::addGeneralTemplates(bool forNode)
+void TemplateMenu::addGeneralTemplates(bool forNode, bool withVariables)
 {
-    Templates::const_iterator i = templates.constBegin();
-    while(i != templates.constEnd()) {
-        if(!i.value()->path.isEmpty()
-                && !librdf_node_is_resource(i.value()->ofClass)
-                && !(forNode && !librdf_node_is_resource(i.value()->variable)) ) {
-            QAction *aTemplate = (!i.value()->name.isEmpty()) ? addAction(i.value()->name) : addAction(tr("Unnamed Template"));
-            templateActions_.insert(aTemplate, i.value());
-        }
-        i++;
+    for(Templates::const_iterator i = templates.constBegin(); i != templates.constEnd(); i++) {
+        if(i.value()->path.isEmpty() || librdf_node_is_resource(i.value()->ofClass)) continue;
+        if(forNode && !librdf_node_is_resource(i.value()->variable)) continue;
+        if(!forNode && !withVariables && librdf_node_is_resource(i.value()->variable)) continue;
+
+        QAction *aTemplate = (!i.value()->name.isEmpty()) ? addAction(i.value()->name) : addAction(tr("Unnamed Template"));
+        templateActions_.insert(aTemplate, i.value());
     }
 }
 
-void TemplateMenu::addClassTemplates(const rdf::Node &nclass, bool forNode)
+void TemplateMenu::addClassTemplates(const rdf::Node &nclass, bool forNode, bool withVariables)
 {
-    Templates::const_iterator i = templates.constBegin();
-    while(i != templates.constEnd()) {
-        if(!i.value()->path.isEmpty()
-                && i.value()->ofClass == nclass
-                && !(forNode && !librdf_node_is_resource(i.value()->variable)) ) {
-            QAction *aTemplate = (!i.value()->name.isEmpty()) ? addAction(i.value()->name) : addAction(tr("Unnamed Template"));
-            templateActions_.insert(aTemplate, i.value());
-        }
-        i++;
+    for(Templates::const_iterator i = templates.constBegin(); i != templates.constEnd(); i++) {
+        if(i.value()->path.isEmpty() || !(i.value()->ofClass == nclass)) continue;
+        if(forNode && !librdf_node_is_resource(i.value()->variable)) continue;
+        if(!forNode && !withVariables && librdf_node_is_resource(i.value()->variable)) continue;
+
+        QAction *aTemplate = (!i.value()->name.isEmpty()) ? addAction(i.value()->name) : addAction(tr("Unnamed Template"));
+        templateActions_.insert(aTemplate, i.value());
     }
 }
 
@@ -51,6 +47,26 @@ void TemplateMenu::addNodeTemplates(const rdf::Node &node)
     tmg->setTitle(tr("General Templates"));
     tmg->addGeneralTemplates();
     if(!tmg->actions().empty()) addMenu(tmg);
+}
+
+void TemplateMenu::addGraphTemplates(bool withVariables)
+{
+    TemplateMenu *tmg = new TemplateMenu(graph_, this);
+    tmg->setTitle(tr("General Templates"));
+    tmg->addGeneralTemplates(false, withVariables);
+    if(!tmg->actions().empty()) addMenu(tmg);
+
+    QSet<rdf::Node> classes;
+    for(Templates::const_iterator i = templates.constBegin(); i != templates.constEnd(); i++) {
+        Template *t = i.value();
+        if(librdf_node_is_resource(t->ofClass)) classes.insert(t->ofClass);
+    }
+    for(QSet<rdf::Node>::const_iterator j = classes.constBegin(); j != classes.constEnd(); j++) {
+        TemplateMenu *tm = new TemplateMenu(graph_, this);
+        tm->setTitle(j->toQString(graph_->nstack_).append(tr(" Templates")));
+        tm->addClassTemplates(*j, false, withVariables);
+        if(!tm->actions().empty()) addMenu(tm);
+    }
 }
 
 void TemplateMenu::insertTemplate(QAction *act)
