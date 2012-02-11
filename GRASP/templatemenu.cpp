@@ -2,6 +2,7 @@
 
 TemplateMenu::TemplateMenu(Graph *g, QWidget *parent) : QMenu(parent), graph_(g)
 {
+    // when TemplateMenu are nested the slot will be called in each level so checking if actions().contains(QAction *) is in order
     connect(this, SIGNAL(triggered(QAction *)), this, SLOT(insertTemplate(QAction *)));
 }
 
@@ -21,7 +22,6 @@ void TemplateMenu::addClassTemplates(const rdf::Node &nclass)
 {
     Templates::const_iterator i = templates.constBegin();
     while(i != templates.constEnd()) {
-        //qDebug() << i.value()->name;
         if(!i.value()->path.isEmpty() && i.value()->ofClass == nclass) {
             QAction *aTemplate = (!i.value()->name.isEmpty()) ? addAction(i.value()->name) : addAction(tr("Unnamed Template"));
             templateActions_.insert(aTemplate, i.value());
@@ -51,5 +51,8 @@ void TemplateMenu::addNodeTemplates(const rdf::Node &node)
 
 void TemplateMenu::insertTemplate(QAction *act)
 {
-
+    if(actions().contains(act)) {
+        Template *t = templateActions_.value(act);
+        qDebug() << "template path:" << t->path;
+    }
 }
