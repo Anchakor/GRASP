@@ -15,8 +15,8 @@ class TemplateMenu : public QMenu
     public:
         explicit TemplateMenu(Graph *g, QWidget *parent = 0);
 
-        void addGeneralTemplates();
-        void addClassTemplates(const rdf::Node &nclass);
+        void addGeneralTemplates(bool forNode = true);
+        void addClassTemplates(const rdf::Node &nclass, bool forNode = true);
         void addNodeTemplates(const rdf::Node &node);
 
         Graph *graph_;
