@@ -14,9 +14,9 @@ void ContextMenu::addGeneralNodeActions(rdf::Node &node)
     connect(aAddRelation, SIGNAL(triggered()), SLOT(addRelation()));
     QAction *aRemoveNode = addAction(tr("Remove Node"));
     connect(aRemoveNode, SIGNAL(triggered()), SLOT(removeNode()));
-    TemplateMenu *m = new TemplateMenu(graph_, this);
+    TemplateMenu *m = new TemplateMenu(graph_, node, this);
     m->setTitle(tr("Insert Template"));
-    m->addNodeTemplates(node);
+    m->addNodeTemplates();
     addMenu(m);
 }
 
