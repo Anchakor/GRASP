@@ -130,6 +130,15 @@ Graph *Graph::fromURI(const QString &uri, const char *mimeType, librdf_uri *base
     return g;
 }
 
+uint Graph::hashNode(rdf::Node n)
+{
+    uint v = qHash(n);
+    if(librdf_node_is_blank(n) && bnodeHashes_.contains(v)) {
+        return bnodeHashes_.value(v);
+    }
+    return v;
+}
+
 class AddEdgeNodeNotFoundException {};
 void Graph::contextChanged()
 {
@@ -187,7 +196,9 @@ void Graph::contextChanged()
 
     Nodes::const_iterator i = nodes_.constBegin();
     while (i != nodes_.constEnd()) {
-        uint u = qHash(i.key());
+        if(librdf_node_is_blank(i.key()) && !bnodeHashes_.contains(qHash(i.key()))) bnodeHashes_.insert(qHash(i.key()), bnodeHashes_.size() + 1);
+        uint u = hashNode(i.key());
+        //qDebug() << u << qHash(i.key()) << i.key().toQString();
         if(loadedNodePositions_.contains(u)) {
             i.value()->setPos(loadedNodePositions_.value(u));
             //printf("load: %f %f\n", loadedNodePositions_.value(u).x(), loadedNodePositions_.value(u).y());

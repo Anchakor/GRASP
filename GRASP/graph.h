@@ -26,6 +26,9 @@ class Graph : public QGraphicsScene
         static Graph *fromURI(const QString &uri, const char *mimeType = "text/turtle", librdf_uri *baseUri = rdf::baseUri, QObject *parent = 0);
         static Graph *newEmpty(QObject *parent = 0);
 
+        uint hashNode(rdf::Node n);
+        QHash<uint, uint> bnodeHashes_;
+
         void contextChanged();
         rdf::Node getContext();
 

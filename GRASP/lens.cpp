@@ -6,12 +6,12 @@ Lens::Lens()
 {
     whitelistMode_ = false;
 
-    rdf::Node n1 ("http://xmlns.com/foaf/0.1/birthday");
-    rdf::Node n2 ("http://xmlns.com/foaf/0.1/nick");
+    rdf::Node n1 (RDFURIPREFIX"type");
     rdf::Node n3 ("http://www.w3.org/2002/07/owl#sameAs");
     aggregPropertyList_.insert(n1);
-    aggregPropertyList_.insert(n2);
     aggregPropertyList_.insert(n3);
+    propertyList_.insert(n1);
+    propertyList_.insert(n3);
 
 }
 
