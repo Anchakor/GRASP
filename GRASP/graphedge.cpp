@@ -25,6 +25,7 @@ void GraphEdge::init()
 
     label_ = new GraphicsPropertyLabel(this);
 
+    setFiltersChildEvents(true);
     setAcceptHoverEvents(true);
     setFlag(ItemIsSelectable);
     setFocusPolicy(Qt::StrongFocus); // setFlag(ItemIsFocusable);
@@ -163,9 +164,8 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
     // Draw the line itself
     QColor c;
-    if(hasFocus() || hover_ || isSelected()) {
+    if(hasFocus() || label_->hasFocus() || hover_) {
         c = palette().color(QPalette::Highlight);
-        if(isSelected() && !hasFocus() && !hover_) c = c.lighter();
     } else
         c = palette().color(QPalette::ButtonText);
     painter->setPen(QPen(c, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -191,9 +191,37 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
     // Draw the label background
     QColor col (palette().color(QPalette::Button));
-    if(!hasFocus() && !hover_) col.setAlphaF(0.7);
+    if(!hasFocus()) col.setAlphaF(0.7);
     painter->fillRect(labelRect_, col);
     painter->setPen(palette().color(QPalette::ButtonText));
+}
+
+bool GraphEdge::sceneEvent(QEvent *event)
+{
+    if(event->type() == QEvent::FocusIn) {
+        scene()->setFocusItem(label_);
+        return true;
+    }
+    //printf("ev %d\n", event->type());
+    if(event->type() == QEvent::GraphicsSceneContextMenu
+            || event->type() == QEvent::GraphicsSceneMouseDoubleClick) {
+        scene()->sendEvent(label_, event);
+        return true;
+    }
+    QGraphicsWidget::sceneEvent(event);
+}
+
+/*bool GraphEdge::eventFilter(QObject *obj, QEvent *event)*/
+bool GraphEdge::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
+{
+    //printf("evFil %d\n", event->type());
+    if(event->type() == QEvent::FocusIn
+            || event->type() == QEvent::FocusOut) {
+        scene()->sendEvent(this, event);
+        return true;
+    }
+
+    return QGraphicsItem::sceneEventFilter(watched, event);
 }
 
 void GraphEdge::focusInEvent(QFocusEvent *event)

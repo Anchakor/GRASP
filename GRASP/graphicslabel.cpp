@@ -84,6 +84,10 @@ void GraphicsLabel::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         painter->setPen(p);
         painter->drawRect(option->rect.adjusted(-1,-1,1,1));
     }
+    /* Uncomment when something sensible can be done with selected items:
+    if(isSelected()) {
+        p.setColor(palette().color(QPalette::Highlight));
+    } else*/
     p.setColor(palette().color(QPalette::Foreground));
     painter->setPen(p);
 

@@ -185,15 +185,9 @@ bool GraphNode::sceneEvent(QEvent *event)
 bool GraphNode::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 {
     //printf("evFil %d\n", event->type());
-    // all mouse move events of children are to be sorted out by GraphNode
-    if(event->type() == QEvent::GraphicsSceneMouseMove) { 
-        scene()->sendEvent(this, event);
-        return true; 
-    }
-    if(event->type() == QEvent::GraphicsSceneMousePress
-            || event->type() == QEvent::GraphicsSceneMouseRelease
-            || event->type() == QEvent::GrabMouse
-            || event->type() == QEvent::UngrabMouse) {
+    if(event->type() == QEvent::GraphicsSceneMouseMove
+            || event->type() == QEvent::GraphicsSceneMousePress
+            || event->type() == QEvent::GraphicsSceneMouseRelease) {
         scene()->sendEvent(this, event);
         return true;
     }

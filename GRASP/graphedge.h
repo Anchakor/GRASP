@@ -38,6 +38,8 @@ class GraphEdge : public QGraphicsWidget
         int type() const { return Type; }
 
     protected:
+        virtual bool sceneEvent(QEvent *event);
+        virtual bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
         virtual void focusInEvent(QFocusEvent *event);
         virtual void focusOutEvent(QFocusEvent *event);
         virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
