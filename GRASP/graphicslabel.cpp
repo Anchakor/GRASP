@@ -77,7 +77,17 @@ void GraphicsLabel::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     formats.append(range);
     textLayout.setAdditionalFormats(formats);*/
 
-    textLayout.draw(painter, QPointF(0, 0)); 
+    QPen p;
+    p.setWidth(1);
+    if(hasFocus()) {
+        p.setColor(palette().color(QPalette::Highlight));
+        painter->setPen(p);
+        painter->drawRect(option->rect.adjusted(-1,-1,1,1));
+    }
+    p.setColor(palette().color(QPalette::Foreground));
+    painter->setPen(p);
+
+    textLayout.draw(painter, QPointF(0, 0));
 }
 
 int GraphicsLabel::type() const

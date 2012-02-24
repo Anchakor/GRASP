@@ -39,6 +39,7 @@ class GraphNode : public QGraphicsWidget
         void adjustEdges();
 
     protected:
+        virtual bool sceneEvent(QEvent *event);
         virtual bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
         virtual void moveEvent(QGraphicsSceneMoveEvent *event);
         virtual void focusInEvent(QFocusEvent *event);

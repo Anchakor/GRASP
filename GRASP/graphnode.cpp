@@ -166,13 +166,37 @@ void GraphNode::adjustEdges() {
         i2.next()->updateGeometry();
 }
 
+bool GraphNode::sceneEvent(QEvent *event)
+{
+    if(event->type() == QEvent::FocusIn) {
+        scene()->setFocusItem(label_);
+        return true;
+    }
+    //printf("ev %d\n", event->type());
+    if(event->type() == QEvent::GraphicsSceneContextMenu
+            || event->type() == QEvent::GraphicsSceneMouseDoubleClick) {
+        scene()->sendEvent(label_, event);
+        return true;
+    }
+    QGraphicsWidget::sceneEvent(event);
+}
+
 /*bool GraphNode::eventFilter(QObject *obj, QEvent *event)*/
 bool GraphNode::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 {
+    //printf("evFil %d\n", event->type());
     // all mouse move events of children are to be sorted out by GraphNode
     if(event->type() == QEvent::GraphicsSceneMouseMove) { 
         scene()->sendEvent(this, event);
-        return true; }
+        return true; 
+    }
+    if(event->type() == QEvent::GraphicsSceneMousePress
+            || event->type() == QEvent::GraphicsSceneMouseRelease
+            || event->type() == QEvent::GrabMouse
+            || event->type() == QEvent::UngrabMouse) {
+        scene()->sendEvent(this, event);
+        return true;
+    }
 
     return QGraphicsItem::sceneEventFilter(watched, event);
 }
