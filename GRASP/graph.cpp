@@ -158,6 +158,7 @@ void Graph::contextChanged()
         node = librdf_statement_get_object(statement);
         rdf::Node y(node);
         rdf::Node nodepred (librdf_statement_get_predicate(statement));
+        //qDebug() << "CCd triple:" << x.toQString(nstack_) << nodepred.toQString(nstack_) << y.toQString(nstack_);
 
         if((Ui::viewUnusedNodes && Ui::viewUnusedNodes->isChecked()) || !(lens_.whitelistMode_ ^ lens_.propertyList_.contains(nodepred))) {
             if(!nodes_.contains(x)) {
@@ -185,7 +186,6 @@ void Graph::contextChanged()
                         edges_.insert(rdf::Statement(statement), e)
                             .key()));
 
-                //if(nodes_.value(reinterpret_cast<const char *>(librdf_node_to_string(node)) == 0) throw AddEdgeNodeNotFoundException();
                 if(!nodes_.contains(x)) throw AddEdgeNodeNotFoundException();
                 e->setSourceNode(nodes_.value(x));
                 if(!nodes_.contains(y)) throw AddEdgeNodeNotFoundException();

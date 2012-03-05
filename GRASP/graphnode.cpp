@@ -43,14 +43,11 @@ void GraphNode::init()
 void GraphNode::contextChanged()
 {
     genAggregLevel(label_, layout_);
+    updateGeometry();
 }
 
 void GraphNode::genAggregLevel(GraphicsNodeLabel *subjNode, QGraphicsLinearLayout *aggregProps)
 {
-    for(int i = 0; i < aggregProps->count(); i++) {
-        if(aggregProps->itemAt(i) != subjNode) aggregProps->removeAt(i);
-    }
-
     Graph *graph = reinterpret_cast<Graph *>(scene());
     rdf::Node context (graph->getContext());
     Lens *lens = &(graph->lens_);
@@ -92,13 +89,6 @@ void GraphNode::genAggregLevel(GraphicsNodeLabel *subjNode, QGraphicsLinearLayou
 void GraphNode::updateGeometry()
 {
     QGraphicsLayoutItem::updateGeometry();
-
-    Graph *graph = reinterpret_cast<Graph *>(scene());
-    if(graph && graph->views().size() > 0) {
-        QSizeF oldsize = size();
-        adjustSize();
-        setPos(x() + (oldsize.width() - size().width()) / 2, y() + (oldsize.height() - size().height()) / 2);
-    }
 
     adjustEdges();
 }
@@ -201,6 +191,7 @@ void GraphNode::moveEvent(QGraphicsSceneMoveEvent *event)
     adjustEdges();
     Graph *graph = reinterpret_cast<Graph *>(scene());
     if(graph && graph->views().size() > 0) {
+        //qDebug() << label_->node().toQString() << "x:" << event->oldPos().x() << event->newPos().x() << "y:" << event->oldPos().y() << event->newPos().y();
         uint u = graph->hashNode(label_->node());
         graph->loadedNodePositions_[u] = event->newPos();
     }
