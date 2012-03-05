@@ -5,6 +5,7 @@
 Lens::Lens()
 {
     whitelistMode_ = false;
+    aggregateLiterals_ = true;
 
     rdf::Node n1 (RDFURIPREFIX"type");
     rdf::Node n3 ("http://www.w3.org/2002/07/owl#sameAs");
@@ -18,6 +19,7 @@ Lens::Lens()
 void Lens::clear()
 {
     whitelistMode_ = false;
+    aggregateLiterals_ = true;
     propertyList_.clear();
     aggregPropertyList_.clear();
 }
@@ -40,21 +42,23 @@ void Lens::loadLens(librdf_node *l)
     while(!librdf_stream_end(stream)) {
         streamstatement = librdf_stream_get_object(stream);
 
-        rdf::Node ntype ("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+        rdf::Node ntype (RDFURIPREFIX"type");
         librdf_node *np = librdf_statement_get_predicate(streamstatement);
         librdf_node *no = librdf_statement_get_object(streamstatement);
         rdf::Node nio (no);
         if(librdf_node_equals(np, ntype)) {
-            rdf::Node nBl ("http://mud.cz/sw/ed#lens/BlacklistProperties");
+            rdf::Node nBl (LENSURIPREFIX"BlacklistProperties");
             if(librdf_node_equals(no, nBl)) whitelistMode_ = false;
-            rdf::Node nWl ("http://mud.cz/sw/ed#lens/WhitelistProperties");
+            rdf::Node nWl (LENSURIPREFIX"WhitelistProperties");
             if(librdf_node_equals(no, nWl)) whitelistMode_ = true;
+            rdf::Node nAL (LENSURIPREFIX"NotAggregateLiterals");
+            if(librdf_node_equals(no, nAL)) aggregateLiterals_ = false;
         }
-        rdf::Node nprop ("http://mud.cz/sw/ed#lens/property");
+        rdf::Node nprop (LENSURIPREFIX"property");
         if(librdf_node_equals(np, nprop)) {
             propertyList_.insert(nio);
         }
-        rdf::Node naggprop ("http://mud.cz/sw/ed#lens/aggregatedProperty");
+        rdf::Node naggprop (LENSURIPREFIX"aggregatedProperty");
         if(librdf_node_equals(np, naggprop)) {
             aggregPropertyList_.insert(nio);
         }

@@ -64,7 +64,8 @@ void GraphNode::genAggregLevel(GraphicsNodeLabel *subjNode, QGraphicsLinearLayou
         streamstatement = librdf_stream_get_object(stream);
         if(!aggregStatements_.contains(streamstatement)) {
             rdf::Node n (librdf_statement_get_predicate(streamstatement));
-            if(lens->aggregPropertyList_.contains(n)) {
+            rdf::Node nobj (librdf_statement_get_object(streamstatement));
+            if(lens->aggregPropertyList_.contains(n) || (lens->aggregateLiterals_ && librdf_node_is_literal(nobj))) {
                 GraphAggregProperty *gap;
                 gap = new GraphAggregProperty();
                 aggregProps->addItem(gap);
@@ -73,7 +74,6 @@ void GraphNode::genAggregLevel(GraphicsNodeLabel *subjNode, QGraphicsLinearLayou
 
                 GraphAggregNode *aggNode = new GraphAggregNode();
                 gap->objects()->addItem(aggNode);
-                rdf::Node nobj (librdf_statement_get_object(streamstatement));
                 aggNode->setNode(nobj);
                 aggregStatements_.insert(streamstatement);
                 // recursive call on next level aggregation

@@ -6,7 +6,7 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix lens: <http://mud.cz/sw/ed#lens/> .
 
-lens:test a lens:Lens , lens:BlacklistProperties ;
+lens:test a lens:Lens , lens:BlacklistProperties , lens:NotAggregateLiterals ;
     lens:property rdf:type ;
     lens:aggregatedProperty rdf:type .
 

@@ -13,6 +13,7 @@ class Lens {
         // relations to blacklist/whitelist generally
         bool whitelistMode_;
         QSet<rdf::Node> propertyList_;
+        bool aggregateLiterals_;
 
         // relations to whitelist into aggregated node view
         QSet<rdf::Node> aggregPropertyList_;

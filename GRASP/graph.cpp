@@ -168,7 +168,7 @@ void Graph::contextChanged()
                     nodes_.insert(x, n)
                         .key()));
             }
-            if(!nodes_.contains(y)) {
+            if(!nodes_.contains(y) && !(lens_.aggregateLiterals_ && librdf_node_is_literal(y))) {
                 GraphNode *n = new GraphNode();
                 addItem(n);
                 n->setNode(const_cast<rdf::Node&>(
@@ -176,7 +176,7 @@ void Graph::contextChanged()
                         .key()));
             }
         }
-        if(!(lens_.whitelistMode_ ^ lens_.propertyList_.contains(nodepred))) { // triple/property not blacklisted
+        if(!(lens_.whitelistMode_ ^ lens_.propertyList_.contains(nodepred)) && !(lens_.aggregateLiterals_ && librdf_node_is_literal(y))) { // triple/property not blacklisted
 
             rdf::Statement z(statement);
             if(!edges_.contains(z)) {
