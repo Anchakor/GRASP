@@ -122,10 +122,8 @@ void GraphEdge::updateGeometry()
         else if(QLineF::BoundedIntersection == line.intersect(QLineF(dSBR.bottomRight(), dSBR.topRight()), &po)) destPoint = po;
         else if(QLineF::BoundedIntersection == line.intersect(QLineF(dSBR.bottomLeft(), dSBR.bottomRight()), &po)) destPoint = po;
         else if(QLineF::BoundedIntersection == line.intersect(QLineF(dSBR.topLeft(), dSBR.bottomLeft()), &po)) destPoint = po;
-        setVisible(true);
     } else {
         sourcePoint = destPoint = line.p1();
-        setVisible(false);
     }
     QGraphicsLayoutItem::updateGeometry();
 }
@@ -158,36 +156,37 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     if (!sourceNode_ || !destNode_) return;
 
     QLineF line(sourcePoint, destPoint);
-    if (qFuzzyCompare(line.length(), qreal(0.))) return;
 
     painter->setRenderHint(QPainter::Antialiasing);
 
-    // Draw the line itself
-    QColor c;
-    if(hasFocus() || label_->hasFocus() || hover_) {
-        c = palette().color(QPalette::Highlight);
-    } else
-        c = palette().color(QPalette::ButtonText);
-    painter->setPen(QPen(c, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    painter->drawLine(line);
+    if (!qFuzzyCompare(line.length(), qreal(0.))) {
+        // Draw the line itself
+        QColor c;
+        if(hasFocus() || label_->hasFocus() || hover_) {
+            c = palette().color(QPalette::Highlight);
+        } else
+            c = palette().color(QPalette::ButtonText);
+        painter->setPen(QPen(c, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter->drawLine(line);
 
-    // Draw the arrows
-    double angle = ::acos(line.dx() / line.length());
-    if (line.dy() >= 0)
-        angle = TwoPi - angle;
+        // Draw the arrows
+        double angle = ::acos(line.dx() / line.length());
+        if (line.dy() >= 0)
+            angle = TwoPi - angle;
 
-    QPointF destArrowP1 = destPoint + QPointF(sin(angle - Pi / 3) * arrowSize,
-                                              cos(angle - Pi / 3) * arrowSize);
-    QPointF destArrowP2 = destPoint + QPointF(sin(angle - Pi + Pi / 3) * arrowSize,
-                                              cos(angle - Pi + Pi / 3) * arrowSize);
-    QPolygonF polygon;
-    polygon << line.p2() << destArrowP1 << destArrowP2;
-    arrow_ = QPainterPath();
-    arrow_.addPolygon(polygon);
-    arrow_.closeSubpath();
+        QPointF destArrowP1 = destPoint + QPointF(sin(angle - Pi / 3) * arrowSize,
+                                                  cos(angle - Pi / 3) * arrowSize);
+        QPointF destArrowP2 = destPoint + QPointF(sin(angle - Pi + Pi / 3) * arrowSize,
+                                                  cos(angle - Pi + Pi / 3) * arrowSize);
+        QPolygonF polygon;
+        polygon << line.p2() << destArrowP1 << destArrowP2;
+        arrow_ = QPainterPath();
+        arrow_.addPolygon(polygon);
+        arrow_.closeSubpath();
 
-    painter->setBrush(c);
-    painter->drawPolygon(polygon);
+        painter->setBrush(c);
+        painter->drawPolygon(polygon);
+    }
 
     // Draw the label background
     QColor col (palette().color(QPalette::Button));
