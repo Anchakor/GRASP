@@ -153,29 +153,30 @@ void Graph::contextChanged()
         librdf_statement *statement = librdf_stream_get_object(stream);
         if(NULL == statement) throw rdf::StatementConstructException();
 
+        librdf_node *node = librdf_statement_get_subject(statement);
+        rdf::Node x(node);
+        node = librdf_statement_get_object(statement);
+        rdf::Node y(node);
         rdf::Node nodepred (librdf_statement_get_predicate(statement));
-        //printf("DEBUG pred node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(nodepred)));
-        if(!(lens_.whitelistMode_ ^ lens_.propertyList_.contains(nodepred))) { // triple/property not blacklisted
-            librdf_node *node = librdf_statement_get_subject(statement);
-            rdf::Node x(node);
-            //printf("DEBUG subj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(x)));
+
+        if((Ui::viewUnusedNodes && Ui::viewUnusedNodes->isChecked()) || !(lens_.whitelistMode_ ^ lens_.propertyList_.contains(nodepred))) {
             if(!nodes_.contains(x)) {
                 GraphNode *n = new GraphNode();
                 addItem(n);
                 n->setNode(const_cast<rdf::Node&>(
-                    nodes_.insert(rdf::Node(node), n)
+                    nodes_.insert(x, n)
                         .key()));
             }
-            node = librdf_statement_get_object(statement);
-            rdf::Node y(node);
-            //printf("DEBUG obj node: %s\n", reinterpret_cast<const char *>(librdf_node_to_string(y)));
             if(!nodes_.contains(y)) {
                 GraphNode *n = new GraphNode();
                 addItem(n);
                 n->setNode(const_cast<rdf::Node&>(
-                    nodes_.insert(rdf::Node(node), n)
+                    nodes_.insert(y, n)
                         .key()));
             }
+        }
+        if(!(lens_.whitelistMode_ ^ lens_.propertyList_.contains(nodepred))) { // triple/property not blacklisted
+
             rdf::Statement z(statement);
             if(!edges_.contains(z)) {
                 GraphEdge *e = new GraphEdge();
@@ -210,6 +211,7 @@ void Graph::contextChanged()
     }
 
     librdf_free_stream(stream);
+    this->update();
 }
 
 rdf::Node Graph::getContext() 

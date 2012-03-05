@@ -7,6 +7,7 @@
 Graph *lensGraph = NULL;
 LensActions lensActions;
 Templates templates;
+QAction *Ui::viewUnusedNodes = NULL;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionS_ave_as, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(saveFileAs()));
     connect(ui->actionReload, SIGNAL(triggered()), this, SLOT(loadLensMenu()));
     connect(ui->menuLens, SIGNAL(triggered(QAction *)), this, SLOT(loadLens(QAction *)));
+    connect(ui->actionUnused_Nodes, SIGNAL(triggered()), this, SLOT(graphContextChanged()));
+    Ui::viewUnusedNodes = ui->actionUnused_Nodes;
     loadLensMenu();
     loadTemplates();
 }
@@ -125,6 +128,12 @@ void MainWindow::loadLens(QAction *act)
     if(!lensActions.contains(act)) return;
     Graph *g = reinterpret_cast<Graph *>(ui->mainGraphicsView->scene());
     g->lens_.loadLens(lensActions.value(act));
+    g->contextChanged();
+}
+
+void MainWindow::graphContextChanged()
+{
+    Graph *g = reinterpret_cast<Graph *>(ui->mainGraphicsView->scene());
     g->contextChanged();
 }
 

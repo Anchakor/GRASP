@@ -21,6 +21,7 @@ extern Templates templates;
 
 namespace Ui {
     class MainWindow;
+    extern QAction *viewUnusedNodes;
 }
 
 class MainWindow : public QMainWindow
@@ -35,6 +36,7 @@ public slots:
     void loadLensMenu();
     void loadTemplates();
     void loadLens(QAction *act);
+    void graphContextChanged();
 
 protected:
     void changeEvent(QEvent *e);
