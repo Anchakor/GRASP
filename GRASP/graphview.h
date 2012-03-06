@@ -21,6 +21,7 @@ class GraphView : public QGraphicsView
         void saveFileAs() {
             graphs[currentGraph_]->saveFileAs();
         }
+        void newGraph();
 
     private:
         QList<Graph *> graphs;

@@ -16,3 +16,9 @@ t:test2 a t:Template ;
     t:variable <urn:grasp:id> ;
     t:name "FOAF Person" .
 
+t:test3 a t:Template ;
+    t:path "../templates/test3.ttl" ;
+    t:class owl:Class ;
+    t:variable <urn:Mother> ;
+    t:name "Class intersection" .
+

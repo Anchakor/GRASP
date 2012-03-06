@@ -5,8 +5,7 @@ GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
 { 
     setDragMode(QGraphicsView::ScrollHandDrag);
 
-    Graph *g = Graph::newEmpty(this);
-    addGraph(g);
+    newGraph(); 
 }
 
 void GraphView::addGraph(Graph *g)
@@ -48,6 +47,12 @@ void GraphView::openURL()
         alertPopup(msg);
         return;
     }
+    addGraph(g);
+}
+
+void GraphView::newGraph()
+{
+    Graph *g = Graph::newEmpty(this);
     addGraph(g);
 }
 
