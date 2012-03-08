@@ -142,6 +142,7 @@ uint Graph::hashNode(rdf::Node n)
 class AddEdgeNodeNotFoundException {};
 void Graph::contextChanged()
 {
+    if(focusItem()) //TODO centering view (QGraphicsView::centerOn(...)) after positioning
     nodes_.clear();
     edges_.clear();
     clear();
@@ -153,43 +154,41 @@ void Graph::contextChanged()
         librdf_statement *statement = librdf_stream_get_object(stream);
         if(NULL == statement) throw rdf::StatementConstructException();
 
-        librdf_node *node = librdf_statement_get_subject(statement);
-        rdf::Node x(node);
-        node = librdf_statement_get_object(statement);
-        rdf::Node y(node);
+        rdf::Node nodesubj (librdf_statement_get_subject(statement));
+        rdf::Node nodeobj (librdf_statement_get_object(statement));
         rdf::Node nodepred (librdf_statement_get_predicate(statement));
         //qDebug() << "CCd triple:" << x.toQString(nstack_) << nodepred.toQString(nstack_) << y.toQString(nstack_);
 
         if((Ui::viewUnusedNodes && Ui::viewUnusedNodes->isChecked()) || !(lens_.whitelistMode_ ^ lens_.propertyList_.contains(nodepred))) {
-            if(!nodes_.contains(x)) {
+            if(!nodes_.contains(nodesubj)) {
                 GraphNode *n = new GraphNode();
                 addItem(n);
                 n->setNode(const_cast<rdf::Node&>(
-                    nodes_.insert(x, n)
+                    nodes_.insert(nodesubj, n)
                         .key()));
             }
-            if(!nodes_.contains(y) && !(lens_.aggregateLiterals_ && librdf_node_is_literal(y))) {
+            if(!nodes_.contains(nodeobj) && !(lens_.aggregateLiterals_ && librdf_node_is_literal(nodeobj))) {
                 GraphNode *n = new GraphNode();
                 addItem(n);
                 n->setNode(const_cast<rdf::Node&>(
-                    nodes_.insert(y, n)
+                    nodes_.insert(nodeobj, n)
                         .key()));
             }
         }
-        if(!(lens_.whitelistMode_ ^ lens_.propertyList_.contains(nodepred)) && !(lens_.aggregateLiterals_ && librdf_node_is_literal(y))) { // triple/property not blacklisted
+        if(!(lens_.whitelistMode_ ^ lens_.propertyList_.contains(nodepred)) && !(lens_.aggregateLiterals_ && librdf_node_is_literal(nodeobj))) { // triple/property not blacklisted
 
             rdf::Statement z(statement);
             if(!edges_.contains(z)) {
                 GraphEdge *e = new GraphEdge();
                 addItem(e);
                 e->setStatement(const_cast<rdf::Statement&>(
-                        edges_.insert(rdf::Statement(statement), e)
+                        edges_.insert(z, e)
                             .key()));
 
-                if(!nodes_.contains(x)) throw AddEdgeNodeNotFoundException();
-                e->setSourceNode(nodes_.value(x));
-                if(!nodes_.contains(y)) throw AddEdgeNodeNotFoundException();
-                e->setDestNode(nodes_.value(y));
+                if(!nodes_.contains(nodesubj)) throw AddEdgeNodeNotFoundException();
+                e->setSourceNode(nodes_.value(nodesubj));
+                if(!nodes_.contains(nodeobj)) throw AddEdgeNodeNotFoundException();
+                e->setDestNode(nodes_.value(nodeobj));
             }
         }
         if(librdf_stream_next(stream)) break;
