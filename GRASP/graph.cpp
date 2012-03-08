@@ -142,7 +142,7 @@ uint Graph::hashNode(rdf::Node n)
 class AddEdgeNodeNotFoundException {};
 void Graph::contextChanged()
 {
-    if(focusItem()) //TODO centering view (QGraphicsView::centerOn(...)) after positioning
+    //if(focusItem()) //TODO centering view (QGraphicsView::centerOn(...)) after positioning
     nodes_.clear();
     edges_.clear();
     clear();
