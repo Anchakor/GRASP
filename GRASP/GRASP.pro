@@ -24,7 +24,8 @@ SOURCES += main.cpp\
         lens.cpp\
         aggreg.cpp\
         contextmenu.cpp\
-        templatemenu.cpp
+        templatemenu.cpp\
+        searchdialog.cpp
 
 HEADERS  += mainwindow.h\
         persistentcounter.h\
@@ -39,10 +40,12 @@ HEADERS  += mainwindow.h\
         lens.h\
         aggreg.h\
         contextmenu.h\
-        templatemenu.h
+        templatemenu.h\
+        searchdialog.h
 
 FORMS    += mainwindow.ui\
-        nodeedit.ui
+        nodeedit.ui\
+        search.ui
 
 LIBS += -lrdf -lraptor2
 

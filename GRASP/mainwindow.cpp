@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionReload, SIGNAL(triggered()), this, SLOT(loadLensMenu()));
     connect(ui->menuLens, SIGNAL(triggered(QAction *)), this, SLOT(loadLens(QAction *)));
     connect(ui->actionUnused_Nodes, SIGNAL(triggered()), this, SLOT(graphContextChanged()));
+    connect(ui->action_Find, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(findDialog()));
     Ui::viewUnusedNodes = ui->actionUnused_Nodes;
     loadLensMenu();
     loadTemplates();

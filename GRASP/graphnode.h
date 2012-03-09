@@ -2,6 +2,7 @@
 #define GRAPHNODE_H
 
 #include <QtGui>
+#include "types.h"
 #include "rdf.h"
 #include "graphedge.h"
 #include "graphicslabel.h"
@@ -26,7 +27,7 @@ class GraphNode : public QGraphicsWidget
 
         virtual void updateGeometry();
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-        enum { Type = UserType + 1 };
+        enum { Type = UserType + GRASP_TYPE_NODE };
         int type() const { return Type; }
 
         void registerEdge(GraphEdge *edge, bool in = true);

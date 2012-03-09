@@ -94,11 +94,6 @@ void GraphicsLabel::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     textLayout.draw(painter, QPointF(0, 0));
 }
 
-int GraphicsLabel::type() const
-{
-    return Type;
-}
-
 QSizeF GraphicsLabel::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     switch (which) {

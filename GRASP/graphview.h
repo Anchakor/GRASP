@@ -11,6 +11,7 @@ class GraphView : public QGraphicsView
     public:
         explicit GraphView(QWidget *parent = 0);
         void addGraph(Graph *g);
+        Graph *currentGraph() const;
 
     public slots:
         void openFile();
@@ -22,6 +23,7 @@ class GraphView : public QGraphicsView
             graphs[currentGraph_]->saveFileAs();
         }
         void newGraph();
+        void findDialog();
 
     private:
         QList<Graph *> graphs;

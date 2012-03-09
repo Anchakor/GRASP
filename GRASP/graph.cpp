@@ -157,7 +157,6 @@ void Graph::contextChanged()
         rdf::Node nodesubj (librdf_statement_get_subject(statement));
         rdf::Node nodeobj (librdf_statement_get_object(statement));
         rdf::Node nodepred (librdf_statement_get_predicate(statement));
-        //qDebug() << "CCd triple:" << x.toQString(nstack_) << nodepred.toQString(nstack_) << y.toQString(nstack_);
 
         if((Ui::viewUnusedNodes && Ui::viewUnusedNodes->isChecked()) || !(lens_.whitelistMode_ ^ lens_.propertyList_.contains(nodepred))) {
             if(!nodes_.contains(nodesubj)) {

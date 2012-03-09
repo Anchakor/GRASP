@@ -1,5 +1,6 @@
 #include "graphview.h"
 #include "guiutils.h"
+#include "searchdialog.h"
 
 GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
 { 
@@ -13,6 +14,11 @@ void GraphView::addGraph(Graph *g)
     graphs.append(g);
     currentGraph_ = graphs.size() - 1;
     setScene(g);
+}
+
+Graph *GraphView::currentGraph() const
+{
+    return graphs[currentGraph_];
 }
 
 void GraphView::openFile()
@@ -54,5 +60,11 @@ void GraphView::newGraph()
 {
     Graph *g = Graph::newEmpty(this);
     addGraph(g);
+}
+
+void GraphView::findDialog()
+{
+    SearchDialog d (this, this);
+    d.exec();
 }
 

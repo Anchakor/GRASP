@@ -2,6 +2,7 @@
 #define GRAPHICSLABEL_H
 
 #include <QtGui>
+#include "types.h"
 #include "rdf.h"
 
 class GraphicsLabel : public QGraphicsWidget
@@ -12,6 +13,9 @@ class GraphicsLabel : public QGraphicsWidget
         explicit GraphicsLabel(QGraphicsWidget *parent = 0);
         explicit GraphicsLabel(const QString &text, QGraphicsWidget *parent = 0);
         ~GraphicsLabel();
+
+        enum { Type =  UserType + GRASP_TYPE_LABEL };
+        int type() const { return Type; }
 
         virtual bool contains (const QPointF & point) const {
             return QGraphicsItem::contains(point);
@@ -31,9 +35,6 @@ class GraphicsLabel : public QGraphicsWidget
         QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
         void setGeometry(const QRectF &rect);
 
-        enum { Type =  UserType + 1 };
-        int type() const;
-
     private:
         QTextLayout textLayout;
 };
@@ -46,6 +47,9 @@ class GraphicsNodeLabel : public GraphicsLabel
         explicit GraphicsNodeLabel(QGraphicsWidget *parent = 0);
         explicit GraphicsNodeLabel(rdf::Node &node, QGraphicsWidget *parent = 0);
         ~GraphicsNodeLabel();
+
+        enum { Type =  UserType + GRASP_TYPE_NODELABEL };
+        int type() const { return Type; }
 
         /// copy node and set it as rdf node of the label
         void setNode(rdf::Node &node);
@@ -76,6 +80,9 @@ class GraphicsPropertyLabel : public GraphicsLabel
         explicit GraphicsPropertyLabel(QGraphicsWidget *parent = 0);
         explicit GraphicsPropertyLabel(rdf::Statement &statement, QGraphicsWidget *parent = 0);
         ~GraphicsPropertyLabel();
+
+        enum { Type = UserType + GRASP_TYPE_PROPERTYLABEL };
+        int type() const { return Type; }
 
         /// copy statement and set it as rdf statement of the label
         void setStatement(rdf::Statement &statement);

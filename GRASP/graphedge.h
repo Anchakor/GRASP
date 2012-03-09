@@ -2,6 +2,7 @@
 #define GRAPHEDGE_H
 
 #include <QtGui>
+#include "types.h"
 #include "rdf.h"
 #include "graphicslabel.h"
 
@@ -34,7 +35,7 @@ class GraphEdge : public QGraphicsWidget
         QPainterPath shape() const;
 
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-        enum { Type = UserType + 2 };
+        enum { Type = UserType + GRASP_TYPE_EDGE };
         int type() const { return Type; }
 
     protected:
