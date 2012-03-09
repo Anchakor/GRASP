@@ -3,6 +3,15 @@
 #include "persistentcounter.h"
 #include "mainwindow.h"
 #include "contextmenu.h"
+#include <ogdf/basic/Graph.h>
+#include <ogdf/basic/GraphAttributes.h>
+#include <ogdf/layered/SugiyamaLayout.h>
+#include <ogdf/layered/OptimalRanking.h>
+#include <ogdf/layered/MedianHeuristic.h>
+#include <ogdf/layered/FastHierarchyLayout.h>
+
+#include <ogdf/energybased/FMMMLayout.h>
+
 
 Graph::Graph(QObject *parent) : QGraphicsScene(parent)
 {
@@ -208,8 +217,68 @@ void Graph::contextChanged()
         ++i;
     }
 
+    layoutNodes();
+
     librdf_free_stream(stream);
     this->update();
+}
+
+void Graph::layoutNodes()
+{
+    ogdf::Graph G;
+    ogdf::GraphAttributes GA(G, ogdf::GraphAttributes::nodeGraphics | ogdf::GraphAttributes::edgeGraphics);
+
+    QHash<GraphNode *, ogdf::node> nodeHash;
+    Nodes::const_iterator i = nodes_.constBegin();
+    while (i != nodes_.constEnd()) {
+        GraphNode *gn = i.value();
+
+        ogdf::node n = G.newNode();
+        GA.x(n) = gn->x();
+        GA.y(n) = gn->y();
+        GA.width(n) = gn->geometry().width();
+        GA.height(n) = gn->geometry().height();
+        // TODO find out how to call this function when nodes are laid out - have width and height
+        //qDebug() << GA.x(n) << (gn->geometry().width()) << GA.width(n) << GA.y(n) << (gn->geometry().height()) << GA.height(n);
+        nodeHash.insert(gn, n);
+        ++i;
+    }
+    Edges::const_iterator j = edges_.constBegin();
+    while (j != edges_.constEnd()) {
+        GraphEdge *ge = j.value();
+
+        ogdf::edge e = G.newEdge(
+                nodeHash.value(ge->sourceNode()),
+                nodeHash.value(ge->destNode()));
+        ++j;
+    }
+
+    ogdf::SugiyamaLayout SL;
+    SL.setRanking(new ogdf::OptimalRanking);
+    SL.setCrossMin(new ogdf::MedianHeuristic);
+    ogdf::FastHierarchyLayout *fhl = new ogdf::FastHierarchyLayout;
+    fhl->nodeDistance(90);
+    fhl->layerDistance(100);
+    SL.setLayout(fhl);
+    SL.call(GA);
+
+    /*ogdf::FMMMLayout fmmm;
+    fmmm.useHighLevelOptions(true);
+    fmmm.unitEdgeLength(15.0);
+    fmmm.minGraphSize(1000);
+    fmmm.newInitialPlacement(true);
+    fmmm.qualityVersusSpeed(ogdf::FMMMLayout::qvsGorgeousAndEfficient);
+    fmmm.call(GA);*/
+
+    QHash<GraphNode *, ogdf::node>::iterator k = nodeHash.begin();
+    while (k != nodeHash.end()) {
+        GraphNode *gn = k.key();
+        ogdf::node n = k.value();
+
+        gn->setPos(GA.x(n), GA.y(n));
+        gn->contextChanged();
+        ++k;
+    }
 }
 
 rdf::Node Graph::getContext() 

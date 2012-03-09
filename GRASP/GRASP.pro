@@ -47,7 +47,7 @@ FORMS    += mainwindow.ui\
         nodeedit.ui\
         search.ui
 
-LIBS += -lrdf -lraptor2
+LIBS += -lrdf -lraptor2 -lpthread -L../OGDF/_release -lOGDF
 
 QMAKE_CC = gcc
 QMAKE_CXX = g++
@@ -55,3 +55,4 @@ QMAKE_CXXFLAGS+=-O3
 
 QMAKE_INCDIR += /usr/include/rasqal
 QMAKE_INCDIR += /usr/include/raptor2
+QMAKE_INCDIR += ../OGDF

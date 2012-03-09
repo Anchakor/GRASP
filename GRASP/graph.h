@@ -31,6 +31,7 @@ class Graph : public QGraphicsScene
 
         void contextChanged();
         rdf::Node getContext();
+        void layoutNodes();
 
         void saveFile();
         void saveFileAs();
