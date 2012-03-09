@@ -1,0 +1,11 @@
+#ifndef TYPES_H
+#define TYPES_H
+
+#define GRASP_TYPE_NODE 1
+#define GRASP_TYPE_EDGE 2
+#define GRASP_TYPE_NODELABEL 3
+#define GRASP_TYPE_PROPERTYLABEL 4
+#define GRASP_TYPE_LABEL 5
+
+
+#endif
