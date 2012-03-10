@@ -263,10 +263,11 @@ void Graph::layoutNodes()
     SL.call(GA);
 
     /*ogdf::FMMMLayout fmmm;
+    fmmm.randSeed(666); // :)
     fmmm.useHighLevelOptions(true);
-    fmmm.unitEdgeLength(15.0);
-    fmmm.minGraphSize(1000);
-    fmmm.newInitialPlacement(true);
+    fmmm.unitEdgeLength(40.0);
+    //fmmm.minGraphSize(100);
+    //fmmm.newInitialPlacement(true);
     fmmm.qualityVersusSpeed(ogdf::FMMMLayout::qvsGorgeousAndEfficient);
     fmmm.call(GA);*/
 
