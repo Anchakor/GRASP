@@ -155,8 +155,6 @@ void GraphEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
     if (!sourceNode_ || !destNode_) return;
 
-    updateGeometry();
-
     QLineF line(sourcePoint, destPoint);
 
     painter->setRenderHint(QPainter::Antialiasing);
