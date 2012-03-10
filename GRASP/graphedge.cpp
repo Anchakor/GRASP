@@ -82,7 +82,7 @@ void GraphEdge::updateGeometry()
     while(true) {
         overlapped = false;
         Graph *graph = reinterpret_cast<Graph *>(scene());
-        if(!graph || graph->views().size() < 1) break;
+        if(!graph) break;
         Edges::const_iterator i = graph->edges_.constBegin();
         while (i != graph->edges_.constEnd()) {
             GraphEdge *e = i.value();

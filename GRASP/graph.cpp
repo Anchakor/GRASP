@@ -279,6 +279,12 @@ void Graph::layoutNodes()
         gn->setPos(GA.x(n) - (GA.width(n) / 2.0), GA.y(n) - (GA.height(n) / 2.0));
         ++k;
     }
+    Edges::const_iterator l = edges_.constBegin();
+    while (l != edges_.constEnd()) {
+        GraphEdge *ge = l.value();
+        ge->updateGeometry();
+        ++l;
+    }
 }
 
 rdf::Node Graph::getContext() 

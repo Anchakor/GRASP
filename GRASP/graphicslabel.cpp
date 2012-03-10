@@ -176,6 +176,7 @@ void GraphicsNodeLabel::editDialog()
 {
     librdf_node *newnode = NULL;
     RDFNodeEditDialog dialog (&newnode, node_, reinterpret_cast<Graph *>(scene()));
+    dialog.setWindowModality(Qt::ApplicationModal);
 
     if(dialog.exec() && newnode) {
         try {
@@ -259,6 +260,7 @@ void GraphicsPropertyLabel::editDialog()
     librdf_node *node = librdf_statement_get_predicate(statement_);
     librdf_node *newnode = NULL;
     RDFNodeEditDialog dialog (&newnode, node, reinterpret_cast<Graph *>(scene()), true);
+    dialog.setWindowModality(Qt::ApplicationModal);
 
     if(dialog.exec() && newnode) {
         rdf::Statement stat (statement_);
