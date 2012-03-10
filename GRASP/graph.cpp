@@ -232,14 +232,14 @@ void Graph::layoutNodes()
     Nodes::const_iterator i = nodes_.constBegin();
     while (i != nodes_.constEnd()) {
         GraphNode *gn = i.value();
+        // call layouts of nodes to get non-0 width and height
+        gn->adjustSize();
 
         ogdf::node n = G.newNode();
         GA.x(n) = gn->x();
         GA.y(n) = gn->y();
         GA.width(n) = gn->geometry().width();
         GA.height(n) = gn->geometry().height();
-        // TODO find out how to call this function when nodes are laid out - have width and height
-        //qDebug() << GA.x(n) << (gn->geometry().width()) << GA.width(n) << GA.y(n) << (gn->geometry().height()) << GA.height(n);
         nodeHash.insert(gn, n);
         ++i;
     }
@@ -257,8 +257,8 @@ void Graph::layoutNodes()
     SL.setRanking(new ogdf::OptimalRanking);
     SL.setCrossMin(new ogdf::MedianHeuristic);
     ogdf::FastHierarchyLayout *fhl = new ogdf::FastHierarchyLayout;
-    fhl->nodeDistance(90);
-    fhl->layerDistance(100);
+    fhl->nodeDistance(40);
+    fhl->layerDistance(50);
     SL.setLayout(fhl);
     SL.call(GA);
 
@@ -275,8 +275,7 @@ void Graph::layoutNodes()
         GraphNode *gn = k.key();
         ogdf::node n = k.value();
 
-        gn->setPos(GA.x(n), GA.y(n));
-        gn->contextChanged();
+        gn->setPos(GA.x(n) - (GA.width(n) / 2.0), GA.y(n) - (GA.height(n) / 2.0));
         ++k;
     }
 }
