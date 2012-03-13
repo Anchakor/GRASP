@@ -53,6 +53,8 @@
      <string>&amp;View</string>
     </property>
     <addaction name="actionUnused_Nodes"/>
+    <addaction name="separator"/>
+    <addaction name="actionGraph_Layout"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
@@ -68,7 +70,9 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
    <property name="icon">
-    <iconset theme="window-close"/>
+    <iconset theme="window-close">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>E&amp;xit</string>
@@ -79,7 +83,9 @@
   </action>
   <action name="action_File">
    <property name="icon">
-    <iconset theme="document-open"/>
+    <iconset theme="document-open">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>&amp;Open File</string>
@@ -90,7 +96,9 @@
   </action>
   <action name="action_URL">
    <property name="icon">
-    <iconset theme="applications-internet"/>
+    <iconset theme="applications-internet">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Open &amp;URL</string>
@@ -101,7 +109,9 @@
   </action>
   <action name="action_Save">
    <property name="icon">
-    <iconset theme="document-save"/>
+    <iconset theme="document-save">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>&amp;Save</string>
@@ -112,7 +122,9 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset theme="document-new"/>
+    <iconset theme="document-new">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>New</string>
@@ -120,7 +132,9 @@
   </action>
   <action name="actionS_ave_as">
    <property name="icon">
-    <iconset theme="document-save-as"/>
+    <iconset theme="document-save-as">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>S&amp;ave as...</string>
@@ -128,7 +142,9 @@
   </action>
   <action name="actionReload">
    <property name="icon">
-    <iconset theme="view-refresh"/>
+    <iconset theme="view-refresh">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>&amp;Reload</string>
@@ -147,13 +163,23 @@
   </action>
   <action name="action_Find">
    <property name="icon">
-    <iconset theme="edit-find"/>
+    <iconset theme="edit-find">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>&amp;Find</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionGraph_Layout">
+   <property name="icon">
+    <iconset theme="preferences-desktop-theme"/>
+   </property>
+   <property name="text">
+    <string>Graph Layout</string>
    </property>
   </action>
  </widget>

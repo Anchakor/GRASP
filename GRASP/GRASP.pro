@@ -25,7 +25,8 @@ SOURCES += main.cpp\
         aggreg.cpp\
         contextmenu.cpp\
         templatemenu.cpp\
-        searchdialog.cpp
+        searchdialog.cpp\
+        layout.cpp
 
 HEADERS  += mainwindow.h\
         persistentcounter.h\
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h\
         aggreg.h\
         contextmenu.h\
         templatemenu.h\
-        searchdialog.h
+        searchdialog.h\
+        layout.h
 
 FORMS    += mainwindow.ui\
         nodeedit.ui\

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "rdf.h"
 #include "graph.h"
+#include "layout.h"
 
 extern Graph *lensGraph;
 
@@ -22,7 +23,16 @@ extern Templates templates;
 namespace Ui {
     class MainWindow;
     extern QAction *viewUnusedNodes;
+    namespace Layout {
+        extern bool apply;
+        extern int algorithm;
+        extern double sugiyamaNodeDistance;
+        extern double sugiyamaLayerDistance;
+        extern double fmmmUnitEdgeLength;
+    }
 }
+
+struct NullGraphPointerException {};
 
 class MainWindow : public QMainWindow
 {
@@ -37,12 +47,15 @@ public slots:
     void loadTemplates();
     void loadLens(QAction *act);
     void graphContextChanged();
+    void openLayoutDock();
+    void applyLayout();
 
 protected:
     void changeEvent(QEvent *e);
 
 private:
     Ui::MainWindow *ui;
+    LayoutDockWidget layoutWidget_;
 
 };
 

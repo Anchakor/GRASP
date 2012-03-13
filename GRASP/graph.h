@@ -29,7 +29,6 @@ class Graph : public QGraphicsScene
         uint hashNode(rdf::Node n);
         QHash<uint, uint> bnodeHashes_;
 
-        void layoutNodes();
         void contextChanged();
         rdf::Node getContext();
 

@@ -8,12 +8,19 @@ Graph *lensGraph = NULL;
 LensActions lensActions;
 Templates templates;
 QAction *Ui::viewUnusedNodes = NULL;
+bool Ui::Layout::apply;
+int Ui::Layout::algorithm;
+double Ui::Layout::sugiyamaNodeDistance;
+double Ui::Layout::sugiyamaLayerDistance;
+double Ui::Layout::fmmmUnitEdgeLength;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    layoutWidget_(this)
 {
     ui->setupUi(this);
+    addDockWidget(Qt::RightDockWidgetArea, &layoutWidget_);
 
     connect(ui->actionNew, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(newGraph()));
     connect(ui->action_File, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(openFile()));
@@ -23,7 +30,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionReload, SIGNAL(triggered()), this, SLOT(loadLensMenu()));
     connect(ui->menuLens, SIGNAL(triggered(QAction *)), this, SLOT(loadLens(QAction *)));
     connect(ui->actionUnused_Nodes, SIGNAL(triggered()), this, SLOT(graphContextChanged()));
+    connect(ui->actionGraph_Layout, SIGNAL(triggered()), this, SLOT(openLayoutDock()));
     connect(ui->action_Find, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(findDialog()));
+    connect(&layoutWidget_, SIGNAL(layoutChanged()), this, SLOT(applyLayout()));
     Ui::viewUnusedNodes = ui->actionUnused_Nodes;
     loadLensMenu();
     loadTemplates();
@@ -129,6 +138,7 @@ void MainWindow::loadLens(QAction *act)
 {
     if(!lensActions.contains(act)) return;
     Graph *g = reinterpret_cast<Graph *>(ui->mainGraphicsView->scene());
+    if(!g) throw NullGraphPointerException();
     g->lens_.loadLens(lensActions.value(act));
     g->contextChanged();
 }
@@ -136,7 +146,21 @@ void MainWindow::loadLens(QAction *act)
 void MainWindow::graphContextChanged()
 {
     Graph *g = reinterpret_cast<Graph *>(ui->mainGraphicsView->scene());
+    if(!g) throw NullGraphPointerException();
     g->contextChanged();
+}
+
+void MainWindow::openLayoutDock()
+{
+    //if(!layoutWidget_) layoutWidget_ = new LayoutDockWidget(this);
+    layoutWidget_.show();
+}
+
+void MainWindow::applyLayout()
+{
+    Graph *g = reinterpret_cast<Graph *>(ui->mainGraphicsView->scene());
+    if(!g) throw NullGraphPointerException();
+    layoutGraph(g);
 }
 
 void MainWindow::changeEvent(QEvent *e)
