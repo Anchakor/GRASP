@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionUnused_Nodes, SIGNAL(triggered()), this, SLOT(graphContextChanged()));
     connect(ui->actionGraph_Layout, SIGNAL(triggered()), this, SLOT(openLayoutDock()));
     connect(ui->action_Find, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(findDialog()));
-    connect(&layoutWidget_, SIGNAL(layoutChanged()), this, SLOT(applyLayout()));
+    connect(&layoutWidget_, SIGNAL(layoutChanged()), this, SLOT(graphContextChanged()));
     Ui::viewUnusedNodes = ui->actionUnused_Nodes;
     loadLensMenu();
     loadTemplates();
@@ -154,13 +154,6 @@ void MainWindow::openLayoutDock()
 {
     //if(!layoutWidget_) layoutWidget_ = new LayoutDockWidget(this);
     layoutWidget_.show();
-}
-
-void MainWindow::applyLayout()
-{
-    Graph *g = reinterpret_cast<Graph *>(ui->mainGraphicsView->scene());
-    if(!g) throw NullGraphPointerException();
-    layoutGraph(g);
 }
 
 void MainWindow::changeEvent(QEvent *e)

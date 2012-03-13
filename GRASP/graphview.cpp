@@ -1,6 +1,7 @@
 #include "graphview.h"
 #include "guiutils.h"
 #include "searchdialog.h"
+#include "layout.h"
 
 GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
 { 

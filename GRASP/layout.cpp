@@ -81,6 +81,7 @@ void layoutGraph(Graph *g)
     if(!g) {
         throw NullGraphPointerException();
     }
+    if(!Ui::Layout::apply) return;
 
     ogdf::Graph G;
     ogdf::GraphAttributes GA(G, ogdf::GraphAttributes::nodeGraphics | ogdf::GraphAttributes::edgeGraphics);

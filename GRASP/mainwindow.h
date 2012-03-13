@@ -48,7 +48,6 @@ public slots:
     void loadLens(QAction *act);
     void graphContextChanged();
     void openLayoutDock();
-    void applyLayout();
 
 protected:
     void changeEvent(QEvent *e);
