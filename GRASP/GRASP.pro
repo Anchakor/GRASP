@@ -26,7 +26,8 @@ SOURCES += main.cpp\
         contextmenu.cpp\
         templatemenu.cpp\
         searchdialog.cpp\
-        layout.cpp
+        layout.cpp\
+        prefixdock.cpp
 
 HEADERS  += mainwindow.h\
         persistentcounter.h\
@@ -43,7 +44,8 @@ HEADERS  += mainwindow.h\
         contextmenu.h\
         templatemenu.h\
         searchdialog.h\
-        layout.h
+        layout.h\
+        prefixdock.h
 
 FORMS    += mainwindow.ui\
         nodeedit.ui\

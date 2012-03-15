@@ -5,6 +5,7 @@
 #include "rdf.h"
 #include "graph.h"
 #include "layout.h"
+#include "prefixdock.h"
 
 extern Graph *lensGraph;
 
@@ -48,6 +49,7 @@ public slots:
     void loadLens(QAction *act);
     void graphContextChanged();
     void openLayoutDock();
+    void openPrefixDock();
 
 protected:
     void changeEvent(QEvent *e);
@@ -55,6 +57,7 @@ protected:
 private:
     Ui::MainWindow *ui;
     LayoutDockWidget layoutWidget_;
+    PrefixDockWidget prefixWidget_;
 
 };
 

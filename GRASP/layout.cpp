@@ -21,17 +21,17 @@ LayoutDockWidget::LayoutDockWidget(QWidget *parent, Qt::WindowFlags flags) : QDo
     vbl->addWidget(&comboBox_);
 
     QFormLayout *fl = new QFormLayout();
-    sugiyamaNodeDistanceSpinBox_.setRange(1,200);
+    sugiyamaNodeDistanceSpinBox_.setRange(1,2000);
     sugiyamaNodeDistanceSpinBox_.setValue(40);
     fl->addRow(new QLabel(tr("Node Distance:"), this), &sugiyamaNodeDistanceSpinBox_);
-    sugiyamaLayerDistanceSpinBox_.setRange(1,200);
+    sugiyamaLayerDistanceSpinBox_.setRange(1,2000);
     sugiyamaLayerDistanceSpinBox_.setValue(50);
     fl->addRow(new QLabel(tr("Layer Distance:"), this), &sugiyamaLayerDistanceSpinBox_);
     sugiyama_.setLayout(fl);
     vbl->addWidget(&sugiyama_);
 
     QFormLayout *fl2 = new QFormLayout();
-    fmmmUnitEdgeLengthSpinBox_.setRange(1,200);
+    fmmmUnitEdgeLengthSpinBox_.setRange(1,2000);
     fmmmUnitEdgeLengthSpinBox_.setValue(40);
     fl2->addRow(new QLabel(tr("Unit Edge Length:"), this), &fmmmUnitEdgeLengthSpinBox_);
     fmmm_.setLayout(fl2);
@@ -105,7 +105,7 @@ void layoutGraph(Graph *g)
     while (j != g->edges_.constEnd()) {
         GraphEdge *ge = j.value();
 
-        ogdf::edge e = G.newEdge(
+        G.newEdge(
                 nodeHash.value(ge->sourceNode()),
                 nodeHash.value(ge->destNode()));
         ++j;
