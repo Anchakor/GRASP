@@ -384,14 +384,15 @@ namespace rdf
 
     extern QSet<Node *> contexts;
 
-    typedef QHash<QString, QString> NSHash; // prefix -> uri
+    typedef QList<QPair<QString, QString> > NSHash; // prefix -> uri
 
 #define NODEPOSITIONCOMMENTPREFIX "#&&&NodePosition"
 #define LENSCOMMENTPREFIX "#&&&Lens"
     void saveGraphToFile(librdf_node *context, FILE *file);
     void printContext(librdf_node *context);
     void freeContext(librdf_node *context);
-    raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser, NSHash *nshash = NULL);
+    raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser, NSHash *nslist = NULL);
+    raptor_namespace_stack *getNamespaces(NSHash *nslist, int defaults = 0);
     void addOrReplaceStatement(librdf_node *context, librdf_statement *replacement, librdf_statement *statement = NULL);
     void removeStatement(librdf_node *context, librdf_statement *statement);
     void replaceOrDeleteNode(librdf_node *context, librdf_node *node, librdf_node *replacement = NULL);

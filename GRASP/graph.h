@@ -36,7 +36,7 @@ class Graph : public QGraphicsScene
         void saveFileAs();
 
         rdf::Node context_;
-        rdf::NSHash nshash_;
+        rdf::NSHash nslist_;
         raptor_namespace_stack *nstack_;
         QString file_;
         Lens lens_;

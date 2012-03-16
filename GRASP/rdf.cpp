@@ -80,7 +80,7 @@ namespace rdf
         return qstrdup(s.toLatin1().constData());
     }
 
-    raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser, NSHash *nshash) {
+    raptor_namespace_stack *getParsedNamespaces(librdf_parser *parser, NSHash *nslist) {
         int namespaces = librdf_parser_get_namespaces_seen_count(parser);
         if(namespaces < 1) return NULL;
 
@@ -93,7 +93,7 @@ namespace rdf
             if(NULL == prefix || NULL == uri) return NULL;
             unsigned char *uric = librdf_uri_to_string(uri);
 
-            if(NULL != nshash) nshash->insert(QString((const char *)prefix), QString((const char *)uric));
+            if(NULL != nslist) nslist->append(QPair<QString,QString>(QString((const char *)prefix), QString((const char *)uric)));
 
             raptor_namespace *ns = raptor_new_namespace(nstack, prefix, uric, 0);
             if(NULL == ns) return NULL;
@@ -101,6 +101,24 @@ namespace rdf
             free(uric);
         }
 
+        return nstack;
+    }
+
+    raptor_namespace_stack *getNamespaces(NSHash *nslist, int defaults) {
+        if(NULL == nslist) return NULL;
+
+        raptor_namespace_stack *nstack = raptor_new_namespaces(raptor, defaults);
+        if(NULL == nstack) return NULL;
+
+        NSHash::const_iterator i = nslist->constBegin();
+        while (i != nslist->constEnd()) {
+            const unsigned char *prefix = reinterpret_cast<const unsigned char *>((*i).first.toLatin1().constData());
+            unsigned char *uric = const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>((*i).second.toLatin1().constData()));
+            raptor_namespace *ns = raptor_new_namespace(nstack, prefix, uric, 0);
+            if(NULL == ns) return NULL;
+            raptor_namespaces_start_namespace(nstack, ns);
+            ++i;
+        }
         return nstack;
     }
 

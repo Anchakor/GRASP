@@ -13,6 +13,7 @@ int Ui::Layout::algorithm;
 double Ui::Layout::sugiyamaNodeDistance;
 double Ui::Layout::sugiyamaLayerDistance;
 double Ui::Layout::fmmmUnitEdgeLength;
+GraphView *Ui::view = NULL;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -37,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_Find, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(findDialog()));
     connect(&layoutWidget_, SIGNAL(layoutChanged()), this, SLOT(graphContextChanged()));
     Ui::viewUnusedNodes = ui->actionUnused_Nodes;
+    Ui::view = ui->mainGraphicsView;
     loadLensMenu();
     loadTemplates();
 }

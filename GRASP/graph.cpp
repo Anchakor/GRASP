@@ -55,7 +55,7 @@ Graph *Graph::fromFile(const QString &path, const char *mimeType, librdf_uri *ba
         throw rdf::ModelAccessException();
     }
 
-    g->nstack_ = rdf::getParsedNamespaces(parser, &(g->nshash_));
+    g->nstack_ = rdf::getParsedNamespaces(parser, &(g->nslist_));
 
     // load node positions
     bool foundLensDef = false;
@@ -124,7 +124,7 @@ Graph *Graph::fromURI(const QString &uri, const char *mimeType, librdf_uri *base
         throw rdf::ModelAccessException(); 
     }
 
-    g->nstack_ = rdf::getParsedNamespaces(parser, &(g->nshash_));
+    g->nstack_ = rdf::getParsedNamespaces(parser, &(g->nslist_));
 
     librdf_free_stream(stream);
     g->init();
@@ -225,9 +225,9 @@ void Graph::saveFile()
     //qDebug(file_.toLatin1().constData());
     if(!file_.isEmpty()) {
         FILE *file = fopen(file_.toLatin1().constData(), "w");
-        rdf::NSHash::const_iterator i = nshash_.constBegin();
-        while (i != nshash_.constEnd()) {
-            fprintf(file, "@prefix %s: <%s> .\n", i.key().toLatin1().constData(), i.value().toLatin1().constData());
+        rdf::NSHash::const_iterator i = nslist_.constBegin();
+        while (i != nslist_.constEnd()) {
+            fprintf(file, "@prefix %s: <%s> .\n", (*i).first.toLatin1().constData(), (*i).second.toLatin1().constData());
             ++i;
         }
         rdf::saveGraphToFile(context_, file);

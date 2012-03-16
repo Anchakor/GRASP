@@ -6,6 +6,7 @@
 #include "graph.h"
 #include "layout.h"
 #include "prefixdock.h"
+#include "graphview.h"
 
 extern Graph *lensGraph;
 
@@ -21,6 +22,8 @@ struct Template {
 typedef QHash<rdf::Node, Template *> Templates; // id -> template
 extern Templates templates;
 
+
+// global values
 namespace Ui {
     class MainWindow;
     extern QAction *viewUnusedNodes;
@@ -31,7 +34,10 @@ namespace Ui {
         extern double sugiyamaLayerDistance;
         extern double fmmmUnitEdgeLength;
     }
+    extern GraphView *view;
 }
+
+
 
 struct NullGraphPointerException {};
 
