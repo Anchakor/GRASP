@@ -212,6 +212,8 @@ void Graph::contextChanged()
     layoutGraph(this);
 
     librdf_free_stream(stream);
+
+    if(views().size() > 0) views().at(0)->centerOn(itemsBoundingRect().center());
     this->update();
 }
 
