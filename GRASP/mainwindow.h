@@ -62,8 +62,8 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-    LayoutDockWidget layoutWidget_;
-    PrefixDockWidget prefixWidget_;
+    LayoutDockWidget *layoutWidget_;
+    PrefixDockWidget *prefixWidget_;
 
 };
 

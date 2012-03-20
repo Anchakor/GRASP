@@ -17,13 +17,16 @@ GraphView *Ui::view = NULL;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    layoutWidget_(this),
-    prefixWidget_(this)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    addDockWidget(Qt::RightDockWidgetArea, &layoutWidget_);
-    addDockWidget(Qt::RightDockWidgetArea, &prefixWidget_);
+    Ui::viewUnusedNodes = ui->actionUnused_Nodes;
+    Ui::view = ui->mainGraphicsView;
+
+    layoutWidget_ = new LayoutDockWidget(this);
+    addDockWidget(Qt::RightDockWidgetArea, layoutWidget_);
+    prefixWidget_ = new PrefixDockWidget(this);
+    addDockWidget(Qt::RightDockWidgetArea, prefixWidget_);
 
     connect(ui->actionNew, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(newGraph()));
     connect(ui->action_File, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(openFile()));
@@ -36,9 +39,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionGraph_Layout, SIGNAL(triggered()), this, SLOT(openLayoutDock()));
     connect(ui->actionPrefixes, SIGNAL(triggered()), this, SLOT(openPrefixDock()));
     connect(ui->action_Find, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(findDialog()));
-    connect(&layoutWidget_, SIGNAL(layoutChanged()), this, SLOT(graphContextChanged()));
-    Ui::viewUnusedNodes = ui->actionUnused_Nodes;
-    Ui::view = ui->mainGraphicsView;
+    connect(layoutWidget_, SIGNAL(layoutChanged()), this, SLOT(graphContextChanged()));
+    connect(prefixWidget_, SIGNAL(prefixesChanged()), this, SLOT(graphContextChanged()));
     loadLensMenu();
     loadTemplates();
 }
@@ -158,12 +160,12 @@ void MainWindow::graphContextChanged()
 void MainWindow::openLayoutDock()
 {
     //if(!layoutWidget_) layoutWidget_ = new LayoutDockWidget(this);
-    layoutWidget_.show();
+    layoutWidget_->show();
 }
 
 void MainWindow::openPrefixDock()
 {
-    prefixWidget_.show();
+    prefixWidget_->show();
 }
 
 void MainWindow::changeEvent(QEvent *e)

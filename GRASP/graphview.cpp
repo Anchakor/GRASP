@@ -19,6 +19,7 @@ void GraphView::addGraph(Graph *g)
 
 Graph *GraphView::currentGraph() const
 {
+    if(graphs.size() < 1) return NULL;
     return graphs[currentGraph_];
 }
 
