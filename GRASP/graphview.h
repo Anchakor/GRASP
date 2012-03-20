@@ -13,6 +13,9 @@ class GraphView : public QGraphicsView
         void addGraph(Graph *g);
         Graph *currentGraph() const;
 
+    signals:
+        void graphChanged();
+
     public slots:
         void openFile();
         void openURL();

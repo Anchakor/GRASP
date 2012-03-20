@@ -15,6 +15,7 @@ void GraphView::addGraph(Graph *g)
     graphs.append(g);
     currentGraph_ = graphs.size() - 1;
     setScene(g);
+    emit graphChanged();
 }
 
 Graph *GraphView::currentGraph() const

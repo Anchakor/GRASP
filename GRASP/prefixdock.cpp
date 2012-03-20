@@ -1,4 +1,5 @@
 #include "prefixdock.h"
+#include "mainwindow.h"
 
 
 PrefixDockWidget::PrefixDockWidget(QWidget *parent, Qt::WindowFlags flags) : QDockWidget(parent, flags)
@@ -40,6 +41,7 @@ PrefixDockWidget::PrefixDockWidget(QWidget *parent, Qt::WindowFlags flags) : QDo
     connect(&addPrefixButton_, SIGNAL(released()), this, SLOT(addPrefix()));
     connect(&removePrefixButton_, SIGNAL(released()), this, SLOT(removePrefix()));
     connect(tableModel_, SIGNAL(prefixTableChanged()), this, SIGNAL(prefixesChanged()));
+    connect(Ui::view, SIGNAL(graphChanged()), tableModel_, SIGNAL(modelReset()));
 }
 
 void PrefixDockWidget::addPrefix()
