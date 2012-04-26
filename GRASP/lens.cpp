@@ -8,11 +8,20 @@ Lens::Lens()
     aggregateLiterals_ = true;
 
     rdf::Node n1 (RDFURIPREFIX"type");
-    rdf::Node n3 ("http://www.w3.org/2002/07/owl#sameAs");
+    rdf::Node n2 (OWLURIPREFIX"sameAs");
+    rdf::Node n3 (OWLURIPREFIX"assertionProperty");
+    rdf::Node n4 (RDFURIPREFIX"first");
+    rdf::Node n5 (RDFURIPREFIX"rest");
     aggregPropertyList_.insert(n1);
+    aggregPropertyList_.insert(n2);
     aggregPropertyList_.insert(n3);
+    aggregPropertyList_.insert(n4);
+    //aggregPropertyList_.insert(n5);
     propertyList_.insert(n1);
+    propertyList_.insert(n2);
     propertyList_.insert(n3);
+    propertyList_.insert(n4);
+    //propertyList_.insert(n5);
 
 }
 

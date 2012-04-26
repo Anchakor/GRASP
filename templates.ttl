@@ -6,19 +6,66 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix t: <http://mud.cz/sw/ed#templates/> .
 
-t:test a t:Template ;
-    t:path "../templates/test.ttl" ;
-    t:name "Class" .
+t:class a t:Template ;
+    t:path "../templates/class.ttl" ;
+    t:name "Class (RDFS,OWL)" .
 
-t:test2 a t:Template ;
-    t:path "../templates/test2.ttl" ;
-    t:class foaf:Person ;
-    t:variable <urn:grasp:id> ;
-    t:name "FOAF Person" .
+t:subclass a t:Template ;
+    t:path "../templates/subclass.ttl" ;
+    t:name "Subclass (RDFS)" ;
+    t:class rdfs:Class ;
+    t:variable <urn:grasp:class> .
 
-t:test3 a t:Template ;
-    t:path "../templates/test3.ttl" ;
+t:equivclass a t:Template ;
+    t:path "../templates/equivclass.ttl" ;
+    t:name "Equivalent Class (OWL)" ;
     t:class owl:Class ;
-    t:variable <urn:Mother> ;
-    t:name "Class intersection" .
+    t:variable <urn:grasp:class> .
+
+t:disjointclass a t:Template ;
+    t:path "../templates/disjointclass.ttl" ;
+    t:name "Disjoint Class (OWL)" ;
+    t:class owl:Class ;
+    t:variable <urn:grasp:class> .
+
+t:classunion a t:Template ;
+    t:path "../templates/classunion.ttl" ;
+    t:name "Class Union (OWL)" ;
+    t:class owl:Class ;
+    t:variable <urn:grasp:class> .
+
+t:classintersection a t:Template ;
+    t:path "../templates/classintersection.ttl" ;
+    t:name "Class Intersection (OWL)" ;
+    t:class owl:Class ;
+    t:variable <urn:grasp:class> .
+
+t:classcomplement a t:Template ;
+    t:path "../templates/classcomplement.ttl" ;
+    t:name "Class Complement (OWL)" ;
+    t:class owl:Class ;
+    t:variable <urn:grasp:class> .
+
+t:property a t:Template ;
+    t:path "../templates/property.ttl" ;
+    t:name "Property (RDF)" .
+
+t:subproperty a t:Template ;
+    t:path "../templates/subproperty.ttl" ;
+    t:name "Subproperty (RDFS)" ;
+    t:class rdf:Property ;
+    t:variable <urn:grasp:property> .
+
+t:propertyDR a t:Template ;
+    t:path "../templates/propertydomainrange.ttl" ;
+    t:name "Property Domain & Range (RDFS)" ;
+    t:class rdf:Property ;
+    t:variable <urn:grasp:property> .
+
+t:negpropertyassert a t:Template ;
+    t:path "../templates/negpropertyassert.ttl" ;
+    t:name "Negative Property Assertion (OWL)" ;
+    t:class rdf:Property ;
+    t:variable <urn:grasp:property> .
+    
 
