@@ -4,8 +4,10 @@
 #include "layout.h"
 
 GraphView::GraphView(QWidget *parent) : QGraphicsView(parent)
-{ 
+{
     setDragMode(QGraphicsView::ScrollHandDrag);
+    setAlignment(Qt::AlignCenter);
+    pastScale = 1.0;
 
     newGraph(); 
 }
@@ -69,5 +71,14 @@ void GraphView::findDialog()
 {
     SearchDialog d (this, this);
     d.exec();
+}
+
+void GraphView::zoom(int i)
+{
+    qreal x = (i / 100.0);
+    x = pow(exp(x-1), 4);
+    qreal y = (1.0 / pastScale) * x;
+    pastScale = x;
+    scale(y, y);
 }
 

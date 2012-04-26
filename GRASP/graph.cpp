@@ -214,7 +214,9 @@ void Graph::contextChanged()
 
     librdf_free_stream(stream);
 
-    if(views().size() > 0) views().at(0)->centerOn(itemsBoundingRect().center());
+    QRectF iBR = itemsBoundingRect();
+    setSceneRect(iBR);
+    if(views().size() > 0) views().at(0)->centerOn(iBR.center());
     this->update();
 }
 

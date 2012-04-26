@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_Find, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(findDialog()));
     connect(layoutWidget_, SIGNAL(layoutChanged()), this, SLOT(graphContextChanged()));
     connect(prefixWidget_, SIGNAL(prefixesChanged()), this, SLOT(graphContextChanged()));
+    connect(ui->zoomSlider, SIGNAL(sliderMoved(int)), ui->mainGraphicsView, SLOT(zoom(int)));
     loadLensMenu();
     loadTemplates();
 }

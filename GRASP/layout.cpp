@@ -31,7 +31,7 @@ LayoutDockWidget::LayoutDockWidget(QWidget *parent, Qt::WindowFlags flags) : QDo
     vbl->addWidget(&sugiyama_);
 
     QFormLayout *fl2 = new QFormLayout();
-    fmmmUnitEdgeLengthSpinBox_.setRange(1,2000);
+    fmmmUnitEdgeLengthSpinBox_.setRange(1,4000);
     fmmmUnitEdgeLengthSpinBox_.setValue(40);
     fl2->addRow(new QLabel(tr("Unit Edge Length:"), this), &fmmmUnitEdgeLengthSpinBox_);
     fmmm_.setLayout(fl2);

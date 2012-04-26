@@ -27,10 +27,12 @@ class GraphView : public QGraphicsView
         }
         void newGraph();
         void findDialog();
+        void zoom(int i);
 
     private:
         QList<Graph *> graphs;
         int currentGraph_;
+        qreal pastScale;
 };
 
 #endif
