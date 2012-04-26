@@ -1,0 +1,19 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix t: <http://mud.cz/sw/ed#templates/> .
+
+[
+   rdf:type                     owl:Restriction ;
+   owl:maxQualifiedCardinality  "4"^^xsd:nonNegativeInteger ;
+   owl:qualifiedCardinality     "3"^^xsd:nonNegativeInteger ;
+   owl:minQualifiedCardinality  "2"^^xsd:nonNegativeInteger ;
+   owl:onProperty               <urn:grasp:property> ;
+   owl:onClass                  <urn:grasp:class> ;
+   <urn:grasp:node> "use only 1 of the 3 ways"
+ ] .
+<urn:grasp:property> rdf:type owl:DatatypeProperty .

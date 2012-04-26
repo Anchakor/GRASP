@@ -46,6 +46,42 @@ t:classcomplement a t:Template ;
     t:class owl:Class ;
     t:variable <urn:grasp:class> .
 
+t:enumclass a t:Template ;
+    t:path "../templates/enumclass.ttl" ;
+    t:name "Enumerated Class (OWL)" ;
+    t:class owl:Class ;
+    t:variable <urn:grasp:class> .
+
+t:propRexist a t:Template ;
+    t:path "../templates/propRexist.ttl" ;
+    t:name "Property Restriction - Existential Quantification (OWL)" ;
+    t:class owl:Class ;
+    t:variable <urn:grasp:class> .
+
+t:propRuniv a t:Template ;
+    t:path "../templates/propRuniv.ttl" ;
+    t:name "Property Restriction - Universal Quantification (OWL)" ;
+    t:class owl:Class ;
+    t:variable <urn:grasp:class> .
+
+t:propRuniv a t:Template ;
+    t:path "../templates/propRobject.ttl" ;
+    t:name "Property Restriction on Object Value (OWL)" ;
+    t:class owl:Class ;
+    t:variable <urn:grasp:class> .
+
+t:propRself a t:Template ;
+    t:path "../templates/propRself.ttl" ;
+    t:name "Property Restriction on self (OWL)" ;
+    t:class owl:Class ;
+    t:variable <urn:grasp:class> .
+
+t:propCR a t:Template ;
+    t:path "../templates/propCR.ttl" ;
+    t:name "Property Cardinality Restriction (OWL)" ;
+    t:class owl:Class ;
+    t:variable <urn:grasp:class> .
+
 t:property a t:Template ;
     t:path "../templates/property.ttl" ;
     t:name "Property (RDF)" .
@@ -59,6 +95,12 @@ t:subproperty a t:Template ;
 t:propertyDR a t:Template ;
     t:path "../templates/propertydomainrange.ttl" ;
     t:name "Property Domain & Range (RDFS)" ;
+    t:class rdf:Property ;
+    t:variable <urn:grasp:property> .
+
+t:invproperty a t:Template ;
+    t:path "../templates/propertyinv.ttl" ;
+    t:name "Inverse Object Property (OWL)" ;
     t:class rdf:Property ;
     t:variable <urn:grasp:property> .
 

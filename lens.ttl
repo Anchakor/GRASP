@@ -3,14 +3,27 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix lens: <http://mud.cz/sw/ed#lens/> .
 
-lens:test a lens:Lens , lens:BlacklistProperties , lens:NotAggregateLiterals ;
-    lens:property rdf:type ;
-    lens:aggregatedProperty rdf:type .
+lens:default a lens:Lens , lens:BlacklistProperties ;
+    lens:property rdf:type , owl:sameAs , owl:assertionProperty , rdf:first ;
+    lens:aggregatedProperty rdf:type , owl:sameAs , owl:assertionProperty , rdf:first .
 
-lens:test2 a lens:Lens , lens:WhitelistProperties ;
-    lens:property rdf:type ;
-    lens:property foaf:nick ;
-    lens:aggregatedProperty rdf:type .
+lens:ClassHierarchy a lens:Lens , lens:WhitelistProperties ; #, lens:NotAggregateLiterals ;
+    lens:property rdfs:subClassOf ;
+    lens:aggregatedProperty rdf:type , rdfs:comment , rdfs:label , vs:term_status .
+
+lens:PropertyHierarchy a lens:Lens , lens:WhitelistProperties ; #, lens:NotAggregateLiterals ;
+    lens:property rdfs:subPropertyOf ;
+    lens:aggregatedProperty rdf:type , rdfs:range , rdfs:domain , rdfs:comment , rdfs:label , vs:term_status .
+
+#lens:test a lens:Lens , lens:BlacklistProperties , lens:NotAggregateLiterals ;
+#    lens:property rdf:type ;
+#    lens:aggregatedProperty rdf:type .
+
+#lens:test2 a lens:Lens , lens:WhitelistProperties ;
+#    lens:property rdf:type ;
+#    lens:property foaf:nick ;
+#    lens:aggregatedProperty rdf:type .
