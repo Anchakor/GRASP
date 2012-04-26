@@ -7,13 +7,11 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix t: <http://mud.cz/sw/ed#templates/> .
 
-[
-   rdf:type                     owl:Restriction ;
+_:x rdf:type                     owl:Restriction ;
    owl:maxQualifiedCardinality  "4"^^xsd:nonNegativeInteger ;
    owl:qualifiedCardinality     "3"^^xsd:nonNegativeInteger ;
    owl:minQualifiedCardinality  "2"^^xsd:nonNegativeInteger ;
    owl:onProperty               <urn:grasp:property> ;
    owl:onClass                  <urn:grasp:class> ;
-   <urn:grasp:node> "use only 1 of the 3 ways"
- ] .
+   <urn:grasp:note> "use only 1 of the 3 ways" .
 <urn:grasp:property> rdf:type owl:DatatypeProperty .

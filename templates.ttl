@@ -94,7 +94,7 @@ t:subproperty a t:Template ;
 
 t:propertyDR a t:Template ;
     t:path "../templates/propertydomainrange.ttl" ;
-    t:name "Property Domain & Range (RDFS)" ;
+    t:name "Property Domain && Range (RDFS)" ;
     t:class rdf:Property ;
     t:variable <urn:grasp:property> .
 
