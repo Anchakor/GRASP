@@ -51,6 +51,9 @@ LayoutDockWidget::LayoutDockWidget(QWidget *parent, Qt::WindowFlags flags) : QDo
     connect(&sugiyamaLayerDistanceSpinBox_, SIGNAL(editingFinished()), this, SLOT(applyLayout()));
     connect(&fmmmUnitEdgeLengthSpinBox_, SIGNAL(editingFinished()), this, SLOT(applyLayout()));
     connect(&applyLayout_, SIGNAL(released()), this, SLOT(applyLayout()));
+    
+    applyLayout_.setCheckState(Qt::Checked);
+    applyLayout();
 }
 
 void LayoutDockWidget::layoutChange(int index)
