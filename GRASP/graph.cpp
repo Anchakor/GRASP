@@ -16,7 +16,8 @@ void Graph::init()
 
 Graph *Graph::newEmpty(QObject *parent)
 {
-    Graph *g = new Graph(parent);
+    Graph *g = Graph::fromFile("../default.ttl", "text/turtle", rdf::baseUri, parent);
+        /*new Graph(parent);
     g->nstack_ = raptor_new_namespaces(rdf::raptor, 2);
 
     QString s(GRASPURIPREFIX);
@@ -25,7 +26,7 @@ Graph *Graph::newEmpty(QObject *parent)
 
     g->context_ = rdf::Node(rdf::world, contextURI);
     rdf::contexts.insert(&(g->context_));
-    g->init();
+    g->init();*/
     return g;
 }
 
