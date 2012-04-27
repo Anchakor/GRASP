@@ -11,4 +11,4 @@
    owl:onProperty     <urn:grasp:property> ;
    owl:allValuesFrom  <urn:grasp:class2>
  ] .
-<urn:grasp:property> rdf:type owl:ObjectProperty .
+<urn:grasp:property> rdf:type owl:ObjectProperty , rdf:Property .

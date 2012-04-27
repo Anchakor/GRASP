@@ -7,9 +7,4 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix t: <http://mud.cz/sw/ed#templates/> .
 
-<urn:grasp:class> owl:equivalentClass _:x .
-_:x
-   rdf:type        owl:Restriction ;
-   owl:onProperty  <urn:grasp:property> ;
-   owl:hasSelf     "true"^^xsd:boolean .
-<urn:grasp:property> rdf:type owl:ObjectProperty , rdf:Property .
+<urn:grasp:property> rdf:type owl:FunctionalProperty .

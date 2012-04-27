@@ -8,4 +8,4 @@
 @prefix t: <http://mud.cz/sw/ed#templates/> .
 
 <urn:grasp:property> owl:inverseOf <urn:grasp:property2> .
-<urn:grasp:property2> rdf:type owl:ObjectProperty .
+<urn:grasp:property2> rdf:type owl:ObjectProperty , rdf:Property .

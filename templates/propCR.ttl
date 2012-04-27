@@ -14,4 +14,4 @@ _:x rdf:type                     owl:Restriction ;
    owl:onProperty               <urn:grasp:property> ;
    owl:onClass                  <urn:grasp:class> ;
    <urn:grasp:note> "use only 1 of the 3 ways" .
-<urn:grasp:property> rdf:type owl:DatatypeProperty .
+<urn:grasp:property> rdf:type owl:DatatypeProperty , rdf:Property .

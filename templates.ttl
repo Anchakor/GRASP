@@ -100,13 +100,61 @@ t:propertyDR a t:Template ;
 
 t:invproperty a t:Template ;
     t:path "../templates/propertyinv.ttl" ;
-    t:name "Inverse Object Property (OWL)" ;
+    t:name "Inverse Property (OWL)" ;
     t:class rdf:Property ;
     t:variable <urn:grasp:property> .
 
 t:negpropertyassert a t:Template ;
     t:path "../templates/negpropertyassert.ttl" ;
     t:name "Negative Property Assertion (OWL)" ;
+    t:class rdf:Property ;
+    t:variable <urn:grasp:property> .
+
+t:symproperty a t:Template ;
+    t:path "../templates/propertysym.ttl" ;
+    t:name "Symmetric Property (OWL)" ;
+    t:class rdf:Property ;
+    t:variable <urn:grasp:property> .
+
+t:asymproperty a t:Template ;
+    t:path "../templates/propertyasym.ttl" ;
+    t:name "Asymmetric Property (OWL)" ;
+    t:class rdf:Property ;
+    t:variable <urn:grasp:property> .
+
+t:disjproperty a t:Template ;
+    t:path "../templates/propertydisj.ttl" ;
+    t:name "Disjoint Property (OWL)" ;
+    t:class rdf:Property ;
+    t:variable <urn:grasp:property> .
+
+t:reflexproperty a t:Template ;
+    t:path "../templates/propertyreflex.ttl" ;
+    t:name "Reflexive Property (OWL)" ;
+    t:class rdf:Property ;
+    t:variable <urn:grasp:property> .
+
+t:irreflexproperty a t:Template ;
+    t:path "../templates/propertyirreflex.ttl" ;
+    t:name "Irreflexive Property (OWL)" ;
+    t:class rdf:Property ;
+    t:variable <urn:grasp:property> .
+
+t:funproperty a t:Template ;
+    t:path "../templates/propertyfun.ttl" ;
+    t:name "Functional Property (OWL)" ;
+    t:class rdf:Property ;
+    t:variable <urn:grasp:property> .
+
+t:invfunproperty a t:Template ;
+    t:path "../templates/propertyinvfun.ttl" ;
+    t:name "Inverse Functional Property (OWL)" ;
+    t:class rdf:Property ;
+    t:variable <urn:grasp:property> .
+
+t:transproperty a t:Template ;
+    t:path "../templates/propertytrans.ttl" ;
+    t:name "Transitive Property (OWL)" ;
     t:class rdf:Property ;
     t:variable <urn:grasp:property> .
     
