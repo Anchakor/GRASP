@@ -1,3 +1,4 @@
+#include <QtSvg>
 #include "graphview.h"
 #include "guiutils.h"
 #include "searchdialog.h"
@@ -82,3 +83,25 @@ void GraphView::zoom(int i)
     scale(y, y);
 }
 
+void GraphView::saveSVG()
+{
+    Graph *g = currentGraph();
+    if(!g) {
+        QString msg("Error: There is no current graph");
+        alertPopup(msg);
+        return;
+    }
+    QString newPath = QFileDialog::getSaveFileName(this, tr("Export to SVG"), QString(), tr("SVG files (*.svg)"));
+    if(newPath.isEmpty()) return;
+
+    QSvgGenerator generator;
+    generator.setFileName(newPath);
+    generator.setSize(QSize(200, 200));
+    generator.setViewBox(QRect(0, 0, 200, 200));
+    generator.setTitle(tr("Ontology, edited by GRASP"));
+    generator.setDescription(tr("Ontology, edited by GRASP"));
+    QPainter painter;
+    painter.begin(&generator);
+    g->render(&painter);
+    painter.end();
+}

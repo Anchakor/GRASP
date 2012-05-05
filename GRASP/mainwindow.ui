@@ -71,6 +71,7 @@
     <addaction name="action_URL"/>
     <addaction name="action_Save"/>
     <addaction name="actionS_ave_as"/>
+    <addaction name="action_ExportSVG"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -226,6 +227,11 @@
    </property>
    <property name="text">
     <string>&amp;Prefixes</string>
+   </property>
+  </action>
+  <action name="action_ExportSVG">
+   <property name="text">
+    <string>Export to SVG</string>
    </property>
   </action>
  </widget>

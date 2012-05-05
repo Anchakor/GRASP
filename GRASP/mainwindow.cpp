@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(layoutWidget_, SIGNAL(layoutChanged()), this, SLOT(graphContextChanged()));
     connect(prefixWidget_, SIGNAL(prefixesChanged()), this, SLOT(graphContextChanged()));
     connect(ui->zoomSlider, SIGNAL(valueChanged(int)), ui->mainGraphicsView, SLOT(zoom(int)));
+    connect(ui->action_ExportSVG, SIGNAL(triggered()), ui->mainGraphicsView, SLOT(saveSVG()));
     loadLensMenu();
     loadTemplates();
 }

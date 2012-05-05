@@ -28,6 +28,7 @@ class GraphView : public QGraphicsView
         void newGraph();
         void findDialog();
         void zoom(int i);
+        void saveSVG();
 
     private:
         QList<Graph *> graphs;
