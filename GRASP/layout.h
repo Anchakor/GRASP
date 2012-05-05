@@ -24,6 +24,7 @@ class LayoutDockWidget : public QDockWidget
         QWidget sugiyama_;
         QDoubleSpinBox sugiyamaNodeDistanceSpinBox_;
         QDoubleSpinBox sugiyamaLayerDistanceSpinBox_;
+        QCheckBox sugiyamaFlip_;
 
         QWidget fmmm_;
         QDoubleSpinBox fmmmUnitEdgeLengthSpinBox_;

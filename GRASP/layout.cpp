@@ -27,6 +27,8 @@ LayoutDockWidget::LayoutDockWidget(QWidget *parent, Qt::WindowFlags flags) : QDo
     sugiyamaLayerDistanceSpinBox_.setRange(1,2000);
     sugiyamaLayerDistanceSpinBox_.setValue(50);
     fl->addRow(new QLabel(tr("Layer Distance:"), this), &sugiyamaLayerDistanceSpinBox_);
+    sugiyamaFlip_.setText(tr("Flip horizontally"));
+    fl->addWidget(&sugiyamaFlip_);
     sugiyama_.setLayout(fl);
     vbl->addWidget(&sugiyama_);
 
@@ -49,6 +51,7 @@ LayoutDockWidget::LayoutDockWidget(QWidget *parent, Qt::WindowFlags flags) : QDo
     connect(&comboBox_, SIGNAL(currentIndexChanged(int)), this, SLOT(applyLayout()));
     connect(&sugiyamaNodeDistanceSpinBox_, SIGNAL(editingFinished()), this, SLOT(applyLayout()));
     connect(&sugiyamaLayerDistanceSpinBox_, SIGNAL(editingFinished()), this, SLOT(applyLayout()));
+    connect(&sugiyamaFlip_, SIGNAL(released()), this, SLOT(applyLayout()));
     connect(&fmmmUnitEdgeLengthSpinBox_, SIGNAL(editingFinished()), this, SLOT(applyLayout()));
     connect(&applyLayout_, SIGNAL(released()), this, SLOT(applyLayout()));
     
@@ -73,6 +76,7 @@ void LayoutDockWidget::applyLayout()
     Ui::Layout::algorithm = comboBox_.currentIndex();
     Ui::Layout::sugiyamaNodeDistance = sugiyamaNodeDistanceSpinBox_.value();
     Ui::Layout::sugiyamaLayerDistance = sugiyamaLayerDistanceSpinBox_.value();
+    Ui::Layout::sugiyamaFlip = sugiyamaFlip_.isChecked();
     Ui::Layout::fmmmUnitEdgeLength = fmmmUnitEdgeLengthSpinBox_.value();
     if(applyLayout_.isChecked()) {
         emit layoutChanged();
@@ -138,8 +142,10 @@ void layoutGraph(Graph *g)
     while (k != nodeHash.end()) {
         GraphNode *gn = k.key();
         ogdf::node n = k.value();
-
-        gn->setPos(GA.x(n) - (GA.width(n) / 2.0), GA.y(n) - (GA.height(n) / 2.0));
+        
+        float y = GA.y(n);
+        if(Ui::Layout::algorithm == 0 && Ui::Layout::sugiyamaFlip) y = -y;
+        gn->setPos(GA.x(n) - (GA.width(n) / 2.0), y - (GA.height(n) / 2.0));
         ++k;
     }
     Edges::const_iterator l = g->edges_.constBegin();

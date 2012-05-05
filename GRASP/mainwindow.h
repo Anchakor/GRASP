@@ -32,6 +32,7 @@ namespace Ui {
         extern int algorithm;
         extern double sugiyamaNodeDistance;
         extern double sugiyamaLayerDistance;
+        extern bool sugiyamaFlip;
         extern double fmmmUnitEdgeLength;
     }
     extern GraphView *view;

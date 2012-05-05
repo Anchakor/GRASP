@@ -12,6 +12,7 @@ bool Ui::Layout::apply;
 int Ui::Layout::algorithm;
 double Ui::Layout::sugiyamaNodeDistance;
 double Ui::Layout::sugiyamaLayerDistance;
+bool Ui::Layout::sugiyamaFlip;
 double Ui::Layout::fmmmUnitEdgeLength;
 GraphView *Ui::view = NULL;
 
