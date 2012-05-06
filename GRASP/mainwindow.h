@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "rdf.h"
+#include "template.h"
 #include "graph.h"
 #include "layout.h"
 #include "prefixdock.h"
@@ -13,12 +14,6 @@ extern Graph *lensGraph;
 typedef QHash<QAction *, rdf::Node> LensActions;
 extern LensActions lensActions;
 
-struct Template {
-    QString name;
-    QString path;
-    rdf::Node variable;
-    rdf::Node ofClass;
-};
 typedef QHash<rdf::Node, Template *> Templates; // id -> template
 extern Templates templates;
 
