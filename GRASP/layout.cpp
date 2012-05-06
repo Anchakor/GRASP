@@ -27,7 +27,7 @@ LayoutDockWidget::LayoutDockWidget(QWidget *parent, Qt::WindowFlags flags) : QDo
     sugiyamaLayerDistanceSpinBox_.setRange(1,2000);
     sugiyamaLayerDistanceSpinBox_.setValue(50);
     fl->addRow(new QLabel(tr("Layer Distance:"), this), &sugiyamaLayerDistanceSpinBox_);
-    sugiyamaFlip_.setText(tr("Flip horizontally"));
+    sugiyamaFlip_.setText(tr("Flip vertically"));
     fl->addWidget(&sugiyamaFlip_);
     sugiyama_.setLayout(fl);
     vbl->addWidget(&sugiyama_);
