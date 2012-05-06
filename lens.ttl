@@ -6,24 +6,80 @@
 @prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix lens: <http://mud.cz/sw/ed#lens/> .
+@prefix t: <http://mud.cz/sw/ed#templates/> .
+@base <urn:grasp:baseUri> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
-lens:default a lens:Lens , lens:BlacklistProperties ;
-    lens:property rdf:type , owl:sameAs , owl:assertionProperty , rdf:first ;
-    lens:aggregatedProperty rdf:type , owl:sameAs , owl:assertionProperty , rdf:first .
+<http://mud.cz/sw/ed#lens/ClassHierarchy>
+    <http://mud.cz/sw/ed#lens/aggregatedProperty> rdf:type, <http://www.w3.org/2000/01/rdf-schema#comment>, <http://www.w3.org/2000/01/rdf-schema#label>, <http://www.w3.org/2003/06/sw-vocab-status/ns#term_status> ;
+    <http://mud.cz/sw/ed#lens/property> <http://www.w3.org/2000/01/rdf-schema#subClassOf> ;
+    a <http://mud.cz/sw/ed#lens/Lens>, <http://mud.cz/sw/ed#lens/NotAggregateLiterals>, <http://mud.cz/sw/ed#lens/WhitelistProperties> .
 
-lens:ClassHierarchy a lens:Lens , lens:WhitelistProperties ; #, lens:NotAggregateLiterals ;
-    lens:property rdfs:subClassOf ;
-    lens:aggregatedProperty rdf:type , rdfs:comment , rdfs:label , vs:term_status .
+<http://mud.cz/sw/ed#lens/ClassRestrictions>
+    <http://mud.cz/sw/ed#lens/aggregatedProperty> rdf:first, rdf:type ;
+    <http://mud.cz/sw/ed#lens/property> rdf:rest, <http://www.w3.org/2002/07/owl#allValuesFrom>, <http://www.w3.org/2002/07/owl#complementOf>, <http://www.w3.org/2002/07/owl#equivalentClass>, <http://www.w3.org/2002/07/owl#hasSelf>, <http://www.w3.org/2002/07/owl#hasValue>, <http://www.w3.org/2002/07/owl#intersectionOf>, <http://www.w3.org/2002/07/owl#members>, <http://www.w3.org/2002/07/owl#onClass>, <http://www.w3.org/2002/07/owl#onProperty>, <http://www.w3.org/2002/07/owl#oneOf>, <http://www.w3.org/2002/07/owl#someValuesFrom>, <http://www.w3.org/2002/07/owl#unionOf> ;
+    a <http://mud.cz/sw/ed#lens/Lens>, <http://mud.cz/sw/ed#lens/WhitelistProperties> .
 
-lens:PropertyHierarchy a lens:Lens , lens:WhitelistProperties ; #, lens:NotAggregateLiterals ;
-    lens:property rdfs:subPropertyOf ;
-    lens:aggregatedProperty rdf:type , rdfs:range , rdfs:domain , rdfs:comment , rdfs:label , vs:term_status .
+<http://mud.cz/sw/ed#lens/LensEditing>
+    <http://mud.cz/sw/ed#lens/aggregatedProperty> <http://mud.cz/sw/ed#lens/aggregatedProperty>, <http://mud.cz/sw/ed#lens/property>, rdf:first, rdf:type, <http://www.w3.org/2002/07/owl#assertionProperty>, <http://www.w3.org/2002/07/owl#sameAs> ;
+    <http://mud.cz/sw/ed#lens/property> <http://mud.cz/sw/ed#lens/aggregatedProperty>, <http://mud.cz/sw/ed#lens/property>, rdf:first, rdf:type, <http://www.w3.org/2002/07/owl#assertionProperty>, <http://www.w3.org/2002/07/owl#sameAs> ;
+    a <http://mud.cz/sw/ed#lens/BlacklistProperties>, <http://mud.cz/sw/ed#lens/Lens> .
 
-#lens:test a lens:Lens , lens:BlacklistProperties , lens:NotAggregateLiterals ;
-#    lens:property rdf:type ;
-#    lens:aggregatedProperty rdf:type .
+<http://mud.cz/sw/ed#lens/Plain>
+    a <http://mud.cz/sw/ed#lens/BlacklistProperties>, <http://mud.cz/sw/ed#lens/Lens>, <http://mud.cz/sw/ed#lens/NotAggregateLiterals> .
 
-#lens:test2 a lens:Lens , lens:WhitelistProperties ;
-#    lens:property rdf:type ;
-#    lens:property foaf:nick ;
-#    lens:aggregatedProperty rdf:type .
+<http://mud.cz/sw/ed#lens/PropertyHierarchy>
+    <http://mud.cz/sw/ed#lens/aggregatedProperty> rdf:type, <http://www.w3.org/2000/01/rdf-schema#comment>, <http://www.w3.org/2000/01/rdf-schema#domain>, <http://www.w3.org/2000/01/rdf-schema#label>, <http://www.w3.org/2000/01/rdf-schema#range>, <http://www.w3.org/2003/06/sw-vocab-status/ns#term_status> ;
+    <http://mud.cz/sw/ed#lens/property> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> ;
+    a <http://mud.cz/sw/ed#lens/Lens>, <http://mud.cz/sw/ed#lens/NotAggregateLiterals>, <http://mud.cz/sw/ed#lens/WhitelistProperties> .
+
+<http://mud.cz/sw/ed#lens/TemplateEditing>
+    <http://mud.cz/sw/ed#lens/aggregatedProperty> <http://mud.cz/sw/ed#templates/class>, <http://mud.cz/sw/ed#templates/variable>, rdf:first, rdf:type, <http://www.w3.org/2002/07/owl#assertionProperty>, <http://www.w3.org/2002/07/owl#sameAs> ;
+    <http://mud.cz/sw/ed#lens/property> <http://mud.cz/sw/ed#templates/class>, <http://mud.cz/sw/ed#templates/variable>, rdf:first, rdf:type, <http://www.w3.org/2002/07/owl#assertionProperty>, <http://www.w3.org/2002/07/owl#sameAs> ;
+    a <http://mud.cz/sw/ed#lens/BlacklistProperties>, <http://mud.cz/sw/ed#lens/Lens> .
+
+<http://mud.cz/sw/ed#lens/default>
+    <http://mud.cz/sw/ed#lens/aggregatedProperty> rdf:first, rdf:type, <http://www.w3.org/2002/07/owl#assertionProperty>, <http://www.w3.org/2002/07/owl#sameAs> ;
+    <http://mud.cz/sw/ed#lens/property> rdf:first, rdf:type, <http://www.w3.org/2002/07/owl#assertionProperty>, <http://www.w3.org/2002/07/owl#sameAs> ;
+    a <http://mud.cz/sw/ed#lens/BlacklistProperties>, <http://mud.cz/sw/ed#lens/Lens> .
+
+#&&&NodePosition 275 752 168023742
+#&&&NodePosition 418 752 164678702
+#&&&NodePosition 589 752 104344734
+#&&&NodePosition 616 20 125284446
+#&&&NodePosition 652 563 241223326
+#&&&NodePosition 673 314 256448206
+#&&&NodePosition 698 20 264576446
+#&&&NodePosition 703 752 132103310
+#&&&NodePosition 752 563 131626542
+#&&&NodePosition 20 836 13327726
+#&&&NodePosition 93 836 247643278
+#&&&NodePosition 229 836 55012718
+#&&&NodePosition 387 836 10380334
+#&&&NodePosition 378 314 202336206
+#&&&NodePosition 496 836 217670094
+#&&&NodePosition 602 836 149000526
+#&&&NodePosition 700 836 182954318
+#&&&NodePosition 20 875 165302766
+#&&&NodePosition 203 875 153324238
+#&&&NodePosition 365 875 228517534
+#&&&NodePosition 20 314 5682574
+#&&&NodePosition 451 875 27411950
+#&&&NodePosition 534 875 236003118
+#&&&NodePosition 599 875 41669486
+#&&&NodePosition 709 875 141897534
+#&&&NodePosition 800 836 13341086
+#&&&NodePosition 357 563 69454190
+#&&&NodePosition 821 314 106287374
+#&&&NodePosition 822 752 266675326
+#&&&NodePosition 20 914 121093438
+#&&&NodePosition 157 914 199299054
+#&&&NodePosition 347 914 203650638
+#&&&NodePosition 279 20 185544558
+#&&&NodePosition 519 914 156951438
+#&&&NodePosition 603 914 248063742
+#&&&NodePosition 20 20 61522478
+#&&&NodePosition 20 563 229092158
+#&&&NodePosition 20 752 99881790
+#&&&NodePosition 700 914 46847806
+#&&&Lens 5682574

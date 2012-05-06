@@ -5,157 +5,217 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix t: <http://mud.cz/sw/ed#templates/> .
+@base <urn:grasp:baseUri> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
-t:class a t:Template ;
-    t:path "../templates/class.ttl" ;
-    t:name "Class (RDFS,OWL)" .
+<http://mud.cz/sw/ed#templates/asymproperty>
+    <http://mud.cz/sw/ed#templates/class> rdf:Property ;
+    <http://mud.cz/sw/ed#templates/name> "Asymmetric Property (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propertyasym.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:property> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:subclass a t:Template ;
-    t:path "../templates/subclass.ttl" ;
-    t:name "Subclass (RDFS)" ;
-    t:class rdfs:Class ;
-    t:variable <urn:grasp:class> .
+<http://mud.cz/sw/ed#templates/class>
+    <http://mud.cz/sw/ed#templates/name> "Class (RDFS,OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/class.ttl" ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:equivclass a t:Template ;
-    t:path "../templates/equivclass.ttl" ;
-    t:name "Equivalent Class (OWL)" ;
-    t:class owl:Class ;
-    t:variable <urn:grasp:class> .
+<http://mud.cz/sw/ed#templates/classcomplement>
+    <http://mud.cz/sw/ed#templates/class> <http://www.w3.org/2002/07/owl#Class> ;
+    <http://mud.cz/sw/ed#templates/name> "Class Complement (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/classcomplement.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:class> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:disjointclass a t:Template ;
-    t:path "../templates/disjointclass.ttl" ;
-    t:name "Disjoint Class (OWL)" ;
-    t:class owl:Class ;
-    t:variable <urn:grasp:class> .
+<http://mud.cz/sw/ed#templates/classintersection>
+    <http://mud.cz/sw/ed#templates/class> <http://www.w3.org/2002/07/owl#Class> ;
+    <http://mud.cz/sw/ed#templates/name> "Class Intersection (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/classintersection.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:class> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:classunion a t:Template ;
-    t:path "../templates/classunion.ttl" ;
-    t:name "Class Union (OWL)" ;
-    t:class owl:Class ;
-    t:variable <urn:grasp:class> .
+<http://mud.cz/sw/ed#templates/classunion>
+    <http://mud.cz/sw/ed#templates/class> <http://www.w3.org/2002/07/owl#Class> ;
+    <http://mud.cz/sw/ed#templates/name> "Class Union (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/classunion.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:class> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:classintersection a t:Template ;
-    t:path "../templates/classintersection.ttl" ;
-    t:name "Class Intersection (OWL)" ;
-    t:class owl:Class ;
-    t:variable <urn:grasp:class> .
+<http://mud.cz/sw/ed#templates/disjointclass>
+    <http://mud.cz/sw/ed#templates/class> <http://www.w3.org/2002/07/owl#Class> ;
+    <http://mud.cz/sw/ed#templates/name> "Disjoint Class (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/disjointclass.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:class> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:classcomplement a t:Template ;
-    t:path "../templates/classcomplement.ttl" ;
-    t:name "Class Complement (OWL)" ;
-    t:class owl:Class ;
-    t:variable <urn:grasp:class> .
+<http://mud.cz/sw/ed#templates/disjproperty>
+    <http://mud.cz/sw/ed#templates/class> rdf:Property ;
+    <http://mud.cz/sw/ed#templates/name> "Disjoint Property (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propertydisj.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:property> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:enumclass a t:Template ;
-    t:path "../templates/enumclass.ttl" ;
-    t:name "Enumerated Class (OWL)" ;
-    t:class owl:Class ;
-    t:variable <urn:grasp:class> .
+<http://mud.cz/sw/ed#templates/enumclass>
+    <http://mud.cz/sw/ed#templates/class> <http://www.w3.org/2002/07/owl#Class> ;
+    <http://mud.cz/sw/ed#templates/name> "Enumerated Class (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/enumclass.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:class> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:propRexist a t:Template ;
-    t:path "../templates/propRexist.ttl" ;
-    t:name "Property Restriction - Existential Quantification (OWL)" ;
-    t:class owl:Class ;
-    t:variable <urn:grasp:class> .
+<http://mud.cz/sw/ed#templates/equivclass>
+    <http://mud.cz/sw/ed#templates/class> <http://www.w3.org/2002/07/owl#Class> ;
+    <http://mud.cz/sw/ed#templates/name> "Equivalent Class (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/equivclass.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:class> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:propRuniv a t:Template ;
-    t:path "../templates/propRuniv.ttl" ;
-    t:name "Property Restriction - Universal Quantification (OWL)" ;
-    t:class owl:Class ;
-    t:variable <urn:grasp:class> .
+<http://mud.cz/sw/ed#templates/funproperty>
+    <http://mud.cz/sw/ed#templates/class> rdf:Property ;
+    <http://mud.cz/sw/ed#templates/name> "Functional Property (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propertyfun.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:property> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:propRuniv a t:Template ;
-    t:path "../templates/propRobject.ttl" ;
-    t:name "Property Restriction on Object Value (OWL)" ;
-    t:class owl:Class ;
-    t:variable <urn:grasp:class> .
+<http://mud.cz/sw/ed#templates/invfunproperty>
+    <http://mud.cz/sw/ed#templates/class> rdf:Property ;
+    <http://mud.cz/sw/ed#templates/name> "Inverse Functional Property (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propertyinvfun.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:property> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:propRself a t:Template ;
-    t:path "../templates/propRself.ttl" ;
-    t:name "Property Restriction on self (OWL)" ;
-    t:class owl:Class ;
-    t:variable <urn:grasp:class> .
+<http://mud.cz/sw/ed#templates/invproperty>
+    <http://mud.cz/sw/ed#templates/class> rdf:Property ;
+    <http://mud.cz/sw/ed#templates/name> "Inverse Property (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propertyinv.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:property> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:propCR a t:Template ;
-    t:path "../templates/propCR.ttl" ;
-    t:name "Property Cardinality Restriction (OWL)" ;
-    t:class owl:Class ;
-    t:variable <urn:grasp:class> .
+<http://mud.cz/sw/ed#templates/irreflexproperty>
+    <http://mud.cz/sw/ed#templates/class> rdf:Property ;
+    <http://mud.cz/sw/ed#templates/name> "Irreflexive Property (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propertyirreflex.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:property> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:property a t:Template ;
-    t:path "../templates/property.ttl" ;
-    t:name "Property (RDF)" .
+<http://mud.cz/sw/ed#templates/negpropertyassert>
+    <http://mud.cz/sw/ed#templates/class> rdf:Property ;
+    <http://mud.cz/sw/ed#templates/name> "Negative Property Assertion (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/negpropertyassert.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:property> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:subproperty a t:Template ;
-    t:path "../templates/subproperty.ttl" ;
-    t:name "Subproperty (RDFS)" ;
-    t:class rdf:Property ;
-    t:variable <urn:grasp:property> .
+<http://mud.cz/sw/ed#templates/propCR>
+    <http://mud.cz/sw/ed#templates/class> <http://www.w3.org/2002/07/owl#Class> ;
+    <http://mud.cz/sw/ed#templates/name> "Property Cardinality Restriction (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propCR.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:class> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:propertyDR a t:Template ;
-    t:path "../templates/propertydomainrange.ttl" ;
-    t:name "Property Domain && Range (RDFS)" ;
-    t:class rdf:Property ;
-    t:variable <urn:grasp:property> .
+<http://mud.cz/sw/ed#templates/propRexist>
+    <http://mud.cz/sw/ed#templates/class> <http://www.w3.org/2002/07/owl#Class> ;
+    <http://mud.cz/sw/ed#templates/name> "Property Restriction - Existential Quantification (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propRexist.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:class> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:invproperty a t:Template ;
-    t:path "../templates/propertyinv.ttl" ;
-    t:name "Inverse Property (OWL)" ;
-    t:class rdf:Property ;
-    t:variable <urn:grasp:property> .
+<http://mud.cz/sw/ed#templates/propRobj>
+    <http://mud.cz/sw/ed#templates/class> <http://www.w3.org/2002/07/owl#Class> ;
+    <http://mud.cz/sw/ed#templates/name> "Property Restriction on Object Value (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propRobject.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:class> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:negpropertyassert a t:Template ;
-    t:path "../templates/negpropertyassert.ttl" ;
-    t:name "Negative Property Assertion (OWL)" ;
-    t:class rdf:Property ;
-    t:variable <urn:grasp:property> .
+<http://mud.cz/sw/ed#templates/propRself>
+    <http://mud.cz/sw/ed#templates/class> <http://www.w3.org/2002/07/owl#Class> ;
+    <http://mud.cz/sw/ed#templates/name> "Property Restriction on self (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propRself.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:class> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:symproperty a t:Template ;
-    t:path "../templates/propertysym.ttl" ;
-    t:name "Symmetric Property (OWL)" ;
-    t:class rdf:Property ;
-    t:variable <urn:grasp:property> .
+<http://mud.cz/sw/ed#templates/propRuniv>
+    <http://mud.cz/sw/ed#templates/class> <http://www.w3.org/2002/07/owl#Class> ;
+    <http://mud.cz/sw/ed#templates/name> "Property Restriction - Universal Quantification (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propRuniv.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:class> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:asymproperty a t:Template ;
-    t:path "../templates/propertyasym.ttl" ;
-    t:name "Asymmetric Property (OWL)" ;
-    t:class rdf:Property ;
-    t:variable <urn:grasp:property> .
+<http://mud.cz/sw/ed#templates/property>
+    <http://mud.cz/sw/ed#templates/name> "Property (RDF)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/property.ttl" ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:disjproperty a t:Template ;
-    t:path "../templates/propertydisj.ttl" ;
-    t:name "Disjoint Property (OWL)" ;
-    t:class rdf:Property ;
-    t:variable <urn:grasp:property> .
+<http://mud.cz/sw/ed#templates/propertyDR>
+    <http://mud.cz/sw/ed#templates/class> rdf:Property ;
+    <http://mud.cz/sw/ed#templates/name> "Property Domain && Range (RDFS)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propertydomainrange.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:property> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:reflexproperty a t:Template ;
-    t:path "../templates/propertyreflex.ttl" ;
-    t:name "Reflexive Property (OWL)" ;
-    t:class rdf:Property ;
-    t:variable <urn:grasp:property> .
+<http://mud.cz/sw/ed#templates/reflexproperty>
+    <http://mud.cz/sw/ed#templates/class> rdf:Property ;
+    <http://mud.cz/sw/ed#templates/name> "Reflexive Property (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propertyreflex.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:property> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:irreflexproperty a t:Template ;
-    t:path "../templates/propertyirreflex.ttl" ;
-    t:name "Irreflexive Property (OWL)" ;
-    t:class rdf:Property ;
-    t:variable <urn:grasp:property> .
+<http://mud.cz/sw/ed#templates/subclass>
+    <http://mud.cz/sw/ed#templates/class> <http://www.w3.org/2000/01/rdf-schema#Class> ;
+    <http://mud.cz/sw/ed#templates/name> "Subclass (RDFS)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/subclass.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:class> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:funproperty a t:Template ;
-    t:path "../templates/propertyfun.ttl" ;
-    t:name "Functional Property (OWL)" ;
-    t:class rdf:Property ;
-    t:variable <urn:grasp:property> .
+<http://mud.cz/sw/ed#templates/subproperty>
+    <http://mud.cz/sw/ed#templates/class> rdf:Property ;
+    <http://mud.cz/sw/ed#templates/name> "Subproperty (RDFS)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/subproperty.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:property> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:invfunproperty a t:Template ;
-    t:path "../templates/propertyinvfun.ttl" ;
-    t:name "Inverse Functional Property (OWL)" ;
-    t:class rdf:Property ;
-    t:variable <urn:grasp:property> .
+<http://mud.cz/sw/ed#templates/symproperty>
+    <http://mud.cz/sw/ed#templates/class> rdf:Property ;
+    <http://mud.cz/sw/ed#templates/name> "Symmetric Property (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propertysym.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:property> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
-t:transproperty a t:Template ;
-    t:path "../templates/propertytrans.ttl" ;
-    t:name "Transitive Property (OWL)" ;
-    t:class rdf:Property ;
-    t:variable <urn:grasp:property> .
-    
+<http://mud.cz/sw/ed#templates/transproperty>
+    <http://mud.cz/sw/ed#templates/class> rdf:Property ;
+    <http://mud.cz/sw/ed#templates/name> "Transitive Property (OWL)" ;
+    <http://mud.cz/sw/ed#templates/path> "../templates/propertytrans.ttl" ;
+    <http://mud.cz/sw/ed#templates/variable> <urn:grasp:property> ;
+    a <http://mud.cz/sw/ed#templates/Template> .
 
+#&&&NodePosition 238 932 220664302
+#&&&NodePosition 20 134 223267326
+#&&&NodePosition 20 20 156927806
+#&&&NodePosition 20 248 239955918
+#&&&NodePosition 20 362 218111566
+#&&&NodePosition 277 362 56306238
+#&&&NodePosition 293 248 245287662
+#&&&NodePosition 329 932 227365454
+#&&&NodePosition 429 932 81316206
+#&&&NodePosition 20 476 210843070
+#&&&NodePosition 319 134 198393422
+#&&&NodePosition 20 590 13124990
+#&&&NodePosition 785 818 255416974
+#&&&NodePosition 337 476 223304046
+#&&&NodePosition 446 590 117008078
+#&&&NodePosition 345 20 11476382
+#&&&NodePosition 20 704 219042942
+#&&&NodePosition 452 704 156623054
+#&&&NodePosition 568 248 221978190
+#&&&NodePosition 570 362 235544462
+#&&&NodePosition 511 932 92057390
+#&&&NodePosition 586 134 260499966
+#&&&NodePosition 647 476 157204366
+#&&&NodePosition 20 932 236003118
+#&&&NodePosition 20 818 218793422
+#&&&NodePosition 283 818 32985454
+#&&&NodePosition 524 818 199007822
+#&&&NodePosition 676 932 183677390
+#&&&NodePosition 678 20 252483998
+#&&&NodePosition 701 590 128709454
+#&&&NodePosition 704 704 12965758
+#&&&NodePosition 762 932 8174446
+#&&&Lens 185544558

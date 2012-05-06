@@ -48,6 +48,7 @@ void GraphNode::contextChanged()
 
 void GraphNode::genAggregLevel(GraphicsNodeLabel *subjNode, QGraphicsLinearLayout *aggregProps)
 {
+    // aggregStatements_ is a set rdf:Statements which already were aggregated in this node
     Graph *graph = reinterpret_cast<Graph *>(scene());
     rdf::Node context (graph->getContext());
     Lens *lens = &(graph->lens_);
