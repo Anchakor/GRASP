@@ -34,8 +34,8 @@
     a <http://mud.cz/sw/ed#lens/Lens>, <http://mud.cz/sw/ed#lens/NotAggregateLiterals>, <http://mud.cz/sw/ed#lens/WhitelistProperties> .
 
 <http://mud.cz/sw/ed#lens/TemplateEditing>
-    <http://mud.cz/sw/ed#lens/aggregatedProperty> <http://mud.cz/sw/ed#templates/class>, <http://mud.cz/sw/ed#templates/variable>, rdf:first, rdf:type, <http://www.w3.org/2002/07/owl#assertionProperty>, <http://www.w3.org/2002/07/owl#sameAs> ;
-    <http://mud.cz/sw/ed#lens/property> <http://mud.cz/sw/ed#templates/class>, <http://mud.cz/sw/ed#templates/variable>, rdf:first, rdf:type, <http://www.w3.org/2002/07/owl#assertionProperty>, <http://www.w3.org/2002/07/owl#sameAs> ;
+    <http://mud.cz/sw/ed#lens/aggregatedProperty> <http://mud.cz/sw/ed#templates/variable>, rdf:first, rdf:type, <http://www.w3.org/2002/07/owl#assertionProperty>, <http://www.w3.org/2002/07/owl#sameAs> ;
+    <http://mud.cz/sw/ed#lens/property> <http://mud.cz/sw/ed#templates/variable>, rdf:first, rdf:type, <http://www.w3.org/2002/07/owl#assertionProperty>, <http://www.w3.org/2002/07/owl#sameAs> ;
     a <http://mud.cz/sw/ed#lens/BlacklistProperties>, <http://mud.cz/sw/ed#lens/Lens> .
 
 <http://mud.cz/sw/ed#lens/default>
@@ -60,18 +60,18 @@
 #&&&NodePosition 496 836 217670094
 #&&&NodePosition 602 836 149000526
 #&&&NodePosition 700 836 182954318
-#&&&NodePosition 20 875 165302766
-#&&&NodePosition 203 875 153324238
+#&&&NodePosition 182 875 165302766
+#&&&NodePosition 20 875 153324238
 #&&&NodePosition 365 875 228517534
 #&&&NodePosition 20 314 5682574
 #&&&NodePosition 451 875 27411950
 #&&&NodePosition 534 875 236003118
-#&&&NodePosition 599 875 41669486
-#&&&NodePosition 709 875 141897534
-#&&&NodePosition 800 836 13341086
+#&&&NodePosition 534 875 41669486
+#&&&NodePosition 644 875 141897534
+#&&&NodePosition 767 875 13341086
 #&&&NodePosition 357 563 69454190
-#&&&NodePosition 821 314 106287374
-#&&&NodePosition 822 752 266675326
+#&&&NodePosition 800 836 106287374
+#&&&NodePosition 821 314 266675326
 #&&&NodePosition 20 914 121093438
 #&&&NodePosition 157 914 199299054
 #&&&NodePosition 347 914 203650638
