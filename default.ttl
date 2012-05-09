@@ -7,6 +7,7 @@
 @prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix t: <http://mud.cz/sw/ed#templates/> .
+@prefix lens: <http://mud.cz/sw/ed#lens/> .
 @base <urn:grasp:baseUri> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 

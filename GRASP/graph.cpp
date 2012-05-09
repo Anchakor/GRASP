@@ -4,6 +4,7 @@
 #include "mainwindow.h"
 #include "contextmenu.h"
 
+#define DEFAULTGRAPH "../default.ttl"
 
 Graph::Graph(QObject *parent) : QGraphicsScene(parent)
 {
@@ -16,7 +17,7 @@ void Graph::init()
 
 Graph *Graph::newEmpty(QObject *parent)
 {
-    Graph *g = Graph::fromFile("../default.ttl", "text/turtle", rdf::baseUri, parent);
+    Graph *g = Graph::fromFile(DEFAULTGRAPH, "text/turtle", rdf::baseUri, parent);
         /*new Graph(parent);
     g->nstack_ = raptor_new_namespaces(rdf::raptor, 2);
 
@@ -228,7 +229,7 @@ rdf::Node Graph::getContext()
 void Graph::saveFile()
 {
     //qDebug(file_.toLatin1().constData());
-    if(!file_.isEmpty()) {
+    if(!file_.isEmpty() && file_ != QString("../default.ttl")) {
         FILE *file = fopen(file_.toLatin1().constData(), "w");
         rdf::NSHash::const_iterator i = nslist_.constBegin();
         while (i != nslist_.constEnd()) {
@@ -257,8 +258,10 @@ void Graph::saveFile()
 void Graph::saveFileAs()
 {
     QString fileName = QFileDialog::getSaveFileName(NULL, tr("Save"), QString(), tr("Turtle files (*.ttl)"));
-    file_ = fileName;
-    saveFile();
+    if(!fileName.isEmpty()) {
+        file_ = fileName;
+        saveFile();
+    }
 }
 
 void Graph::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
