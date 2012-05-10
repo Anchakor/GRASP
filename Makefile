@@ -9,6 +9,7 @@ qmake:
 	cd ${PROJECT} && qmake -o ../${PROJECT}-build-desktop/Makefile ${PROJECT}.pro && cd ..
 
 build: qmake
+	cp ${PROJECT}/* ${PROJECT}-build-desktop/
 	cd ${PROJECT}-build-desktop && make && cd ..
 
 debug: build
@@ -16,6 +17,9 @@ debug: build
 
 ddd: build
 	cd ${PROJECT}-build-desktop && make && ddd --debugger "gdb -x ../GDBcode" ./${PROJECT}
+
+doc:
+	doxygen Doxyfile
 
 memcheck: build
 	cd ${PROJECT}-build-desktop && valgrind -v --show-below-main=yes --leak-check=yes --gen-suppressions=yes --suppressions=../suppressions.supp ./${PROJECT} #-style windows
