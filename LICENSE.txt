@@ -1,0 +1,5 @@
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+Version 2 or 3 as published by the Free Software Foundation
+and appearing in the files LICENSE_GPL_v2.txt and
+LICENSE_GPL_v3.txt included in the packaging of this file.
