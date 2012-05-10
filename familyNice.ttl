@@ -1,0 +1,51 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix ex: <urn:examples:> .
+
+ex:Father
+    a rdfs:Class, owl:Class ;
+    rdfs:subClassOf ex:Man, ex:Parent ;
+    owl:intersectionOf (ex:Man
+        ex:Parent
+    ) .
+
+ex:Man
+    a rdfs:Class, owl:Class ;
+    rdfs:subClassOf ex:Person .
+
+ex:Mother
+    a rdfs:Class, owl:Class ;
+    rdfs:subClassOf ex:Parent, ex:Woman ;
+    owl:intersectionOf (ex:Woman
+        ex:Parent
+    ) .
+
+ex:Parent
+    a rdfs:Class, owl:Class ;
+    rdfs:subClassOf ex:Person ;
+    owl:equivalentClass [
+        a owl:Restriction ;
+        owl:onProperty ex:hasChild ;
+        owl:someValuesFrom ex:Person
+    ] .
+
+ex:Person
+    a rdfs:Class, owl:Class .
+
+ex:Woman
+    a rdfs:Class, owl:Class ;
+    rdfs:subClassOf ex:Person .
+
+ex:hasChild
+    a rdf:Property, owl:AsymmetricProperty, owl:IrreflexiveProperty, owl:ObjectProperty ;
+    rdfs:domain ex:Parent ;
+    rdfs:range ex:Person ;
+    rdfs:subPropertyOf ex:influenced .
+
+ex:influenced
+    a rdf:Property ;
+    rdfs:domain ex:Person ;
+    rdfs:range ex:Person .
+

@@ -1,0 +1,106 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix t: <http://mud.cz/sw/ed#templates/> .
+@prefix ex: <urn:examples:> .
+@base <urn:grasp:baseUri> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<urn:examples:Father>
+    a <http://www.w3.org/2000/01/rdf-schema#Class>, <http://www.w3.org/2002/07/owl#Class> ;
+    <http://www.w3.org/2000/01/rdf-schema#subClassOf> <urn:examples:Man>, <urn:examples:Parent> ;
+    <http://www.w3.org/2002/07/owl#intersectionOf> (<urn:examples:Man>
+        <urn:examples:Parent>
+    ) .
+
+<urn:examples:Man>
+    a <http://www.w3.org/2000/01/rdf-schema#Class>, <http://www.w3.org/2002/07/owl#Class> ;
+    <http://www.w3.org/2000/01/rdf-schema#subClassOf> <urn:examples:Person> .
+
+<urn:examples:Mother>
+    a <http://www.w3.org/2000/01/rdf-schema#Class>, <http://www.w3.org/2002/07/owl#Class> ;
+    <http://www.w3.org/2000/01/rdf-schema#subClassOf> <urn:examples:Parent>, <urn:examples:Woman> ;
+    <http://www.w3.org/2002/07/owl#intersectionOf> (<urn:examples:Woman>
+        <urn:examples:Parent>
+    ) .
+
+<urn:examples:Parent>
+    a <http://www.w3.org/2000/01/rdf-schema#Class>, <http://www.w3.org/2002/07/owl#Class> ;
+    <http://www.w3.org/2000/01/rdf-schema#subClassOf> <urn:examples:Person> ;
+    <http://www.w3.org/2002/07/owl#equivalentClass> [
+        a <http://www.w3.org/2002/07/owl#Restriction> ;
+        <http://www.w3.org/2002/07/owl#onProperty> <urn:examples:hasChild> ;
+        <http://www.w3.org/2002/07/owl#someValuesFrom> <urn:examples:Person>
+    ] .
+
+<urn:examples:Person>
+    a <http://www.w3.org/2000/01/rdf-schema#Class>, <http://www.w3.org/2002/07/owl#Class> .
+
+<urn:examples:Woman>
+    a <http://www.w3.org/2000/01/rdf-schema#Class>, <http://www.w3.org/2002/07/owl#Class> ;
+    <http://www.w3.org/2000/01/rdf-schema#subClassOf> <urn:examples:Person> .
+
+<urn:examples:hasChild>
+    a rdf:Property, <http://www.w3.org/2002/07/owl#AsymmetricProperty>, <http://www.w3.org/2002/07/owl#IrreflexiveProperty>, <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+    <http://www.w3.org/2000/01/rdf-schema#domain> <urn:examples:Parent> ;
+    <http://www.w3.org/2000/01/rdf-schema#range> <urn:examples:Person> ;
+    <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <urn:examples:influenced> .
+
+<urn:examples:influenced>
+    a rdf:Property ;
+    <http://www.w3.org/2000/01/rdf-schema#domain> <urn:examples:Person> ;
+    <http://www.w3.org/2000/01/rdf-schema#range> <urn:examples:Person> .
+
+#&&&NodePosition 20 379.667 1
+#&&&NodePosition 20 265.667 2
+#&&&NodePosition 260 379.667 3
+#&&&NodePosition 260 265.667 4
+#&&&NodePosition 929 394.667 5
+#&&&NodePosition 276.5 578.667 252738142
+#&&&NodePosition 20 20 211835982
+#&&&NodePosition 20 371 6
+#&&&NodePosition 20 371 7
+#&&&NodePosition 400 20 8
+#&&&NodePosition 20 371 9
+#&&&NodePosition 400 20 10
+#&&&NodePosition 983.433 1021.59 11
+#&&&NodePosition 672.867 1120.22 12
+#&&&NodePosition 1023.5 20 54052798
+#&&&NodePosition 20 371 15604446
+#&&&NodePosition 279.032 1126.95 13
+#&&&NodePosition 20 20 76011246
+#&&&NodePosition -0.184332 1011.49 14
+#&&&NodePosition 134 632.667 227365454
+#&&&NodePosition 1303.5 341.667 65217550
+#&&&NodePosition 1243.5 280.667 235718750
+#&&&NodePosition 322 446 130790990
+#&&&NodePosition 750.5 35 936350
+#&&&NodePosition 1243.5 280.667 165727406
+#&&&NodePosition 660 632.667 259550254
+#&&&NodePosition 20 371 121785198
+#&&&NodePosition 20 446 130791006
+#&&&NodePosition 212.5 209.833 196256974
+#&&&NodePosition 804 632.667 183677390
+#&&&NodePosition 171 446 24180142
+#&&&NodePosition 424 485 8174446
+#&&&NodePosition 222 516.623 134120446
+#&&&NodePosition 20 632.667 147281726
+#&&&NodePosition 234 632.667 81316206
+#&&&NodePosition 496 632.667 123119182
+#&&&NodePosition 950.5 563.667 179127230
+#&&&NodePosition 550.5 35 15616478
+#&&&NodePosition 1243.5 280.667 235720526
+#&&&NodePosition 590.5 387.167 86897246
+#&&&NodePosition 432 371 242757006
+#&&&NodePosition 910.5 273.167 183247070
+#&&&NodePosition 222 296 92057390
+#&&&NodePosition 20 470 227090798
+#&&&NodePosition 316 632.667 222517646
+#&&&NodePosition 710.5 273.167 220495454
+#&&&NodePosition 20 257 256208398
+#&&&Lens 229092158

@@ -1,0 +1,41 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix lens: <http://mud.cz/sw/ed#lens/> .
+
+lens:Lens
+    a rdfs:Class, owl:Class ;
+    rdfs:comment "Class of lens." .
+
+lens:BlacklistProperties
+    a rdfs:Class, owl:Class ;
+    rdfs:comment "Class of lens, which don't show relations with specified properties in the graph view." ;
+    rdfs:subClassOf lens:Lens .
+
+lens:WhitelistProperties
+    a rdfs:Class, owl:Class ;
+    rdfs:comment "Class of lens, which show only relations with specified properties in the graph view." ;
+    rdfs:subClassOf lens:Lens .
+
+[]
+    a owl:AllDisjointClasses ;
+    owl:members (lens:BlacklistProperties lens:WhitelistProperties ) .
+
+lens:property
+    a rdf:Property, owl:ObjectProperty ;
+    rdfs:comment "Property for specifying properties for whitelisting/blacklisting." ;
+    rdfs:domain lens:Lens ;
+    rdfs:range rdf:Property .
+
+lens:NotAggregateLiterals
+    a rdfs:Class, owl:Class ;
+    rdfs:comment "Class of lens, which don't aggregate relations with literal objects in graph nodes as is usual." ;
+    rdfs:subClassOf lens:Lens .
+
+lens:aggregatedProperty
+    a rdf:Property, owl:ObjectProperty ;
+    rdfs:comment "Property for specifying properties for aggregating in graph nodes." ;
+    rdfs:domain lens:Lens ;
+    rdfs:range rdf:Property .
+

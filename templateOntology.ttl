@@ -1,0 +1,31 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix t: <http://mud.cz/sw/ed#templates/> .
+
+t:Template
+    a rdfs:Class, owl:Class ;
+    rdfs:comment "Class of templates." .
+
+t:class
+    a rdf:Property, owl:ObjectProperty ;
+    rdfs:comment "Property for specifying a class to which the template belongs to, as a means of classifying it in the menu for template insertion." ;
+    rdfs:domain t:Template ;
+    rdfs:range rdfs:Class .
+
+t:name
+    a rdf:Property, owl:ObjectProperty ;
+    rdfs:comment "Property for specifying template name" ;
+    rdfs:domain t:Template .
+
+t:path
+    a rdf:Property, owl:ObjectProperty ;
+    rdfs:comment "Property for specifying path from the editor executable to the template RDF file." ;
+    rdfs:domain t:Template .
+
+t:variable
+    a rdf:Property, owl:ObjectProperty ;
+    rdfs:comment "Property for specifying an RDF node which is to be replaced by selected node on template insertion." ;
+    rdfs:domain t:Template .
+
