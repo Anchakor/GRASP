@@ -6,6 +6,13 @@
 #include "mainwindow.h"
 #include "graph.h"
 
+int logger (void *user_data, librdf_log_message *message) {
+    fprintf(stderr, "LIBRDF: ");
+    fprintf(stderr, librdf_log_message_message(message));
+    fprintf(stderr, "\n");
+    return 1;
+}
+
 int main(int argc, char *argv[])
 {
     int ret;
@@ -14,12 +21,13 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Failed to create rdf::world\n");
         return(1);
     }
+    librdf_world_set_logger(rdf::world, NULL, &logger);
     librdf_world_open(rdf::world);
     rdf::raptor = librdf_world_get_raptor(rdf::world);
 
-    QString storageConfString("hash-type='bdb',dir='.',contexts='yes'");
-    if(!QFile::exists(QString("maindb-contexts.db"))) storageConfString.prepend("new='yes',");
-    rdf::storage = librdf_new_storage(rdf::world, "hashes", "maindb", storageConfString.toLatin1().constData());
+    QString storageConfString("contexts='yes'");//"hash-type='bdb',dir='.',contexts='yes'");
+    //if(!QFile::exists(QString("maindb-contexts.db"))) storageConfString.prepend("new='yes',");
+    rdf::storage = librdf_new_storage(rdf::world, /*"hashes", "maindb"*/ "memory", NULL, storageConfString.toLatin1().constData());
     if(NULL == rdf::storage) {
         fprintf(stderr, "Failed to create rdf::storage\n");
         return(1);

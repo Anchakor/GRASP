@@ -20,7 +20,8 @@ First build will probably require to be run two times.
 
 Raptor git://github.com/dajobe/raptor.git rev. e90515929b8ffed8a9daf67e26bb1d9a090e1971
   - or release after 2.0.7 (not yet released)
-Redland with Berkley DB support (tested 1.0.13)
+Redland (tested 1.0.13)
 Rasqal (tested 0.9.25)
 Qt with QtSvg (tested 4.7)
++ dependencies of OGDF library distributed with the source
 

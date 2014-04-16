@@ -1,12 +1,13 @@
 
 
 PROJECT=GRASP
+QMAKE=qmake-qt4
 
 all: build
 	cd ${PROJECT}-build-desktop && ./${PROJECT} #-style windows
 
 qmake:
-	cd ${PROJECT} && qmake -o ../${PROJECT}-build-desktop/Makefile ${PROJECT}.pro && cd ..
+	cd ${PROJECT} && ${QMAKE} -o ../${PROJECT}-build-desktop/Makefile ${PROJECT}.pro && cd ..
 
 build: qmake
 	cp ${PROJECT}/* ${PROJECT}-build-desktop/
